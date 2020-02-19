@@ -1,0 +1,4 @@
+appsettings.json
+*.dll
+*.exe
+.vscode/
