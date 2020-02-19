@@ -10,6 +10,14 @@ namespace massage.Controllers
 {
     public class HomeController : Controller
     {
+        // database setup
+        public ProjectContext dbContext;
+        public LoginController(ProjectContext context)
+        {
+            dbContext = context;
+        }
+
+
         public IActionResult Index()
         {
             return View();
