@@ -4,6 +4,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using massage.Models;
 
 namespace massage.Controllers
@@ -16,6 +19,7 @@ namespace massage.Controllers
         {
             dbContext = context;
         }
+        List<Room> PossibleRooms = dbContext.Rooms.ToList();
 
 
         public IActionResult Index()
