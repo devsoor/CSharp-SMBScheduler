@@ -12,7 +12,7 @@ namespace massage.Controllers
     {
         // database setup
         public ProjectContext dbContext;
-        public LoginController(ProjectContext context)
+        public HomeController(ProjectContext context)
         {
             dbContext = context;
         }

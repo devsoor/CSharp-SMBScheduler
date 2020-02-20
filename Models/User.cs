@@ -11,9 +11,15 @@ namespace massage.Models
 
         [Required]
         [MinLength(2)]
-        [MaxLength(255, ErrorMessage="Name may not be more than 255 characters long")]
-        [Display(Name = "Full Name")]
-        public string FullName { get; set; }
+        [MaxLength(255, ErrorMessage="First Name may not be more than 255 characters long")]
+        [Display(Name = "First Name")]
+        public string FirstName { get; set; }
+
+        [Required]
+        [MinLength(2)]
+        [MaxLength(255, ErrorMessage="Last Name may not be more than 255 characters long")]
+        [Display(Name = "Last Name")]
+        public string LastName { get; set; }
 
         [Required]
         [MinLength(2, ErrorMessage="Username must be at least 2 characters long")]

@@ -7,7 +7,7 @@ namespace massage.Models
     public class Reservation
     {
         [Key]
-        public long ReservationId { get; set; }
+        public int ReservationId { get; set; }
 
         [Required]
         public int CustomerId { get; set; }
@@ -29,7 +29,7 @@ namespace massage.Models
         public Room Room { get; set; }
 
         [Required]
-        public int TimeslotID { get; set; }
+        public int TimeslotId { get; set; }
         public Timeslot Timeslot { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;

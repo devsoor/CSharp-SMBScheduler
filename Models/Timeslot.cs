@@ -7,7 +7,7 @@ namespace massage.Models
     public class Timeslot
     {
         [Key]
-        public long TimeslotId { get; set; }
+        public int TimeslotId { get; set; }
 
         [Range(6,20)]
         public int Hour { get; set; }
