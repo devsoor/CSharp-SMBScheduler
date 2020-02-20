@@ -39,6 +39,16 @@ namespace massage.Models
         public List<PSchedule> PSchedules { get; set; }
 
         public List<PAvailTime> AvailTimes { get; set; }
+
+        [InverseProperty("Creator")]
+        public List<Reservation> CreatedReservations { get; set; }
+
+        [InverseProperty("Practitioner")]
+        public List<Reservation> Appointments { get; set; }
+
+        public List<PService> Services { get; set; }
+
+        public List<PInsurance> InsurancesAccepted { get; set; }
         
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 

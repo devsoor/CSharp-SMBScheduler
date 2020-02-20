@@ -4,24 +4,16 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Collections.Generic;
 namespace massage.Models
 {
-    public class Timeslot
+    public class Room
     {
         [Key]
-        public long TimeslotId { get; set; }
-
-        [Range(6,20)]
-        public int Hour { get; set; }
-
-        [DataType(DataType.Date)]
-        public DateTime Date { get; set; }
+        public int RoomId { get; set; }
 
         public List<Reservation> Reservations { get; set; }
 
-        public List<PAvailTime> PsAvail { get; set; } // Practitioners available
+        public List<RoomService> Services { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public DateTime UpdatedAt { get; set; } = DateTime.Now;
-
-
     }
 }

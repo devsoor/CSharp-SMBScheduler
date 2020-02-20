@@ -38,6 +38,11 @@ namespace massage.Models
 
         public string Notes { get; set; }
 
+        public List<Reservation> Reservations { get; set; }
+
+        public int InsuranceId { get; set; }
+        public Insurance Insurance { get; set; }
+
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public DateTime UpdatedAt { get; set; } = DateTime.Now;   
     }
