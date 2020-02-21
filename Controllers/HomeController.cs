@@ -96,7 +96,7 @@ namespace massage.Controllers
         {
             if (ModelState.IsValid)
             {
-                dbContext.Add(Reservation);
+                dbContext.Add(r);
                 dbContext.SaveChanges();
             }
             return RedirectToAction("Index");
@@ -121,10 +121,27 @@ namespace massage.Controllers
                     newTS.Hour = h;
                     dbContext.Add(newTS);
                     // generate new PAvailTimes to connect practitioners to each timeslot if their PSchedule lists them as available at this time/day
-                    
+                    foreach (User p in allPs)
+                    {
+                        foreach (PSchedule ps in p.PSchedules)
+                        {
+                            if (ps.DayOfWeek == newTS.Date.DayOfWeek.ToString())
+                            {
+                                // objName.GetType().GetProperty("propName").GetValue(objName); // this is code format for getting a property using a string for the property name
+                                bool isPAvailNow = (bool)ps.GetType().GetProperty("t" + h).GetValue(ps); // adds the letter t to the integer of the timeslot's hour and gets that property value from the practitioner schedule to see if they are available
+                                if (isPAvailNow)
+                                {
+                                    PAvailTime pat = new PAvailTime();
+                                    pat.PractitionerId = ps.PractitionerId;
+                                    pat.TimeslotId = newTS.TimeslotId;
+                                    dbContext.Add(pat);
+                                }
+                            }
+                        }
+                    }
                 }
             }
-        
+            dbContext.SaveChanges();        
         }
 
 
