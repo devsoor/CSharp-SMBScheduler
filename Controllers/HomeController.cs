@@ -105,7 +105,26 @@ namespace massage.Controllers
         // Generate New Entries
         public void GenerateTimeslots()
         {
-            return;
+            int daysAhead = 14; // this is the number of days in advance the system should keep timeslots built for
+            List<Timeslot> existingTS = dbContext.Timeslots.OrderByDescending(t => t.Date).ToList(); // all existing timeslots with the furthest in the future ordered first
+            int daysToBuild = (daysAhead - (int)(existingTS[0].Date - DateTime.Now).TotalDays); // difference between days we want to stay ahead and days the last existing timeslot is ahead of Now
+            List<User> allPs = dbContext.Users.Include(u => u.PSchedules).Where(u => u.Role == 1).ToList(); // all practitioners (user role 1) including their schedules
+            int minHour = 6;
+            int maxHour = 18;
+            for (int d=1; d<daysToBuild; d++)
+            {
+                for (int h=minHour; h<=maxHour; h++)
+                {
+                    // generate new timeslot for each hour of each day we are adding
+                    Timeslot newTS = new Timeslot();
+                    newTS.Date = existingTS[0].Date.AddDays(d);
+                    newTS.Hour = h;
+                    dbContext.Add(newTS);
+                    // generate new PAvailTimes to connect practitioners to each timeslot if their PSchedule lists them as available at this time/day
+                    
+                }
+            }
+        
         }
 
 
