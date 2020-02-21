@@ -9,6 +9,8 @@ namespace massage.Models
         [Key]
         public int InsuranceId { get; set; }
 
+        [Required]
+        [MinLength(2)]
         public string Name { get; set; }
 
         public List<PInsurance> Practitioners { get; set; }
