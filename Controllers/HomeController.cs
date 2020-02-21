@@ -163,6 +163,23 @@ namespace massage.Controllers
 
 
 
+        [HttpGet("Dashboard")]
+        public IActionResult Dashboard()
+        {
+            return PartialView();
+        }
+
+        [HttpGet("/calendar")]
+        public IActionResult calendar()
+        {
+            return PartialView("Calendar");
+        }
+
+        [HttpGet("/userProfile")]
+        public IActionResult userProfile()
+        {
+            return PartialView("UserProfile");
+        }
 
 
 

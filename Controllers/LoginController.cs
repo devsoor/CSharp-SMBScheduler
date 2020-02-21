@@ -43,7 +43,7 @@ namespace massage.Controllers
                     dbContext.SaveChanges();
                     User thisUser = dbContext.Users.FirstOrDefault(u => u.Username == newUser.Username);
                     HttpContext.Session.SetInt32("UserId", thisUser.UserId);
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Dashboard", "Home");
                 }
             }
             else { // failed validations
@@ -66,7 +66,7 @@ namespace massage.Controllers
                 }
                 else { // success
                     HttpContext.Session.SetInt32("UserId", userInDb.UserId);
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Dashboard", "Home");
                 }
             }
             else { // failed validations
