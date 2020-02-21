@@ -102,21 +102,36 @@ namespace massage.Controllers
             return RedirectToAction("Index");
         }
 
+        // Check if Generation is needed
+        public void CheckTimeslots()
+        {
+            int daysAhead = 14; // this is the number of days in advance the system should keep timeslots built for
+            Timeslot lastTS = dbContext.Timeslots.OrderByDescending(t => t.Date).FirstOrDefault();
+            if (lastTS == null)
+            {
+                GenerateTimeslots(daysAhead, lastTS);
+                return;
+            }
+            else
+            {
+                int daysToBuild = daysAhead - (int)(lastTS.Date - DateTime.Today).TotalDays; // difference between days we want to stay ahead and days the last existing timeslot is ahead of Now
+                if (daysToBuild == 0)
+                {
+                    return;
+                }
+                else
+                {
+                    GenerateTimeslots(daysToBuild, lastTS);
+                    return;
+                }
+            }
+        }
+
         // Generate New Entries
-        public void GenerateTimeslots()
+        public void GenerateTimeslots(int daysToBuild, Timeslot lastTS)
         {
             System.Console.WriteLine($"Beginning Timeslot Generation at {DateTime.Now}");
             DateTime startTime = DateTime.Now;
-            int daysAhead = 14; // this is the number of days in advance the system should keep timeslots built for
-            List<Timeslot> existingTS = dbContext.Timeslots.OrderByDescending(t => t.Date).ToList(); // all existing timeslots with the furthest in the future ordered first
-            int daysToBuild;
-            if (existingTS.Count == 0) // no timeslots yet
-            {
-                daysToBuild = daysAhead;
-            }
-            else {
-                daysToBuild = (daysAhead - (int)(existingTS[0].Date - DateTime.Today).TotalDays); // difference between days we want to stay ahead and days the last existing timeslot is ahead of Now
-            }
             List<User> allPs = dbContext.Users.Include(u => u.PSchedules).Where(u => u.Role == 1).ToList(); // all practitioners (user role 1) including their schedules
             int minHour = 6;
             int maxHour = 18;
@@ -126,12 +141,12 @@ namespace massage.Controllers
                 {
                     // generate new timeslot for each hour of each day we are adding
                     Timeslot newTS = new Timeslot();
-                    if (existingTS.Count == 0)
+                    if (lastTS == null)
                     {
                         newTS.Date = DateTime.Today.AddDays(d);
                     }
                     else {
-                        newTS.Date = existingTS[0].Date.AddDays(d);
+                        newTS.Date = lastTS.Date.AddDays(d);
                     }
                     newTS.Hour = h;
                     dbContext.Add(newTS);
@@ -212,7 +227,7 @@ namespace massage.Controllers
                 dbContext.Add(newPS5);
                 dbContext.SaveChanges();
             }
-            GenerateTimeslots();
+            CheckTimeslots();
             List<Timeslot> allTimeslots = dbContext.Timeslots.Include(t => t.PsAvail).ThenInclude(pa => pa.Practitioner).OrderBy(t => t.Date).ThenBy(t => t.Hour).ToList();
             return View(allTimeslots);
         }
