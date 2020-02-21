@@ -14,7 +14,6 @@ namespace massage.Models
             List<Timeslot> FinalFilter = new List<Timeslot>();
             List<Room> PossibleRooms = db.Rooms.Include(r => r.Services).Where(r => r.Services.Any(s => s.ServiceId == SId)).ToList(); // filter rooms by services possible in rooms
             List<User> filtPs = db.Users.Include(u => u.Services).Include(u => u.PSchedules).Where(u => u.Services.Any(s => s.ServiceId == SId)).ToList(); // filter practitioners by services they can perform
-            List<Timeslot> AllTimeslots = db.Timeslots.ToList();
             // filter timeslots by practitioners schedules available
             bool isPAvail;
             foreach (Timeslot ts in currentList)
@@ -51,6 +50,71 @@ namespace massage.Models
                 }
             }
             return FinalFilter;
+        }
+
+        public static List<Timeslot> ByPractitioner(int PId, List<Timeslot> currentList, ProjectContext db)
+        {
+            List<Timeslot> FilteredList = new List<Timeslot>();
+            foreach (Timeslot ts in currentList)
+            {
+                foreach (PAvailTime pat in ts.PsAvail)
+                {
+                    if (pat.PractitionerId == PId)
+                    {
+                        FilteredList.Add(ts);
+                    }
+                }
+            }
+            return FilteredList;
+        }
+        public static List<Timeslot> ByTime(int Hour, List<Timeslot> currentList, ProjectContext db)
+        {
+            List<Timeslot> FilteredList = new List<Timeslot>();
+            foreach (Timeslot ts in currentList)
+            {
+                if (ts.Hour == Hour)
+                {
+                    FilteredList.Add(ts);
+                }
+            }
+            return FilteredList;
+        }
+        public static List<Timeslot> ByDate(DateTime date, List<Timeslot> currentList, ProjectContext db)
+        {
+            List<Timeslot> FilteredList = new List<Timeslot>();
+            foreach (Timeslot ts in currentList)
+            {
+                if (ts.Date == date)
+                {
+                    FilteredList.Add(ts);
+                }
+            }
+            return FilteredList;
+        }
+
+        public static List<Timeslot> ByCustomer(int CId, List<Timeslot> currentList, ProjectContext db) // filter based on the customer's insurance
+        {
+            List<Timeslot> FilteredList = new List<Timeslot>();
+            Customer thisCustomer = db.Customers.Include(c => c.Insurance).FirstOrDefault(c => c.CustomerId == CId);
+            List<User> filtPs = db.Users.Include(u => u.InsurancesAccepted).ThenInclude(i => i.Insurance)
+                .Where(p => p.InsurancesAccepted.Any(ia => ia.InsuranceId == thisCustomer.InsuranceId)).ToList(); // get all practitioners who accept the customer's insurance
+            bool isPAvail;
+            foreach (Timeslot ts in currentList)
+            {
+                isPAvail = false;
+                foreach (PAvailTime pat in ts.PsAvail)
+                {
+                    if (filtPs.IndexOf(pat.Practitioner) != -1)
+                    {
+                        isPAvail = true;
+                    }
+                }
+                if (isPAvail == true)
+                {
+                    FilteredList.Add(ts);
+                }
+            }
+            return FilteredList;
         }
     }
 }
