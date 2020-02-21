@@ -105,9 +105,18 @@ namespace massage.Controllers
         // Generate New Entries
         public void GenerateTimeslots()
         {
+            System.Console.WriteLine($"Beginning Timeslot Generation at {DateTime.Now}");
+            DateTime startTime = DateTime.Now;
             int daysAhead = 14; // this is the number of days in advance the system should keep timeslots built for
             List<Timeslot> existingTS = dbContext.Timeslots.OrderByDescending(t => t.Date).ToList(); // all existing timeslots with the furthest in the future ordered first
-            int daysToBuild = (daysAhead - (int)(existingTS[0].Date - DateTime.Now).TotalDays); // difference between days we want to stay ahead and days the last existing timeslot is ahead of Now
+            int daysToBuild;
+            if (existingTS.Count == 0) // no timeslots yet
+            {
+                daysToBuild = daysAhead;
+            }
+            else {
+                daysToBuild = (daysAhead - (int)(existingTS[0].Date - DateTime.Today).TotalDays); // difference between days we want to stay ahead and days the last existing timeslot is ahead of Now
+            }
             List<User> allPs = dbContext.Users.Include(u => u.PSchedules).Where(u => u.Role == 1).ToList(); // all practitioners (user role 1) including their schedules
             int minHour = 6;
             int maxHour = 18;
@@ -117,7 +126,13 @@ namespace massage.Controllers
                 {
                     // generate new timeslot for each hour of each day we are adding
                     Timeslot newTS = new Timeslot();
-                    newTS.Date = existingTS[0].Date.AddDays(d);
+                    if (existingTS.Count == 0)
+                    {
+                        newTS.Date = DateTime.Today.AddDays(d);
+                    }
+                    else {
+                        newTS.Date = existingTS[0].Date.AddDays(d);
+                    }
                     newTS.Hour = h;
                     dbContext.Add(newTS);
                     // generate new PAvailTimes to connect practitioners to each timeslot if their PSchedule lists them as available at this time/day
@@ -142,6 +157,8 @@ namespace massage.Controllers
                 }
             }
             dbContext.SaveChanges();        
+            System.Console.WriteLine($"Timeslot Generation completed at {DateTime.Now}");
+            System.Console.WriteLine($"Time taken: {(DateTime.Now - startTime).TotalSeconds} seconds");
         }
 
 
@@ -149,10 +166,38 @@ namespace massage.Controllers
 
 
 
-
+        [HttpGet("Index")]
         public IActionResult Index()
         {
-            return View();
+            // debugg stuffffffff
+            User currUser = dbContext.Users.Include(u => u.PSchedules).FirstOrDefault(u => u.UserId == HttpContext.Session.GetInt32("UserId"));
+            if (currUser.PSchedules.Count == 0)
+            {
+                PSchedule newPS = new PSchedule();
+                newPS.PractitionerId = currUser.UserId;
+                newPS.DayOfWeek = "Monday";
+                dbContext.Add(newPS);
+                PSchedule newPS2 = new PSchedule();
+                newPS2.PractitionerId = currUser.UserId;
+                newPS2.DayOfWeek = "Tuesday";
+                dbContext.Add(newPS2);
+                PSchedule newPS3 = new PSchedule();
+                newPS3.PractitionerId = currUser.UserId;
+                newPS3.DayOfWeek = "Wednesday";
+                dbContext.Add(newPS3);
+                PSchedule newPS4 = new PSchedule();
+                newPS4.PractitionerId = currUser.UserId;
+                newPS4.DayOfWeek = "Thursday";
+                dbContext.Add(newPS4);
+                PSchedule newPS5 = new PSchedule();
+                newPS5.PractitionerId = currUser.UserId;
+                newPS5.DayOfWeek = "Friday";
+                dbContext.Add(newPS5);
+                dbContext.SaveChanges();
+            }
+            GenerateTimeslots();
+            List<Timeslot> allTimeslots = dbContext.Timeslots.Include(t => t.PsAvail).ThenInclude(pa => pa.Practitioner).OrderBy(t => t.Date).ThenBy(t => t.Hour).ToList();
+            return View(allTimeslots);
         }
 
         public IActionResult Privacy()
