@@ -31,6 +31,8 @@ namespace massage.Models
         public bool t17 { get; set; } = true; // 5pm
         public bool t18 { get; set; } = false; // 6pm
 
+        public bool Approved { get; set; } = false; // Whether schedule has been approved by an Admin
+
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         public DateTime UpdatedAt { get; set; } = DateTime.Now;
