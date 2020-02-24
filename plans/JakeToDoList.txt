@@ -30,10 +30,11 @@ Models
                 (done)-Edit a practitioner's services by list of PServices
                 (done)-Create new PService association
                 (done)-Delete PService association
-        -One Practitioner's PInsurances
-            -One PInsurance association
-                -Create
-                -Delete
+        (done)-One Practitioner's PInsurances
+            (done)-One PInsurance association
+                (done)-Edit a practitioner's insurances accepted by a list of PInsurances
+                (done)-Create
+                (done)-Delete
         -One Practitioner's PSchedules (should be 7)
             -Create new set of 7 if none found
             -Edit all 7 PSchedules

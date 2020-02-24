@@ -302,6 +302,58 @@ namespace massage.Models
                 .Include(ps => ps.Service)
                 .ToList();
         }
+        // Practitioner Insurance Queries
+        public static List<PInsurance> OnePsInsurances(int pID, ProjectContext db)
+        {
+            return db.PInsurances
+                .Include(pi => pi.Insurance)
+                .Include(pi => pi.Practitioner)
+                .Where(pi => pi.PractitionerId == pID)
+                .ToList();
+        }
+        public static PInsurance OnePInsurance(int piID, ProjectContext db)
+        {
+            return db.PInsurances
+                .Include(pi => pi.Insurance)
+                .Include(pi => pi.Practitioner)
+                .FirstOrDefault(pi => pi.PInsuranceId == piID);
+        }
+        public static PInsurance CreatePInsurance(PInsurance newPI, ProjectContext db)
+        {
+            db.Add(newPI);
+            db.SaveChanges();
+            return newPI;
+        }
+        public static void DeletePInsurance(int piID, ProjectContext db)
+        {
+            PInsurance piToDel = db.PInsurances.FirstOrDefault(pi => pi.PInsuranceId == piID);
+            db.Remove(piToDel);
+            db.SaveChanges();
+            return;
+        }
+        public static List<PInsurance> UpdateAllOfOnePsInsurances(int pID, List<PInsurance> updatedPIs, ProjectContext db)
+        {
+            List<PInsurance> oldPInsurances = db.PInsurances.Where(pi => pi.PractitionerId == pID).ToList();
+            foreach (PInsurance oldPI in oldPInsurances)
+            {
+                PInsurance piToDel = db.PInsurances.FirstOrDefault(pi => pi.PInsuranceId == oldPI.PInsuranceId);
+                db.Remove(piToDel);
+            }
+            db.SaveChanges();
+            foreach (PInsurance updatedPI in updatedPIs)
+            {
+                PInsurance newPI = new PInsurance();
+                newPI.PractitionerId = updatedPI.PractitionerId;
+                newPI.InsuranceId = updatedPI.InsuranceId;
+                db.Add(newPI);
+            }
+            db.SaveChanges();
+            return db.PInsurances
+                .Include(pi => pi.Insurance)
+                .Include(pi => pi.Practitioner)
+                .Where(pi => pi.PractitionerId == pID)
+                .ToList();
+        }
 
     }
 }
