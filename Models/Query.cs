@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using Microsoft.AspNetCore.Identity;
 namespace massage.Models
 {
     public static class Query
@@ -112,5 +113,85 @@ namespace massage.Models
             return;
         }
         // User Queries
+        public static List<User> AllUsers(ProjectContext db)
+        {
+            return db.Users
+                .Include(u => u.PSchedules)
+                .Include(u => u.AvailTimes)
+                .ThenInclude(pat => pat.TimeSlot)
+                .Include(u => u.CreatedReservations)
+                .Include(u => u.Appointments)
+                .Include(u => u.Services)
+                .Include(u => u.InsurancesAccepted)
+                .ToList();
+        }
+        public static List<User> AllPractitioners(ProjectContext db)
+        {
+            return db.Users
+                .Include(u => u.PSchedules)
+                .Include(u => u.AvailTimes)
+                .ThenInclude(pat => pat.TimeSlot)
+                .Include(u => u.Appointments)
+                .Include(u => u.Services)
+                .Include(u => u.InsurancesAccepted)
+                .Where(u => u.Role == 1)
+                .ToList();
+        }
+        public static List<User> AllReceptionists(ProjectContext db)
+        {
+            return db.Users
+                .Include(u => u.CreatedReservations)
+                .Where(u => u.Role == 2)
+                .ToList();
+        }
+        public static User OnePractitioner(int pID, ProjectContext db)
+        {
+            return db.Users
+                .Include(u => u.PSchedules)
+                .Include(u => u.AvailTimes)
+                .ThenInclude(pat => pat.TimeSlot)
+                .Include(u => u.Appointments)
+                .Include(u => u.Services)
+                .Include(u => u.InsurancesAccepted)
+                .Where(u => u.Role == 1)
+                .FirstOrDefault(u => u.UserId == pID);
+        }
+        public static User OneReceptionist(int rID, ProjectContext db)
+        {
+            return db.Users
+                .Include(u => u.CreatedReservations)
+                .Where(u => u.Role == 2)
+                .FirstOrDefault(u => u.UserId == rID);
+        }
+        public static User EditUser(User editedUser, ProjectContext db)
+        {
+            User userToEdit = db.Users.FirstOrDefault(u => u.UserId == editedUser.UserId);
+            userToEdit.FirstName = editedUser.FirstName;
+            userToEdit.LastName = editedUser.LastName;
+            if (editedUser.Password.Length > 7) {
+                PasswordHasher<User> Hasher = new PasswordHasher<User>();
+                userToEdit.Password = Hasher.HashPassword(editedUser, editedUser.Password);
+            }
+            userToEdit.Role = editedUser.Role;
+            userToEdit.UpdatedAt = DateTime.Now;
+            userToEdit.Username = editedUser.Username;
+            db.SaveChanges();
+            return db.Users
+                .Include(u => u.PSchedules)
+                .Include(u => u.AvailTimes)
+                .ThenInclude(pat => pat.TimeSlot)
+                .Include(u => u.CreatedReservations)
+                .Include(u => u.Appointments)
+                .Include(u => u.Services)
+                .Include(u => u.InsurancesAccepted)
+                .FirstOrDefault(u => u.UserId == userToEdit.UserId);
+        }
+        public static void DeleteUser(int userID, ProjectContext db)
+        {
+            User userToDel = db.Users.FirstOrDefault(u => u.UserId == userID);
+            db.Remove(userToDel);
+            db.SaveChanges();
+            return;
+        }
     }
 }

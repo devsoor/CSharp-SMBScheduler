@@ -28,7 +28,7 @@ namespace massage.Models
         public bool t14 { get; set; } = true; // 2pm
         public bool t15 { get; set; } = true; // 3pm
         public bool t16 { get; set; } = true; // 4pm
-        public bool t17 { get; set; } = false; // 5pm
+        public bool t17 { get; set; } = true; // 5pm
         public bool t18 { get; set; } = false; // 6pm
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;

@@ -14,12 +14,12 @@ Models
             (done)-Edit Insurance
             (done)-Create Insurance
             (done)-Delete Insurance
-        -All Users
-            -All Practitioners
-            -All Receptionists
-            -One User
-                -Edit User
-                -Delete User
+        (done)-All Users
+            (done)-All Practitioners
+            (done)-All Receptionists
+            (done)-One User
+                (done)-Edit User
+                (done)-Delete User
         -All Practitioner Availabilities (PAvailTime)
         -One Practitioner's Availibity
             -Edit A Practitioner's Availibity
