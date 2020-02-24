@@ -1,10 +1,10 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
-@model List<massage.Models.Timeslot>
+@model massage.Models.ViewModel
 
 @{
-    foreach (Timeslot t in Model)
+    foreach (Timeslot t in Model.AllTimeslots)
     {
         <p>Timeslot date: @t.Date (@t.Date.DayOfWeek)</p>
         <p>Timeslot time: @t.Hour</p>

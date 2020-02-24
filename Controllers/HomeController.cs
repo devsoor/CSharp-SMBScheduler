@@ -20,7 +20,23 @@ namespace massage.Controllers
             dbContext = context;
         }
 
-
+        // all reservations
+        [HttpGet("allreservations")]
+        public IActionResult GetAllReservations()
+        {
+            List<Reservation> allRs = dbContext.Reservations
+                .Include(r => r.Customer)
+                .Include(r => r.Practitioner)
+                .Include(r => r.Creator)
+                .Include(r => r.Service)
+                .Include(r => r.Room)
+                .Include(r => r.Timeslot)
+                .ToList();
+            ViewModel vm = new ViewModel();
+            vm.AllReservations = allRs;
+            return View("AllReservations", vm);
+            
+        }
 
 
 
@@ -181,7 +197,15 @@ namespace massage.Controllers
         [HttpGet("Dashboard")]
         public IActionResult Dashboard()
         {
-            return PartialView();
+            ViewModel vm = new ViewModel();
+            vm.CurrentUser = dbContext.Users.FirstOrDefault(u => u.UserId == HttpContext.Session.GetInt32("UserId"));
+            vm.AllUsers = dbContext.Users.ToList();
+            vm.AllCustomers = dbContext.Customers.ToList();
+            vm.AllInsurances = dbContext.Insurances.ToList();
+            vm.AllReservations = dbContext.Reservations.ToList();
+            vm.AllServices = dbContext.Services.ToList();
+            vm.AllTimeslots = dbContext.Timeslots.ToList();
+            return PartialView(vm);
         }
 
         [HttpGet("/calendar")]
@@ -193,7 +217,9 @@ namespace massage.Controllers
         [HttpGet("/userProfile")]
         public IActionResult userProfile()
         {
-            return PartialView("UserProfile");
+            ViewModel vm = new ViewModel();
+            vm.CurrentUser = dbContext.Users.Include(u => u.PSchedules).Include(u => u.AvailTimes).Include(u => u.Appointments).FirstOrDefault(u => u.UserId == HttpContext.Session.GetInt32("UserId"));
+            return PartialView("UserProfile", vm);
         }
 
 
@@ -227,9 +253,14 @@ namespace massage.Controllers
                 dbContext.Add(newPS5);
                 dbContext.SaveChanges();
             }
+            
             CheckTimeslots();
+            List<Customer> allCs = Query.AllCustomers(dbContext);
             List<Timeslot> allTimeslots = dbContext.Timeslots.Include(t => t.PsAvail).ThenInclude(pa => pa.Practitioner).OrderBy(t => t.Date).ThenBy(t => t.Hour).ToList();
-            return View(allTimeslots);
+            ViewModel vm = new ViewModel();
+            vm.AllCustomers = allCs;
+            vm.AllTimeslots = allTimeslots;
+            return View(vm);
         }
 
         public IActionResult Privacy()

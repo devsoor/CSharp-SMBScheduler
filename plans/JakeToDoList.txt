@@ -1,0 +1,54 @@
+Models
+
+-Restructure Reservation model to include notes and not have required fields
+-Restructure ViewModel to allow for creation/edit Models
+-Create Query static model to allow for common queries to be made from any controller without rewriting code
+    -Queries:
+        -All Customers
+        -One Customer
+            -Create Customer
+            -Edit Customer
+            -Delete Customer
+        -All Insurances
+        -One Insurance
+            -Edit Insurance
+            -Create Insurance
+            -Delete Insurance
+        -All Users
+            -All Practitioners
+            -All Receptionists
+            -One User
+                -Edit User
+                -Delete User
+        -All Practitioner Availabilities (PAvailTime)
+        -One Practitioner's Availibity
+            -Edit A Practitioner's Availibity
+            -Create new PAT with associations
+            -Delete PAT
+        -One Practitioner's PServices
+            -One PService association
+                -Create new PService association
+                -Delete PService association
+        -One Practitioner's PInsurances
+            -One PInsurance association
+                -Create
+                -Delete
+        -One Practitioner's PSchedules (should be 7)
+            -Create new set of 7 if none found
+            -Edit all 7 PSchedules
+        -All Reservations
+        -One Reservation
+            -Create
+            -Edit
+            -Delete
+        -All Services
+        -One Service
+            -Create
+            -Edit
+            -Delete
+        -All Timeslots
+        -One Timeslot
+            -Create
+            -Edit
+            -Delete
+        
