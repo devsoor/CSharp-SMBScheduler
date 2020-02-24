@@ -20,15 +20,16 @@ Models
             (done)-One User
                 (done)-Edit User
                 (done)-Delete User
-        -All Practitioner Availabilities (PAvailTime)
-        -One Practitioner's Availibity
-            -Edit A Practitioner's Availibity
-            -Create new PAT with associations
-            -Delete PAT
-        -One Practitioner's PServices
-            -One PService association
-                -Create new PService association
-                -Delete PService association
+        (done)-All Practitioner Availabilities (PAvailTime)
+        (done)-One Practitioner's Availibity
+            (done)-Edit A Practitioner's Availibity by list of PATs
+            (done)-Create new PAT with associations
+            (done)-Delete PAT
+        (done)-One Practitioner's PServices
+            (done)-One PService association
+                (done)-Edit a practitioner's services by list of PServices
+                (done)-Create new PService association
+                (done)-Delete PService association
         -One Practitioner's PInsurances
             -One PInsurance association
                 -Create
@@ -51,4 +52,7 @@ Models
             -Create
             -Edit
             -Delete
+
+
+        -List of something based on what PSchedules have not been approved and need admin attention
         

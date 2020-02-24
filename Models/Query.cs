@@ -193,5 +193,115 @@ namespace massage.Models
             db.SaveChanges();
             return;
         }
+        // Practitioner Availability
+        public static List<PAvailTime> AllPractitionerAvailabilities(ProjectContext db)
+        {
+            return db.PAvailTimes
+                .Include(pat => pat.Practitioner)
+                .Include(pat => pat.Timeslot)
+                .ToList();
+        }
+        public static List<PAvailTime> OnePractitionersAvailabilities(int pID, ProjectContext db)
+        {
+            return db.PAvailTimes
+                .Include(pat => pat.Practitioner)
+                .Include(pat => pat.TimeSlot)
+                .Where(pat => pat.PractitionerId == pID)
+                .ToList();
+        }
+        public static PAvailTime CreatePractitionerAvailability(int pID, int tsID, ProjectContext db)
+        {
+            PAvailTime newPAT = new PAvailTime();
+            newPAT.PractitionerId = pID;
+            newPAT.TimeslotId = tsID;
+            db.Add(newPAT);
+            db.SaveChanges();
+            return db.PAvailTimes
+                .Include(pat => pat.Practitioner)
+                .Include(pat => pat.TimeSlot)
+                .Where(pat => pat.PractitionerId == pID)
+                .FirstOrDefault(pat => pat.TimeslotId == tsID);
+        }
+        public static void DeletePractitionerAvailability(int patID, ProjectContext db)
+        {
+            PAvailTime patToDel = db.PAvailTimes.FirstOrDefault(pat => pat.PAvailTimeId == patID);
+            db.Remove(patToDel);
+            db.SaveChanges();
+            return;
+        }
+        public static List<PAvailTime> UpdateAllOfOnePsAvails(int pID, List<PAvailTime> updatedPATs, ProjectContext db)
+        {
+            List<PAvailTime> oldPats = db.PAvailTimes.Where(pat => pat.PractitionerId == pID).ToList();
+            foreach (PAvailTime oldPat in oldPats)
+            {
+                PAvailTime patToDel = db.PAvailTimes.FirstOrDefault(pat => pat.PAvailTimeId == oldPat.PAvailTimeId);
+                db.Remove(patToDel);
+            }
+            db.SaveChanges();
+            foreach (PAvailTime updatedPat in updatedPATs)
+            {
+                PAvailTime newPAT = new PAvailTime();
+                newPAT.PractitionerId = updatedPat.PractitionerId;
+                newPAT.TimeslotId = updatedPat.TimeslotId;
+                db.Add(newPAT);
+            }
+            db.SaveChanges();
+            return db.PAvailTimes
+                .Include(pat => pat.Practitioner)
+                .Include(pat => pat.TimeSlot)
+                .Where(pat => pat.PractitionerId == pID)
+                .ToList();
+        }
+        // Practitioner's Services Queries
+        public static List<PService> OnePsServices(int pID, ProjectContext db)
+        {
+            return db.PServices
+                .Include(ps => ps.Practitioner)
+                .Include(ps => ps.Service)
+                .ToList();
+        }
+        public static PService OnePService(int psID, ProjectContext db)
+        {
+            return db.PServices
+                .Include(ps => ps.Practitioner)
+                .Include(ps => ps.Service)
+                .FirstOrDefault(ps => ps.PServiceId == psID);
+        }
+        public static PService CreatePService(PService newPS, ProjectContext db)
+        {
+            db.Add(newPS);
+            db.SaveChanges();
+            return newPS;
+        }
+        public static void DeletePService(int psID, ProjectContext db)
+        {
+            PService psToDel = db.PServices.FirstOrDefault(ps => ps.PServiceId == psID);
+            db.Remove(psToDel);
+            db.SaveChanges();
+            return;
+        }
+        public static List<PService> UpdateAllOfOnePsServices(int pID, List<PService> updatedPServices, ProjectContext db)
+        {
+            List<PService> oldPServices = db.PServices.Where(ps => ps.PractitionerId == pID).ToList();
+            foreach (PService oldPS in oldPServices)
+            {
+                PService psToDel = db.PServices.FirstOrDefault(ps => ps.PServiceId == oldPS.PServiceId);
+                db.Remove(psToDel);
+            }
+            db.SaveChanges();
+            foreach (PService updatedPS in updatedPServices)
+            {
+                PService newPS = new PService();
+                newPS.PractitionerId = updatedPS.PractitionerId;
+                newPS.ServiceId = updatedPS.ServiceId;
+                db.Add(newPS);
+            }
+            db.SaveChanges();
+            return db.PServices
+                .Include(ps => ps.Practitioner)
+                .Include(ps => ps.Service)
+                .ToList();
+        }
+
     }
 }
