@@ -4,16 +4,16 @@ Models
 -Restructure ViewModel to allow for creation/edit Models
 -Create Query static model to allow for common queries to be made from any controller without rewriting code
     -Queries:
-        -All Customers
-        -One Customer
-            -Create Customer
-            -Edit Customer
-            -Delete Customer
-        -All Insurances
-        -One Insurance
-            -Edit Insurance
-            -Create Insurance
-            -Delete Insurance
+        (done)-All Customers
+        (done)-One Customer
+            (done)-Create Customer
+            (done)-Edit Customer
+            (done)-Delete Customer
+        (done)-All Insurances
+        (done)-One Insurance
+            (done)-Edit Insurance
+            (done)-Create Insurance
+            (done)-Delete Insurance
         -All Users
             -All Practitioners
             -All Receptionists
