@@ -174,7 +174,7 @@ namespace massage.Models
             }
             userToEdit.Role = editedUser.Role;
             userToEdit.UpdatedAt = DateTime.Now;
-            userToEdit.Username = editedUser.Username;
+            userToEdit.UserName = editedUser.UserName;
             db.SaveChanges();
             return db.Users
                 .Include(u => u.PSchedules)
@@ -544,6 +544,66 @@ namespace massage.Models
             sToUpdate.UpdatedAt = DateTime.Now;
             db.SaveChanges();
             return sToUpdate;
+        }
+        public static List<Timeslot> AllTimeslots(ProjectContext db)
+        {
+            return db.Timeslots
+                .Include(t => t.PsAvail)
+                .ThenInclude(pat => pat.Practitioner)
+                .Include(t => t.Reservations)
+                .Include(t => t.Reservations.Select(r => r.Practitioner))
+                .Include(t => t.Reservations.Select(r => r.Customer))
+                .Include(t => t.Reservations.Select(r => r.Creator))
+                .Include(t => t.Reservations.Select(r => r.Room))
+                .Include(t => t.Reservations.Select(r => r.Service))
+                .OrderBy(t => t.Date)
+                .ThenBy(t => t.Hour)                
+                .ToList();
+        }
+        public static List<Timeslot> AllFutureTimeslots(ProjectContext db)
+        {
+            return db.Timeslots
+                .Include(t => t.PsAvail)
+                .ThenInclude(pat => pat.Practitioner)
+                .Include(t => t.Reservations)
+                .Include(t => t.Reservations.Select(r => r.Practitioner))
+                .Include(t => t.Reservations.Select(r => r.Customer))
+                .Include(t => t.Reservations.Select(r => r.Creator))
+                .Include(t => t.Reservations.Select(r => r.Room))
+                .Include(t => t.Reservations.Select(r => r.Service))
+                .Where(t => t.Date >= DateTime.Today)
+                .OrderBy(t => t.Date)
+                .ThenBy(t => t.Hour)                
+                .ToList();
+        }
+        public static List<Timeslot> AllPastTimeslots(ProjectContext db)
+        {
+            return db.Timeslots
+                .Include(t => t.PsAvail)
+                .ThenInclude(pat => pat.Practitioner)
+                .Include(t => t.Reservations)
+                .Include(t => t.Reservations.Select(r => r.Practitioner))
+                .Include(t => t.Reservations.Select(r => r.Customer))
+                .Include(t => t.Reservations.Select(r => r.Creator))
+                .Include(t => t.Reservations.Select(r => r.Room))
+                .Include(t => t.Reservations.Select(r => r.Service))
+                .Where(t => t.Date < DateTime.Today)
+                .OrderBy(t => t.Date)
+                .ThenBy(t => t.Hour)                
+                .ToList();
+        }
+        public static Timeslot OneTimeslot(int tsID, ProjectContext db)
+        {
+            return db.Timeslots
+                .Include(t => t.PsAvail)
+                .ThenInclude(pat => pat.Practitioner)
+                .Include(t => t.Reservations)
+                .Include(t => t.Reservations.Select(r => r.Practitioner))
+                .Include(t => t.Reservations.Select(r => r.Customer))
+                .Include(t => t.Reservations.Select(r => r.Creator))
+                .Include(t => t.Reservations.Select(r => r.Room))
+                .Include(t => t.Reservations.Select(r => r.Service))
+                // not done
         }
     }
 }
