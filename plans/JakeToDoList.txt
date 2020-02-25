@@ -51,11 +51,16 @@ Models
             (done)-Create
             (done)-Edit
             (done)-Delete
-        -All Timeslots
-        -One Timeslot
-            -Create
-            -Edit
-            -Delete
+        (done)-All Timeslots
+        (done)-All Past Timeslots
+        (done)-All Future Timeslots
+        (done)-Current Month's Timeslots
+        (done)-Current Week's Timeslots
+        (done)-Today's Timeslots
+        (done)-One Timeslot
+            (done)-Create
+            (done)-Edit
+            (done)-Delete
 
 
         -List of something based on what PSchedules have not been approved and need admin attention

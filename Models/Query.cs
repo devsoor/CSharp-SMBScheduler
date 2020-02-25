@@ -198,7 +198,7 @@ namespace massage.Models
         {
             return db.PAvailTimes
                 .Include(pat => pat.Practitioner)
-                .Include(pat => pat.Timeslot)
+                .Include(pat => pat.TimeSlot)
                 .ToList();
         }
         public static List<PAvailTime> OnePractitionersAvailabilities(int pID, ProjectContext db)
@@ -592,6 +592,65 @@ namespace massage.Models
                 .ThenBy(t => t.Hour)                
                 .ToList();
         }
+        public static List<Timeslot> ThisMonthsTimeslots(ProjectContext db)
+        {
+            return db.Timeslots
+                .Include(t => t.PsAvail)
+                .ThenInclude(pat => pat.Practitioner)
+                .Include(t => t.Reservations)
+                .Include(t => t.Reservations.Select(r => r.Practitioner))
+                .Include(t => t.Reservations.Select(r => r.Customer))
+                .Include(t => t.Reservations.Select(r => r.Creator))
+                .Include(t => t.Reservations.Select(r => r.Room))
+                .Include(t => t.Reservations.Select(r => r.Service))
+                .Where(t => t.Date.Month == DateTime.Now.Month)
+                .OrderBy(t => t.Date)
+                .ThenBy(t => t.Hour)                
+                .ToList();
+        }
+        public static List<Timeslot> ThisWeeksTimeslots(ProjectContext db)
+        {
+            DateTime start = DateTime.Today;
+            while (start.DayOfWeek.ToString() != "Sunday")
+            {
+                start.AddDays(-1);
+            }
+            // now we have 'start' stored as our start date for the week
+            DateTime end = DateTime.Today;
+            while (end.DayOfWeek.ToString() != "Saturday")
+            {
+                end.AddDays(1);
+            }
+            // now we have 'end' stored as our end date for the week
+            return db.Timeslots
+                .Include(t => t.PsAvail)
+                .ThenInclude(pat => pat.Practitioner)
+                .Include(t => t.Reservations)
+                .Include(t => t.Reservations.Select(r => r.Practitioner))
+                .Include(t => t.Reservations.Select(r => r.Customer))
+                .Include(t => t.Reservations.Select(r => r.Creator))
+                .Include(t => t.Reservations.Select(r => r.Room))
+                .Include(t => t.Reservations.Select(r => r.Service))
+                .Where(t => t.Date >= start && t.Date <= end)
+                .OrderBy(t => t.Date)
+                .ThenBy(t => t.Hour)                
+                .ToList();
+        }
+        public static List<Timeslot> TodaysTimeslots(ProjectContext db)
+        {
+            return db.Timeslots
+                .Include(t => t.PsAvail)
+                .ThenInclude(pat => pat.Practitioner)
+                .Include(t => t.Reservations)
+                .Include(t => t.Reservations.Select(r => r.Practitioner))
+                .Include(t => t.Reservations.Select(r => r.Customer))
+                .Include(t => t.Reservations.Select(r => r.Creator))
+                .Include(t => t.Reservations.Select(r => r.Room))
+                .Include(t => t.Reservations.Select(r => r.Service))
+                .Where(t => t.Date == DateTime.Today)
+                .OrderBy(t => t.Hour)             
+                .ToList();
+        }
         public static Timeslot OneTimeslot(int tsID, ProjectContext db)
         {
             return db.Timeslots
@@ -603,7 +662,29 @@ namespace massage.Models
                 .Include(t => t.Reservations.Select(r => r.Creator))
                 .Include(t => t.Reservations.Select(r => r.Room))
                 .Include(t => t.Reservations.Select(r => r.Service))
-                // not done
+                .FirstOrDefault(t => t.TimeslotId == tsID);
+        }
+        public static Timeslot CreateTimeslot(Timeslot newTS, ProjectContext db)
+        {
+            db.Add(newTS);
+            db.SaveChanges();
+            return newTS;
+        }
+        public static void DeleteTimeslot(int tsID, ProjectContext db)
+        {
+            Timeslot tsToDel = db.Timeslots.FirstOrDefault(t => t.TimeslotId == tsID);
+            db.Remove(tsToDel);
+            db.SaveChanges();
+            return;
+        }
+        public static Timeslot EditTimeslot(Timeslot editedTS, ProjectContext db) // Honestly we should just not use this because it could create really weird issues timeslots on the same time, etc
+        {
+            Timeslot tsToEdit = db.Timeslots.FirstOrDefault(t => t.TimeslotId == editedTS.TimeslotId);
+            tsToEdit.Date = editedTS.Date;
+            tsToEdit.Hour = editedTS.Hour;
+            tsToEdit.UpdatedAt = DateTime.Now;
+            db.SaveChanges();
+            return tsToEdit;
         }
     }
 }
