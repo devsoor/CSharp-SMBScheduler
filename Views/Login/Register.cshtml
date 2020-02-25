@@ -23,14 +23,6 @@
                             <input class="form-control" asp-for="LastName">
                             <div class="text-danger small" style="height: 5px;"><span asp-validation-for="LastName"></span></div>
                         </div>
-                        <div class="form-group">
-                            <label asp-for="Role">First Name</label>
-                            <select class="form-control" asp-for="Role">
-                                <option value="1">Practitioner</option>
-                                <option value="2">Receptionist</option>
-                            </select>
-                            <div class="text-danger small" style="height: 5px;"><span asp-validation-for="Role"></span></div>
-                        </div>
                         <div class="form-group mb-4">
                             <label asp-for="Password"></label>
                             <input class="form-control" asp-for="Password">
@@ -48,7 +40,6 @@
                             <div class="col-md-5 offset-md-0">
                                 <a href="/" class="btn btn-danger" style="width: 200px;">Cancel and Login</a>
                             </div>
-
                         </div>
                     </form>
                 </div>

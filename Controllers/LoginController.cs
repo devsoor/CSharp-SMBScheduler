@@ -40,18 +40,23 @@ namespace massage.Controllers
         }
         [HttpPost("submitregister")]
         public async Task<IActionResult> SubmitRegister(User newUser) {
-            if (ModelState.IsValid) { // pass validations
-                if (dbContext.Users.Any(u => u.UserName == newUser.UserName)) return View("Register");
-                    else { // valid, UserName not in use, go ahead and register
-                    IdentityResult result = await _userManager.CreateAsync(newUser, newUser.Password);
-                    if(result.Succeeded) {
-                        await _signInManager.SignInAsync(newUser, isPersistent: false);
-                        return RedirectToAction("Dashboard", "Home");
-                    } // CreateAsync failed
-                    foreach(var error in result.Errors) ModelState.AddModelError("Password", error.Description );
+            if (ModelState.IsValid) 
+            { // pass validations
+                if (dbContext.Users.Any(u => u.UserName == newUser.UserName)){
+                    ModelState.AddModelError("UserName", "Username already in use");
                     return View("Register");
                 }
-            } else return View("Register");
+                else { // valid, UserName not in use, go ahead and register
+                IdentityResult result = await _userManager.CreateAsync(newUser, newUser.Password);
+                if(result.Succeeded) {
+                    await _signInManager.SignInAsync(newUser, isPersistent: false);
+                    return RedirectToAction("Dashboard", "Home");
+                } // CreateAsync failed
+    
+                return View("Register");
+                }
+            } 
+            return View("Register");
         }
         [HttpPost("submitlogin")]
         public async Task<IActionResult> SubmitLogin(LoginUser loginUser) {
