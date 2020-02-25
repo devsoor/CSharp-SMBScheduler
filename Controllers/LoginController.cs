@@ -47,6 +47,8 @@ namespace massage.Controllers
                     return View("Register");
                 }
                 else { // valid, UserName not in use, go ahead and register
+                newUser.Password = " ";
+                newUser.Role = 0;
                 IdentityResult result = await _userManager.CreateAsync(newUser, newUser.Password);
                 if(result.Succeeded) {
                     await _signInManager.SignInAsync(newUser, isPersistent: false);
