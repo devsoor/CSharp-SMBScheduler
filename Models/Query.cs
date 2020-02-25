@@ -473,6 +473,59 @@ namespace massage.Models
                 .ThenBy(r => r.Timeslot.Hour)
                 .ToList();
         }
+        public static List<Reservation> AllThisMonthsReservations(ProjectContext db)
+        {
+            return db.Reservations
+                .Include(r => r.Creator)
+                .Include(r => r.Customer)
+                .Include(r => r.Practitioner)
+                .Include(r => r.Room)
+                .Include(r => r.Service)
+                .Include(r => r.Timeslot)
+                .Where(r => r.Timeslot.Date.Year == DateTime.Today.Year && r.Timeslot.Date.Month == DateTime.Today.Month)
+                .OrderBy(r => r.Timeslot.Date)
+                .ThenBy(r => r.Timeslot.Hour)
+                .ToList();
+        }
+        public static List<Reservation> AllThisWeeksReservations(ProjectContext db)
+        {
+            DateTime start = DateTime.Today;
+            while (start.DayOfWeek.ToString() != "Sunday")
+            {
+                start.AddDays(-1);
+            }
+            // now we have 'start' stored as our start date for the week
+            DateTime end = DateTime.Today;
+            while (end.DayOfWeek.ToString() != "Saturday")
+            {
+                end.AddDays(1);
+            }
+            // now we have 'end' stored as our end date for the week
+            return db.Reservations
+                .Include(r => r.Creator)
+                .Include(r => r.Customer)
+                .Include(r => r.Practitioner)
+                .Include(r => r.Room)
+                .Include(r => r.Service)
+                .Include(r => r.Timeslot)
+                .Where(r => r.Timeslot.Date >= start && r.Timeslot.Date <= end)
+                .OrderBy(r => r.Timeslot.Date)
+                .ThenBy(r => r.Timeslot.Hour)
+                .ToList();
+        }
+        public static List<Reservation> AllTodaysReservations(ProjectContext db)
+        {
+            return db.Reservations
+                .Include(r => r.Creator)
+                .Include(r => r.Customer)
+                .Include(r => r.Practitioner)
+                .Include(r => r.Room)
+                .Include(r => r.Service)
+                .Include(r => r.Timeslot)
+                .Where(r => r.Timeslot.Date == DateTime.Today)
+                .OrderBy(r => r.Timeslot.Hour)
+                .ToList();
+        }
         public static Reservation OneReservation(int rID, ProjectContext db)
         {
             return db.Reservations
