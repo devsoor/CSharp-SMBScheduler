@@ -46,11 +46,11 @@ Models
             (done)-Create
             (done)-Edit
             (done)-Delete
-        -All Services
-        -One Service
-            -Create
-            -Edit
-            -Delete
+        (done)-All Services
+        (done)-One Service
+            (done)-Create
+            (done)-Edit
+            (done)-Delete
         -All Timeslots
         -One Timeslot
             -Create

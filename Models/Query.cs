@@ -501,6 +501,50 @@ namespace massage.Models
                 .Include(r => r.Timeslot)
                 .FirstOrDefault(r => r.ReservationId == newR.ReservationId);
         }
+        // Service Queries
+        public static List<Service> AllServices(ProjectContext db)
+        {
+            return db.Services
+                .Include(s => s.Practitioners)
+                .Include(s => s.Rooms)
+                .ToList();
+        }
+        public static Service OneService(int sID, ProjectContext db)
+        {
+            return db.Services
+                .Include(s => s.Practitioners)
+                .Include(s => s.Rooms)
+                .FirstOrDefault(s => s.ServiceId == sID);
+        }
+        public static Service CreateService(Service newS, ProjectContext db)
+        {
+            db.Add(newS);
+            db.SaveChanges();
+            List<Room> allRooms = db.Rooms.ToList(); // these next few lines create the default associations for all rooms with this new service
+            foreach (Room room in allRooms)
+            {
+                RoomService newRS = new RoomService();
+                newRS.RoomId = room.RoomId;
+                newRS.ServiceId = newS.ServiceId;
+            }
+            db.SaveChanges();
+            return newS;
+        }
+        public static void DeleteService(int sID, ProjectContext db)
+        {
+            Service sToDel = db.Services.FirstOrDefault(s => s.ServiceId == sID);
+            db.Remove(sToDel);
+            db.SaveChanges();
+            return;
+        }
+        public static Service EditService(Service updatedS, ProjectContext db)
+        {
+            Service sToUpdate = db.Services.FirstOrDefault(s => s.ServiceId == updatedS.ServiceId);
+            sToUpdate.Name = updatedS.Name;
+            sToUpdate.UpdatedAt = DateTime.Now;
+            db.SaveChanges();
+            return sToUpdate;
+        }
     }
 }
 
