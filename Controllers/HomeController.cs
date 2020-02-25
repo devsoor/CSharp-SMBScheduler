@@ -47,6 +47,184 @@ namespace massage.Controllers
             return View("AllReservations", vm);
             
         }
+        [HttpGet("generatefakecontent")] // debug path to make fake content for testing purposes
+        public IActionResult GenerateFakeContent()
+        {
+            Insurance newIns = new Insurance();
+            newIns.Name = "Cash";
+            dbContext.Add(newIns);
+            Insurance newIns2 = new Insurance();
+            newIns2.Name = "Blue Cross/Blue Shield";
+            dbContext.Add(newIns2);
+            dbContext.SaveChanges();
+            Customer newCust = new Customer();
+            newCust.Address1 = "123 Fake St";
+            newCust.Address2 = "Apt 4";
+            newCust.City = "Boston";
+            newCust.Email = "fakeUser@fake.com";
+            newCust.FirstName = "Bob";
+            newCust.LastName = "Barker";
+            newCust.Notes = "this guy always cancels";
+            newCust.Phone = "1234567890";
+            newCust.State = "MA";
+            newCust.Zip = 02115;
+            newCust.InsuranceId = newIns.InsuranceId;
+            dbContext.Add(newCust);
+            Customer newCust2 = new Customer();
+            newCust2.Address1 = "4324 bleh ave";
+            newCust2.Address2 = "Apt 1";
+            newCust2.City = "San Francisco";
+            newCust2.Email = "SomePerson@aol.com";
+            newCust2.FirstName = "Mary";
+            newCust2.LastName = "Sue";
+            newCust2.Notes = "so friendly!";
+            newCust2.Phone = "9087654321";
+            newCust2.State = "CA";
+            newCust2.Zip = 94611;
+            newCust2.InsuranceId = newIns2.InsuranceId;
+            dbContext.Add(newCust2);
+            dbContext.SaveChanges();
+            User pract1 = new User();
+            pract1.PasswordHash = "AQAAAAEAACcQAAAAEOfdJHYZmxEQpJaWvaD4c7z4CiXIa5ZPfplYWFuCOPYYbXAUxjGKOM3zhm0plujL5g=="; // password hash for Password1!
+            pract1.FirstName = "John";
+            pract1.LastName = "Smith";
+            pract1.Role = 1;
+            pract1.UserName = "JohnSmith";
+            dbContext.Add(pract1);
+            User pract2 = new User();
+            pract2.PasswordHash = "AQAAAAEAACcQAAAAEOfdJHYZmxEQpJaWvaD4c7z4CiXIa5ZPfplYWFuCOPYYbXAUxjGKOM3zhm0plujL5g=="; // password hash for Password1!
+            pract2.FirstName = "Chris";
+            pract2.LastName = "Rodger";
+            pract2.Role = 1;
+            pract2.UserName = "ChrisRodger";
+            dbContext.Add(pract2);
+            User recep1 = new User();
+            recep1.PasswordHash = "AQAAAAEAACcQAAAAEOfdJHYZmxEQpJaWvaD4c7z4CiXIa5ZPfplYWFuCOPYYbXAUxjGKOM3zhm0plujL5g=="; // password hash for Password1!
+            recep1.FirstName = "Jane";
+            recep1.LastName = "Doe";
+            recep1.Role = 2;
+            recep1.UserName = "ChrisRodger";
+            dbContext.Add(recep1);
+            User recep2 = new User();
+            recep2.PasswordHash = "AQAAAAEAACcQAAAAEOfdJHYZmxEQpJaWvaD4c7z4CiXIa5ZPfplYWFuCOPYYbXAUxjGKOM3zhm0plujL5g=="; // password hash for Password1!
+            recep2.FirstName = "Jane";
+            recep2.LastName = "Doe";
+            recep2.Role = 2;
+            recep2.UserName = "ChrisRodger";
+            dbContext.Add(recep2);
+            dbContext.SaveChanges();
+            Service serv1 = new Service();
+            serv1.Name = "Deep Tissue Massage";
+            dbContext.Add(serv1);
+            Service serv2 = new Service();
+            serv2.Name = "Foot Massage";
+            dbContext.Add(serv2);
+            Service serv3 = new Service();
+            serv3.Name = "Accupuncture";
+            dbContext.Add(serv3);
+            Room room1 = new Room();
+            dbContext.Add(room1);
+            Room room2 = new Room();
+            dbContext.Add(room2);
+            Room room3 = new Room();
+            dbContext.Add(room3);
+            Room room4 = new Room();
+            dbContext.Add(room4);
+            Room room5 = new Room();
+            dbContext.Add(room5);
+            Room room6 = new Room();
+            dbContext.Add(room6);
+            dbContext.SaveChanges();
+            List<Room> allRooms = new List<Room>(){room1, room2, room3, room4, room5, room6};
+            List<Service> allServices = new List<Service>(){serv1, serv2, serv3};
+            foreach (Room room in allRooms)
+            {
+                foreach (Service serv in allServices)
+                {
+                    RoomService rs = new RoomService();
+                    rs.RoomId = room.RoomId;
+                    rs.ServiceId = serv.ServiceId;
+                    dbContext.Add(rs);
+                }
+            }
+            dbContext.SaveChanges();
+            PService ps = new PService();
+            ps.ServiceId = serv1.ServiceId;
+            ps.PractitionerId = pract1.UserId;
+            dbContext.Add(ps);
+            PService ps2 = new PService();
+            ps2.ServiceId = serv2.ServiceId;
+            ps2.PractitionerId = pract1.UserId;
+            dbContext.Add(ps2);
+            PService ps3 = new PService();
+            ps3.ServiceId = serv3.ServiceId;
+            ps3.PractitionerId = pract1.UserId;
+            dbContext.Add(ps3);
+            PService ps4 = new PService();
+            ps4.ServiceId = serv2.ServiceId;
+            ps4.PractitionerId = pract2.UserId;
+            dbContext.Add(ps4);
+            PService ps5 = new PService();
+            ps5.ServiceId = serv3.ServiceId;
+            ps5.PractitionerId = pract2.UserId;
+            dbContext.Add(ps5);
+            dbContext.SaveChanges();
+            PInsurance pi1 = new PInsurance();
+            pi1.PractitionerId = pract1.UserId;
+            pi1.InsuranceId = newIns.InsuranceId;
+            dbContext.Add(pi1);
+            PInsurance pi2 = new PInsurance();
+            pi2.PractitionerId = pract1.UserId;
+            pi2.InsuranceId = newIns2.InsuranceId;
+            dbContext.Add(pi2);
+            PInsurance pi3 = new PInsurance();
+            pi3.PractitionerId = pract2.UserId;
+            pi3.InsuranceId = newIns.InsuranceId;
+            dbContext.Add(pi3);
+            dbContext.SaveChanges();
+            Query.OnePsSchedules(pract1.UserId, dbContext);
+            Query.OnePsSchedules(pract2.UserId, dbContext);
+            CheckTimeslots();
+            Timeslot tsToday = dbContext.Timeslots.OrderByDescending(t => t.Hour).FirstOrDefault(t => t.Date == DateTime.Today);
+            Reservation newResToday = new Reservation();
+            newResToday.CreatorId = recep1.UserId;
+            newResToday.CustomerId = newCust.CustomerId;
+            newResToday.Notes = "Important VIP Reservation!!!!!!";
+            newResToday.PractitionerId = pract1.UserId;
+            newResToday.RoomId = room1.RoomId;
+            newResToday.ServiceId = serv1.ServiceId;
+            newResToday.TimeslotId = tsToday.TimeslotId;
+            dbContext.Add(newResToday);
+            Reservation newResToday2 = new Reservation();
+            newResToday2.CreatorId = recep2.UserId;
+            newResToday2.CustomerId = newCust2.CustomerId;
+            newResToday2.Notes = "Will they show up?";
+            newResToday2.PractitionerId = pract2.UserId;
+            newResToday2.RoomId = room2.RoomId;
+            newResToday2.ServiceId = serv3.ServiceId;
+            newResToday2.TimeslotId = tsToday.TimeslotId;
+            dbContext.Add(newResToday2);
+            Timeslot tsTomorrow = dbContext.Timeslots.OrderByDescending(t => t.Hour).FirstOrDefault(t => t.Date == DateTime.Today.AddDays(1));
+            Reservation newResTomorrow = new Reservation();
+            newResTomorrow.CreatorId = recep1.UserId;
+            newResTomorrow.CustomerId = newCust.CustomerId;
+            newResTomorrow.Notes = "Important VIP Reservation!!!!!!";
+            newResTomorrow.PractitionerId = pract1.UserId;
+            newResTomorrow.RoomId = room1.RoomId;
+            newResTomorrow.ServiceId = serv1.ServiceId;
+            newResTomorrow.TimeslotId = tsTomorrow.TimeslotId;
+            dbContext.Add(newResTomorrow);
+            Reservation newResTomorrow2 = new Reservation();
+            newResTomorrow2.CreatorId = recep2.UserId;
+            newResTomorrow2.CustomerId = newCust2.CustomerId;
+            newResTomorrow2.Notes = "Will they show up?";
+            newResTomorrow2.PractitionerId = pract2.UserId;
+            newResTomorrow2.RoomId = room2.RoomId;
+            newResTomorrow2.ServiceId = serv3.ServiceId;
+            newResTomorrow2.TimeslotId = tsTomorrow.TimeslotId;
+            dbContext.Add(newResTomorrow2);
+            return RedirectToAction("Dashboard");
+        }
 
 
         // Create New Entries
