@@ -10,19 +10,31 @@ namespace massage.Models
 
         public List<User> AllUsers { get; set; }
 
+        public User OneUser { get; set; }
+
         public List<Timeslot> AllTimeslots { get; set; }
+
+        public Timeslot OneTimeslot { get; set; }
 
         public List<Insurance> AllInsurances { get; set; }
 
+        public Insurance OneInsurance { get; set; }
+
         public List<PSchedule> AllPSchdules { get; set; }
 
-        public PSchedule onePSchdule { get; set; }
+        public PSchedule OnePSchdule { get; set; }
 
         public List<Customer> AllCustomers { get; set; }
 
+        public Customer OneCustomer { get; set; }
+
         public List<Reservation> AllReservations { get; set; }
 
+        public Reservation OneReservation { get; set; }
+
         public List<Service> AllServices { get; set; }
+
+        public Service OneService { get; set; }
 
         public List<List<Timeslot>> OldQueries { get; set; }
     }
