@@ -422,6 +422,15 @@ namespace massage.Models
             db.SaveChanges();
             return PSchedules;
         }
+        // Query for which PSchedules haven't been approved yet to show to admin
+        public static List<PSchedule> PSchedulesNeedingApproval(ProjectContext db)
+        {
+            return db.PSchedules
+                .Include(ps => ps.Practitioner)
+                .Where(ps => ps.Approved == false)
+                .OrderByDescending(ps => ps.UpdatedAt)
+                .ToList();
+        }
         // Reservation Queries
         public static List<Reservation> AllReservations(ProjectContext db)
         {
