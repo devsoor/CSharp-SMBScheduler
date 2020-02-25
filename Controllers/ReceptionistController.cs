@@ -37,6 +37,14 @@ namespace massage.Controllers
             return View();
         }
 
+
+        [HttpGet]
+        public IActionResult AllReservations()
+        {
+            Query.AllReservations(dbContext);
+            return View();
+        }
+
         [HttpGet]
         public async Task<IActionResult> NewReservation()
         {
@@ -50,8 +58,7 @@ namespace massage.Controllers
         {
             if (ModelState.IsValid)
             {
-                dbContext.Add(newReservation);
-                dbContext.SaveChanges();
+                Query.CreateReservation(newReservation, dbContext);
                 return RedirectToAction("Dashboard", "Receptionist");
             }
             else
@@ -60,11 +67,14 @@ namespace massage.Controllers
             }
         }
 
-        [HttpGet]
-        public IActionResult AllReservations()
+
+        [HttpPost]
+        public IActionResult CancelReservation(Reservation newReservation)
         {
-            return View();
+            Query.DeleteReservation(newReservation.ReservationId, dbContext);
+            return RedirectToAction("Dashboard", "Receptionist");
         }
+
 
         [HttpGet]
         public IActionResult AllCustomers()
@@ -93,7 +103,37 @@ namespace massage.Controllers
             }
         }
 
-        
+        [HttpGet]
+        public IActionResult MyProfile()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult EditProfile()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult UpdatedProfile(User receptionist)
+        {
+            if (ModelState.IsValid)
+            {
+                dbContext.Add(receptionist);
+                dbContext.SaveChanges();
+                return RedirectToAction("Dashboard", "Receptionist");
+            }
+            else
+            {
+                return View("EditProfile");
+            }
+        }
+
+
+
+
+
 
     }
 }
