@@ -44,7 +44,7 @@ namespace massage.Models
         [DataType(DataType.Password)]
 
         public string ConfirmPassword { get; set; }
-
+        [Display(Name = "Role")]
         public int Role { get; set; } = 0; // Set Role by default to 0 for unassigned (1 = Practitioner, 2 = Receptionist, 5 = Admin)
         
         public List<PSchedule> PSchedules { get; set; }

@@ -2,6 +2,7 @@
     ViewData["Title"] = "Home Page";
 }
 @model massage.Models.ViewModel
+<p>@ViewBag.User.FirstName</p>
 
 @{
     foreach (Timeslot t in Model.AllTimeslots)

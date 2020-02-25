@@ -8,9 +8,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using massage.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace massage.Controllers
 {
+    [AllowAnonymous]
     public class LoginController : Controller
     {
         // database setup
@@ -27,8 +29,8 @@ namespace massage.Controllers
             _signInManager = signInManager;
         }
         // routes
+        [HttpGet("login")]
         [HttpGet("")]
-        [Route("loginRoute")]
         public IActionResult Login(){
             return View();
         }
@@ -39,48 +41,17 @@ namespace massage.Controllers
         [HttpPost("submitregister")]
         public async Task<IActionResult> SubmitRegister(User newUser) {
             if (ModelState.IsValid) { // pass validations
-
-                System.Console.WriteLine("************MODEL STATE VALID*************");
-                System.Console.WriteLine("*************************");
-                System.Console.WriteLine("*************************");
-                System.Console.WriteLine("*************************");
-                if (dbContext.Users.Any(u => u.UserName == newUser.UserName))
-                { // UserName in use
-                    System.Console.WriteLine("************USERNAME IN USE*************");
-                    System.Console.WriteLine("*************************");
-                    System.Console.WriteLine("*************************");
-                    System.Console.WriteLine("*************************");
-                    ModelState.AddModelError("UserName", "UserName already in use!");
-                    return View("Register");
-                }
-                else { // valid, UserName not in use, go ahead and register
-
-                    System.Console.WriteLine("************USERNAME NOT IN USE************");
-                    System.Console.WriteLine("*************************");
-                    System.Console.WriteLine("*************************");
-                    System.Console.WriteLine("*************************");
+                if (dbContext.Users.Any(u => u.UserName == newUser.UserName)) return View("Register");
+                    else { // valid, UserName not in use, go ahead and register
                     IdentityResult result = await _userManager.CreateAsync(newUser, newUser.Password);
-
-                    if(result.Succeeded)
-                    {
-                        System.Console.WriteLine("***********MADE IT TO SUCCEED**************");
-                        System.Console.WriteLine("*************************");
-                        System.Console.WriteLine("*************************");
-                        System.Console.WriteLine("*************************");
+                    if(result.Succeeded) {
                         await _signInManager.SignInAsync(newUser, isPersistent: false);
                         return RedirectToAction("Dashboard", "Home");
-                    }
-
-                    foreach(var error in result.Errors)
-                    {
-                        ModelState.AddModelError("ConfirmPassword", error.Description );
-                    }
+                    } // CreateAsync failed
+                    foreach(var error in result.Errors) ModelState.AddModelError("Password", error.Description );
                     return View("Register");
                 }
-            }
-            else { // failed validations
-                return View("Register");
-            }
+            } else return View("Register");
         }
         [HttpPost("submitlogin")]
         public async Task<IActionResult> SubmitLogin(LoginUser loginUser) {
@@ -89,32 +60,27 @@ namespace massage.Controllers
                 if (userInDb == null) { // UserName not found in db
                     ModelState.AddModelError("UserName", "Invalid Username");
                     return View("Login");
-                }
-                else { // success
-                    User registeredUser = dbContext.Users.FirstOrDefault(u => u.UserName == loginUser.UserName);
-                    Microsoft.AspNetCore.Identity.SignInResult checkedUser = await _signInManager.PasswordSignInAsync(registeredUser.UserName, registeredUser.Password, isPersistent: false, lockoutOnFailure: false);
-                    if (checkedUser.Succeeded)
-                    {
-                        return RedirectToAction("Dashboard", "Home");
-                    }
-
+                } else { // success
+                    Microsoft.AspNetCore.Identity.SignInResult checkedUser = await _signInManager
+                    .PasswordSignInAsync(
+                        loginUser.UserName,
+                        loginUser.Password,
+                        isPersistent: false,
+                        lockoutOnFailure: false
+                    );
+                    if (checkedUser.Succeeded) return RedirectToAction("Dashboard", "Home");
+                    // checkedUser did not succeed
                     ModelState.AddModelError("Password", "Username and Password do not match");
-
                     return View("Login");
                 }
-
-            }
-            else { // failed validations
-                return View("Login");
-            }
+            } else return View("Login");
         }
         [HttpGet("logout")]
-        public async Task<IActionResult> Logout(){
+        public async Task<IActionResult> Logout() {
             await _signInManager.SignOutAsync();
             return RedirectToAction("Login");
         }
-        public IActionResult Error()
-        {
+        public IActionResult Error() {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }

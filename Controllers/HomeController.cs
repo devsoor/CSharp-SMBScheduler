@@ -49,16 +49,6 @@ namespace massage.Controllers
         }
 
 
-
-
-
-
-
-
-
-
-
-
         // Create New Entries
         public IActionResult NewService(Service newsvc)
         {
@@ -232,9 +222,7 @@ namespace massage.Controllers
             return PartialView("UserProfile", vm);
         }
 
-
-
-        [HttpGet("Index")]
+    [HttpGet("index")]
         public IActionResult Index()
         {
             // debugg stuffffffff
@@ -263,7 +251,7 @@ namespace massage.Controllers
                 dbContext.Add(newPS5);
                 dbContext.SaveChanges();
             }
-            
+            ViewBag.User = dbContext.Users.First(); //// REMOVE
             CheckTimeslots();
             List<Customer> allCs = Query.AllCustomers(dbContext);
             List<Timeslot> allTimeslots = dbContext.Timeslots.Include(t => t.PsAvail).ThenInclude(pa => pa.Practitioner).OrderBy(t => t.Date).ThenBy(t => t.Hour).ToList();
@@ -282,6 +270,15 @@ namespace massage.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        [HttpGet("clearusers")]
+        public IActionResult clearusers() {
+            foreach (object u in dbContext.Users) {
+                dbContext.Remove(u);
+            }
+            dbContext.SaveChanges();
+            return Redirect("login");
         }
     }
 }
