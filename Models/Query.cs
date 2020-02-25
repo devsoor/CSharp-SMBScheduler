@@ -354,6 +354,73 @@ namespace massage.Models
                 .Where(pi => pi.PractitionerId == pID)
                 .ToList();
         }
-
+        // Practitioner Schedule (template) Queries
+        public static List<PSchedule> OnePsSchedules(int pID, ProjectContext db)
+        {
+            List<PSchedule> existingPSs = db.PSchedules
+                .Include(ps => ps.Practitioner)
+                .Where(ps => ps.PractitionerId == pID)
+                .OrderByDescending(ps => ps.UpdatedAt)
+                .ToList();
+            if (existingPSs.Count != 7) // if there are 0, or if an error has happened and more or less than 7 exist, let's reset
+            {
+                foreach (PSchedule oldPS in existingPSs)
+                {
+                    db.Remove(oldPS);
+                }
+                db.SaveChanges();
+                string[] days = new string[]{"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+                foreach (string day in days)
+                {
+                    PSchedule newPS = new PSchedule();
+                    newPS.DayOfWeek = day;
+                    newPS.PractitionerId = pID;
+                    newPS.Approved = false;
+                    db.Add(newPS);
+                }
+                db.SaveChanges();
+                existingPSs = db.PSchedules
+                    .Include(ps => ps.Practitioner)
+                    .Where(ps => ps.PractitionerId == pID)
+                    .OrderByDescending(ps => ps.UpdatedAt)
+                    .ToList();
+            }
+            return existingPSs;
+        }
+        public static List<PSchedule> UpdateAllOfOnePsSchedules(int pID, List<PSchedule> updatedPSchedules, ProjectContext db)
+        {
+            if (updatedPSchedules.Count != 7)
+            {
+                System.Console.WriteLine("Error: The list of PSchedules provided to update didn't contain 7 PSchedules!  You need one for each day!");
+                return updatedPSchedules;
+            }
+            List<PSchedule> oldPSs = db.PSchedules.Where(ps => ps.PractitionerId == pID).ToList();
+            foreach (PSchedule oldPS in oldPSs)
+            {
+                db.Remove(oldPS);
+            }
+            db.SaveChanges();
+            foreach (PSchedule newPS in updatedPSchedules)
+            {
+                db.Add(newPS);
+            }
+            db.SaveChanges();
+            return updatedPSchedules;
+        }
+        public static List<PSchedule> ApproveAllOfOnePsSchedules(int pID, ProjectContext db)
+        {
+            List<PSchedule> PSchedules = db.PSchedules.Where(ps => ps.PractitionerId == pID).ToList();
+            if (PSchedules.Count != 7)
+            {
+                System.Console.WriteLine("Error: That practitioner does not have exactly 7 PSchedules and thus cannot be approved.  There should be one for each day!");
+                return PSchedules;
+            }
+            foreach (PSchedule ps in PSchedules)
+            {
+                ps.Approved = true;
+            }
+            db.SaveChanges();
+            return PSchedules;
+        }
     }
 }

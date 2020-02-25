@@ -35,9 +35,10 @@ Models
                 (done)-Edit a practitioner's insurances accepted by a list of PInsurances
                 (done)-Create
                 (done)-Delete
-        -One Practitioner's PSchedules (should be 7)
-            -Create new set of 7 if none found
-            -Edit all 7 PSchedules
+        (done)-One Practitioner's PSchedules (should be 7)
+            (done)-Create new set of 7 if none found
+            (done)-Edit all 7 PSchedules
+            (done)-Approve One Practitioner's PSchedules
         -All Reservations
         -One Reservation
             -Create
