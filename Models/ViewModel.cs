@@ -24,6 +24,8 @@ namespace massage.Models
 
         public PSchedule OnePSchdule { get; set; }
 
+        public Dictionary<string, Dictionary<string, bool>> PSDict { get; set; }
+
         public List<Customer> AllCustomers { get; set; }
 
         public Customer OneCustomer { get; set; }
