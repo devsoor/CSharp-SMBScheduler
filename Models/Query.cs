@@ -422,5 +422,85 @@ namespace massage.Models
             db.SaveChanges();
             return PSchedules;
         }
+        // Reservation Queries
+        public static List<Reservation> AllReservations(ProjectContext db)
+        {
+            return db.Reservations
+                .Include(r => r.Creator)
+                .Include(r => r.Customer)
+                .Include(r => r.Practitioner)
+                .Include(r => r.Room)
+                .Include(r => r.Service)
+                .Include(r => r.Timeslot)
+                .OrderBy(r => r.Timeslot.Date)
+                .ThenBy(r => r.Timeslot.Hour)
+                .ToList();
+        }
+        public static List<Reservation> AllFutureReservations(ProjectContext db)
+        {
+            return db.Reservations
+                .Include(r => r.Creator)
+                .Include(r => r.Customer)
+                .Include(r => r.Practitioner)
+                .Include(r => r.Room)
+                .Include(r => r.Service)
+                .Include(r => r.Timeslot)
+                .Where(r => r.Timeslot.Date >= DateTime.Today)
+                .OrderBy(r => r.Timeslot.Date)
+                .ThenBy(r => r.Timeslot.Hour)
+                .ToList();
+        }
+        public static List<Reservation> AllPastReservations(ProjectContext db)
+        {
+            return db.Reservations
+                .Include(r => r.Creator)
+                .Include(r => r.Customer)
+                .Include(r => r.Practitioner)
+                .Include(r => r.Room)
+                .Include(r => r.Service)
+                .Include(r => r.Timeslot)
+                .Where(r => r.Timeslot.Date < DateTime.Today)
+                .OrderBy(r => r.Timeslot.Date)
+                .ThenBy(r => r.Timeslot.Hour)
+                .ToList();
+        }
+        public static Reservation OneReservation(int rID, ProjectContext db)
+        {
+            return db.Reservations
+                .Include(r => r.Creator)
+                .Include(r => r.Customer)
+                .Include(r => r.Practitioner)
+                .Include(r => r.Room)
+                .Include(r => r.Service)
+                .Include(r => r.Timeslot)
+                .FirstOrDefault(r => r.ReservationId == rID);
+        }
+        public static Reservation CreateReservation(Reservation newR, ProjectContext db)
+        {
+            db.Add(newR);
+            db.SaveChanges();
+            return newR;
+        }
+        public static void DeleteReservation(int rID, ProjectContext db)
+        {
+            Reservation rToDelete = db.Reservations.FirstOrDefault(r => r.ReservationId == rID);
+            db.Remove(rToDelete);
+            db.SaveChanges();
+            return;
+        }
+        public static Reservation EditOneReservation(Reservation updatedR, ProjectContext db)
+        {
+            DeleteReservation(updatedR.ReservationId, db);
+            Reservation newR = CreateReservation(updatedR, db);
+            return db.Reservations
+                .Include(r => r.Creator)
+                .Include(r => r.Customer)
+                .Include(r => r.Practitioner)
+                .Include(r => r.Room)
+                .Include(r => r.Service)
+                .Include(r => r.Timeslot)
+                .FirstOrDefault(r => r.ReservationId == newR.ReservationId);
+        }
     }
 }
+

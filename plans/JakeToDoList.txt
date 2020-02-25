@@ -39,11 +39,13 @@ Models
             (done)-Create new set of 7 if none found
             (done)-Edit all 7 PSchedules
             (done)-Approve One Practitioner's PSchedules
-        -All Reservations
-        -One Reservation
-            -Create
-            -Edit
-            -Delete
+        (done)-All Reservations
+        (done)-All Future Reservations
+        (done)-All Past Reservations
+        (done)-One Reservation
+            (done)-Create
+            (done)-Edit
+            (done)-Delete
         -All Services
         -One Service
             -Create
