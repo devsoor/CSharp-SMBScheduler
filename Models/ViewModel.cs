@@ -20,9 +20,9 @@ namespace massage.Models
 
         public Insurance OneInsurance { get; set; }
 
-        public List<PSchedule> AllPSchdules { get; set; }
+        public List<PSchedule> AllPSchedules { get; set; }
 
-        public PSchedule OnePSchdule { get; set; }
+        public PSchedule OnePSchedule { get; set; }
 
         public Dictionary<string, Dictionary<string, bool>> PSDict { get; set; }
 
