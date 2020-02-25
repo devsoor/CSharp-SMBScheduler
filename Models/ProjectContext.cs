@@ -1,7 +1,10 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+
 namespace massage.Models
 {
-    public class ProjectContext : DbContext
+    public class ProjectContext : IdentityDbContext<User>
     {
         public ProjectContext(DbContextOptions options) : base(options){}
         public DbSet<User> Users { get; set; }

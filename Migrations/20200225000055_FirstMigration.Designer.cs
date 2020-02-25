@@ -9,8 +9,8 @@ using massage.Models;
 namespace massage.Migrations
 {
     [DbContext(typeof(ProjectContext))]
-    [Migration("20200221185639_smallUpdateMigration")]
-    partial class smallUpdateMigration
+    [Migration("20200225000055_FirstMigration")]
+    partial class FirstMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -18,6 +18,113 @@ namespace massage.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.2.4-servicing-10062")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken();
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasName("RoleNameIndex");
+
+                    b.ToTable("AspNetRoles");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("ClaimType");
+
+                    b.Property<string>("ClaimValue");
+
+                    b.Property<string>("RoleId")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetRoleClaims");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("ClaimType");
+
+                    b.Property<string>("ClaimValue");
+
+                    b.Property<string>("UserId")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserClaims");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.Property<string>("LoginProvider");
+
+                    b.Property<string>("ProviderKey");
+
+                    b.Property<string>("ProviderDisplayName");
+
+                    b.Property<string>("UserId")
+                        .IsRequired();
+
+                    b.HasKey("LoginProvider", "ProviderKey");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserLogins");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.Property<string>("UserId");
+
+                    b.Property<string>("RoleId");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetUserRoles");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.Property<string>("UserId");
+
+                    b.Property<string>("LoginProvider");
+
+                    b.Property<string>("Name");
+
+                    b.Property<string>("Value");
+
+                    b.HasKey("UserId", "LoginProvider", "Name");
+
+                    b.ToTable("AspNetUserTokens");
+                });
 
             modelBuilder.Entity("massage.Models.Customer", b =>
                 {
@@ -88,11 +195,13 @@ namespace massage.Migrations
 
                     b.Property<int>("PractitionerId");
 
+                    b.Property<string>("PractitionerId1");
+
                     b.Property<int>("TimeslotId");
 
                     b.HasKey("PAvailTimeId");
 
-                    b.HasIndex("PractitionerId");
+                    b.HasIndex("PractitionerId1");
 
                     b.HasIndex("TimeslotId");
 
@@ -108,11 +217,13 @@ namespace massage.Migrations
 
                     b.Property<int>("PractitionerId");
 
+                    b.Property<string>("PractitionerId1");
+
                     b.HasKey("PInsuranceId");
 
                     b.HasIndex("InsuranceId");
 
-                    b.HasIndex("PractitionerId");
+                    b.HasIndex("PractitionerId1");
 
                     b.ToTable("PInsurances");
                 });
@@ -122,11 +233,15 @@ namespace massage.Migrations
                     b.Property<int>("PScheduleId")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<bool>("Approved");
+
                     b.Property<DateTime>("CreatedAt");
 
                     b.Property<string>("DayOfWeek");
 
                     b.Property<int>("PractitionerId");
+
+                    b.Property<string>("PractitionerId1");
 
                     b.Property<DateTime>("UpdatedAt");
 
@@ -158,7 +273,7 @@ namespace massage.Migrations
 
                     b.HasKey("PScheduleId");
 
-                    b.HasIndex("PractitionerId");
+                    b.HasIndex("PractitionerId1");
 
                     b.ToTable("PSchedules");
                 });
@@ -170,11 +285,13 @@ namespace massage.Migrations
 
                     b.Property<int>("PractitionerId");
 
+                    b.Property<string>("PractitionerId1");
+
                     b.Property<int>("ServiceId");
 
                     b.HasKey("PServiceId");
 
-                    b.HasIndex("PractitionerId");
+                    b.HasIndex("PractitionerId1");
 
                     b.HasIndex("ServiceId");
 
@@ -190,9 +307,15 @@ namespace massage.Migrations
 
                     b.Property<int>("CreatorId");
 
+                    b.Property<string>("CreatorId1");
+
                     b.Property<int>("CustomerId");
 
+                    b.Property<string>("Notes");
+
                     b.Property<int>("PractitionerId");
+
+                    b.Property<string>("PractitionerId1");
 
                     b.Property<int>("RoomId");
 
@@ -204,11 +327,11 @@ namespace massage.Migrations
 
                     b.HasKey("ReservationId");
 
-                    b.HasIndex("CreatorId");
+                    b.HasIndex("CreatorId1");
 
                     b.HasIndex("CustomerId");
 
-                    b.HasIndex("PractitionerId");
+                    b.HasIndex("PractitionerId1");
 
                     b.HasIndex("RoomId");
 
@@ -292,10 +415,20 @@ namespace massage.Migrations
 
             modelBuilder.Entity("massage.Models.User", b =>
                 {
-                    b.Property<int>("UserId")
+                    b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int>("AccessFailedCount");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken();
+
                     b.Property<DateTime>("CreatedAt");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256);
+
+                    b.Property<bool>("EmailConfirmed");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -305,20 +438,96 @@ namespace massage.Migrations
                         .IsRequired()
                         .HasMaxLength(255);
 
+                    b.Property<bool>("LockoutEnabled");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256);
+
                     b.Property<string>("Password")
                         .IsRequired();
 
+                    b.Property<string>("PasswordHash");
+
+                    b.Property<string>("PhoneNumber");
+
+                    b.Property<bool>("PhoneNumberConfirmed");
+
                     b.Property<int>("Role");
+
+                    b.Property<string>("SecurityStamp");
+
+                    b.Property<bool>("TwoFactorEnabled");
 
                     b.Property<DateTime>("UpdatedAt");
 
-                    b.Property<string>("Username")
+                    b.Property<int>("UserId");
+
+                    b.Property<string>("UserName")
                         .IsRequired()
-                        .HasMaxLength(29);
+                        .HasMaxLength(256);
 
-                    b.HasKey("UserId");
+                    b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.HasAlternateKey("UserId");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasName("UserNameIndex");
+
+                    b.ToTable("AspNetUsers");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.HasOne("massage.Models.User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.HasOne("massage.Models.User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("massage.Models.User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.HasOne("massage.Models.User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("massage.Models.Customer", b =>
@@ -333,8 +542,7 @@ namespace massage.Migrations
                 {
                     b.HasOne("massage.Models.User", "Practitioner")
                         .WithMany("AvailTimes")
-                        .HasForeignKey("PractitionerId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("PractitionerId1");
 
                     b.HasOne("massage.Models.Timeslot", "TimeSlot")
                         .WithMany("PsAvail")
@@ -351,24 +559,21 @@ namespace massage.Migrations
 
                     b.HasOne("massage.Models.User", "Practitioner")
                         .WithMany("InsurancesAccepted")
-                        .HasForeignKey("PractitionerId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("PractitionerId1");
                 });
 
             modelBuilder.Entity("massage.Models.PSchedule", b =>
                 {
                     b.HasOne("massage.Models.User", "Practitioner")
                         .WithMany("PSchedules")
-                        .HasForeignKey("PractitionerId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("PractitionerId1");
                 });
 
             modelBuilder.Entity("massage.Models.PService", b =>
                 {
                     b.HasOne("massage.Models.User", "Practitioner")
                         .WithMany("Services")
-                        .HasForeignKey("PractitionerId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("PractitionerId1");
 
                     b.HasOne("massage.Models.Service", "Service")
                         .WithMany("Practitioners")
@@ -380,8 +585,7 @@ namespace massage.Migrations
                 {
                     b.HasOne("massage.Models.User", "Creator")
                         .WithMany("CreatedReservations")
-                        .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("CreatorId1");
 
                     b.HasOne("massage.Models.Customer", "Customer")
                         .WithMany("Reservations")
@@ -390,8 +594,7 @@ namespace massage.Migrations
 
                     b.HasOne("massage.Models.User", "Practitioner")
                         .WithMany("Appointments")
-                        .HasForeignKey("PractitionerId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("PractitionerId1");
 
                     b.HasOne("massage.Models.Room", "Room")
                         .WithMany("Reservations")

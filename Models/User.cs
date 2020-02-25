@@ -2,9 +2,14 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Collections.Generic;
+using massage.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+
+
 namespace massage.Models
 {
-    public class User
+    public class User: IdentityUser
     {
         [Key]
         public int UserId { get; set; }
@@ -24,7 +29,7 @@ namespace massage.Models
         [Required]
         [MinLength(2, ErrorMessage="Username must be at least 2 characters long")]
         [MaxLength(29, ErrorMessage="Username must be less than 30 characters long")]
-        public string Username { get; set; }
+        public override string UserName { get; set; }
 
         [Required]
         [MinLength(8, ErrorMessage="Password must be at least 8 characters in length.")]
