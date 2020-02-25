@@ -7,7 +7,7 @@ namespace massage.Models
     public class ProjectContext : IdentityDbContext<User>
     {
         public ProjectContext(DbContextOptions options) : base(options){}
-        public DbSet<User> Users { get; set; }
+        public new DbSet<User> Users { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Insurance> Insurances { get; set; }
         public DbSet<PAvailTime> PAvailTimes { get; set; }
