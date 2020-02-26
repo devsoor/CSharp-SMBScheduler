@@ -20,7 +20,41 @@ namespace massage.Controllers
 
         }
 
-        // all reservations
+        // User session to keep track who is logged in!!
+        private int UserIdSession {
+            get {
+                    if(HttpContext.Session.GetInt32("UserId") != null ) {
+                        return (int)HttpContext.Session.GetInt32("UserId");
+                    }
+                    else {
+                        return -1;
+                    }
+                }
+            set {HttpContext.Session.SetInt32("userId", (int)value);}
+        } 
+
+        // User's Role session to keep track their roles
+        private int UserRoleSession {
+            get {
+                    if(HttpContext.Session.GetInt32("Role") != null ) {
+                        return (int)HttpContext.Session.GetInt32("Role");
+                    }
+                    else {
+                        return -1;
+                    }
+                }
+            set {HttpContext.Session.SetInt32("Role", (int)value);}
+        }
+
+        // Routes
+
+        // logout user clear session
+        [HttpGet("logout")]
+        public IActionResult Logout(){
+            HttpContext.Session.Clear();
+            return RedirectToAction("Index");
+        }
+        
         [HttpGet]
         public IActionResult Dashboard()
         {

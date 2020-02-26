@@ -19,25 +19,51 @@ namespace massage.Controllers
     {
         // Database setup
         public ProjectContext dbContext;
-        private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
-        public PractitionerController(
-            ProjectContext context,
-            UserManager<User> userManager,
-            SignInManager<User> signInManager)
+        public PractitionerController(ProjectContext context)
         {
             dbContext = context;
-            _userManager = userManager;
-            _signInManager = signInManager;
         }
+
+        // UserId session to keep track who is logged in!!
+        private int UserIdSession {
+            get {
+                    if(HttpContext.Session.GetInt32("userId") != null ) {
+                        return (int)HttpContext.Session.GetInt32("userId");
+                    }
+                    else {
+                        return -1;
+                    }
+                }
+            set {HttpContext.Session.SetInt32("userId", (int)value);}
+        } 
+
+        // User's Role session to keep track their roles
+        private int UserRoleSession {
+            get {
+                    if(HttpContext.Session.GetInt32("Role") != null ) {
+                        return (int)HttpContext.Session.GetInt32("Role");
+                    }
+                    else {
+                        return -1;
+                    }
+                }
+            set {HttpContext.Session.SetInt32("Role", (int)value);}
+        } 
 
 //////////////////////////////// GET ////////////////////////////////
 
+        // logout user clear session
+        [HttpGet("logout")]
+        public IActionResult Logout(){
+            HttpContext.Session.Clear();
+            return RedirectToAction("Index");
+        }
+        
         // Practitioner dashboard
         [HttpGet("dashboard")]
-        public async Task<IActionResult> Dash(){
-            User currUser = await _userManager.GetUserAsync(HttpContext.User);
+        public IActionResult Dash(){
             ViewModel vm = new ViewModel();
+            User currUser = dbContext.Users.FirstOrDefault(u => u.UserId == HttpContext.Session.GetInt32("UserId"));
             vm.AllReservations = Query.OnePTodaysReservations(currUser.UserId, dbContext);
             vm.CurrentUser = currUser;
             return View("Index", vm);
