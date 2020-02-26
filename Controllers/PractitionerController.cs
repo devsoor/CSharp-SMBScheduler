@@ -12,7 +12,6 @@ using massage.Models;
 
 namespace massage.Controllers
 {
-    [Authorize]
     [Route("prac")]
     public class PractitionerController : Controller
     {
