@@ -505,13 +505,13 @@ namespace massage.Models
             DateTime start = DateTime.Today;
             while (start.DayOfWeek.ToString() != "Sunday")
             {
-                start.AddDays(-1);
+                start = start.AddDays(-1);
             }
             // now we have 'start' stored as our start date for the week
             DateTime end = DateTime.Today;
             while (end.DayOfWeek.ToString() != "Saturday")
             {
-                end.AddDays(1);
+                end = end.AddDays(1);
             }
             // now we have 'end' stored as our end date for the week
             return db.Reservations
@@ -531,13 +531,13 @@ namespace massage.Models
             DateTime start = DateTime.Today;
             while (start.DayOfWeek.ToString() != "Sunday")
             {
-                start.AddDays(-1);
+                start = start.AddDays(-1);
             }
             // now we have 'start' stored as our start date for the week
             DateTime end = DateTime.Today;
             while (end.DayOfWeek.ToString() != "Saturday")
             {
-                end.AddDays(1);
+                end = end.AddDays(1);
             }
             // now we have 'end' stored as our end date for the week
             return db.Reservations
@@ -708,13 +708,13 @@ namespace massage.Models
         public static List<Timeslot> ThisMonthsTimeslots(ProjectContext db)
         {
             return db.Timeslots
-                // .Include(t => t.PsAvail)
-                // .ThenInclude(pat => pat.Practitioner)
-                // .Include(t => t.Reservations).ThenInclude(r => r.Practitioner)
-                // .Include(t => t.Reservations).ThenInclude(r => r.Customer)
-                // .Include(t => t.Reservations).ThenInclude(r => r.Creator)
-                // .Include(t => t.Reservations).ThenInclude(r => r.Room)
-                // .Include(t => t.Reservations).ThenInclude(r => r.Service)
+                .Include(t => t.PsAvail)
+                .ThenInclude(pat => pat.Practitioner)
+                .Include(t => t.Reservations).ThenInclude(r => r.Practitioner)
+                .Include(t => t.Reservations).ThenInclude(r => r.Customer)
+                .Include(t => t.Reservations).ThenInclude(r => r.Creator)
+                .Include(t => t.Reservations).ThenInclude(r => r.Room)
+                .Include(t => t.Reservations).ThenInclude(r => r.Service)
                 .Where(t => t.Date.Month == DateTime.Now.Month && t.Date.Year == DateTime.Now.Year)
                 .OrderBy(t => t.Date)
                 .ThenBy(t => t.Hour)                
@@ -738,16 +738,18 @@ namespace massage.Models
         public static List<Timeslot> ThisWeeksTimeslots(ProjectContext db)
         {
             DateTime start = DateTime.Today;
+            System.Console.WriteLine("Entering this weeks timeslots function");
             while (start.DayOfWeek.ToString() != "Sunday")
             {
-                start.AddDays(-1);
+                start = start.AddDays(-1);
             }
             // now we have 'start' stored as our start date for the week
             DateTime end = DateTime.Today;
             while (end.DayOfWeek.ToString() != "Saturday")
             {
-                end.AddDays(1);
+                end = end.AddDays(1);
             }
+            System.Console.WriteLine($"Start is {start.Day}, End is {end.Day}");
             // now we have 'end' stored as our end date for the week
             return db.Timeslots
                 .Include(t => t.PsAvail)
@@ -767,13 +769,13 @@ namespace massage.Models
             DateTime start = startDay;
             while (start.DayOfWeek.ToString() != "Sunday")
             {
-                start.AddDays(-1);
+                start = start.AddDays(-1);
             }
             // now we have 'start' stored as our start date for the week
             DateTime end = DateTime.Today;
             while (end.DayOfWeek.ToString() != "Saturday")
             {
-                end.AddDays(1);
+                end = end.AddDays(1);
             }
             // now we have 'end' stored as our end date for the week
             return db.Timeslots
