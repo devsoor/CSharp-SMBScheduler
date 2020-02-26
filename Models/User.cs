@@ -12,6 +12,7 @@ namespace massage.Models
     public class User: IdentityUser
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int UserId { get; set; }
 
         [Required]
