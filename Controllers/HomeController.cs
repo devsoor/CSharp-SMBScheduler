@@ -61,7 +61,7 @@ namespace massage.Controllers
             newCust.Phone = "1234567890";
             newCust.State = "MA";
             newCust.Zip = 02115;
-            newCust.Insurance = newIns.InsuranceId;
+            newCust.Insurance = newIns;
             dbContext.Add(newCust);
             dbContext.SaveChanges();
             Customer newCust2 = new Customer();
@@ -75,7 +75,7 @@ namespace massage.Controllers
             newCust2.Phone = "9087654321";
             newCust2.State = "CA";
             newCust2.Zip = 94611;
-            newCust2.Insurance = newIns2.InsuranceId;
+            newCust2.Insurance = newIns2;
             dbContext.Add(newCust2);
             dbContext.SaveChanges();
             User pract1 = new User();

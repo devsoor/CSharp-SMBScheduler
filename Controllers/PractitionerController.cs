@@ -16,30 +16,19 @@ namespace massage.Controllers
     [Route("practitioner")]
     public class PractitionerController : Controller
     {
-        // Database setup
         public ProjectContext dbContext;
-        private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
-        public PractitionerController(
-            ProjectContext context,
-            UserManager<User> userManager,
-            SignInManager<User> signInManager)
+    
+        public PractitionerController(ProjectContext context)
         {
             dbContext = context;
-            _userManager = userManager;
-            _signInManager = signInManager;
         }
 
 //////////////////////////////// GET ////////////////////////////////
 
         // Practitioner dashboard
         [HttpGet("dashboard")]
-        public async Task<IActionResult> Dash(){
-            User currUser = await _userManager.GetUserAsync(HttpContext.User);
-            ViewModel vm = new ViewModel();
-            vm.AllReservations = Query.OnePTodaysReservations(currUser.UserId, dbContext);
-            vm.CurrentUser = currUser;
-            return View("Index", vm);
+        public IActionResult Dash(){
+            return View("Index");
         }
 
         // Practitioner Schedule View w/ current
