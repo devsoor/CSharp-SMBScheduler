@@ -32,11 +32,10 @@
                     }
                     <tbody>
                         @foreach(KeyValuePair<string, Dictionary<string,bool>> dayofweek in  @Model.PSDict){
-                        <tr>
-                            @foreach(KeyValuePair<string,bool> timeofday in  dayofweek.Value){
-                            <td>@timeofday.Value</td>
-                            }
-                        </tr>
+                         @foreach(KeyValuePair<string,bool> timeofday in  dayofweek.Value){
+                             <tr>
+                                 <td>@timeofday.Value</td>
+                            </tr>
                         }
                     </tbody>
                 }
