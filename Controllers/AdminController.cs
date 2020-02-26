@@ -69,15 +69,6 @@ namespace massage.Controllers
             HttpContext.Session.Clear();
             return RedirectToAction("Index");
         }
-<<<<<<< Updated upstream
-        
-        // Admin: dashboard
-        public IActionResult Dash(){
-            // stuff
-            return View("Index");
-        }
-=======
->>>>>>> Stashed changes
 
         [HttpPost]
         public IActionResult AddTestServices()

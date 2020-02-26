@@ -32,7 +32,7 @@ namespace massage.Controllers
                 return RedirectToAction("Login", "Login");
             } else if (ActiveUser.Role == 0) {
                 ////////// REPLACE WITH A REDIRECT TO DEFAULT DASHBOARD //////////
-                return RedirectToAction("Logout", "Login");
+                return RedirectToAction("Dashboard", "Home");
             } else if (ActiveUser.Role == 2) {
                 return RedirectToAction("Dashboard", "Receptionist");
             }
@@ -43,7 +43,7 @@ namespace massage.Controllers
         
         // Practitioner dashboard
         [HttpGet("dashboard")]
-        public IActionResult Dash(){
+        public IActionResult Dashboard(){
             
             ViewModel vm = new ViewModel();
             User currUser = dbContext.Users.FirstOrDefault(u => u.UserId == HttpContext.Session.GetInt32("UserId"));
