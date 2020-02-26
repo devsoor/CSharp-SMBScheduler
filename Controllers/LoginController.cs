@@ -54,6 +54,8 @@ namespace massage.Controllers
                     await _signInManager.SignInAsync(newUser, isPersistent: false);
                     return RedirectToAction("Dashboard", "Home");
                 } // CreateAsync failed
+
+                foreach(error)
     
                 return View("Register");
                 }
