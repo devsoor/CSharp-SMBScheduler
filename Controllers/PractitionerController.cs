@@ -35,9 +35,12 @@ namespace massage.Controllers
 
         // Practitioner dashboard
         [HttpGet("dashboard")]
-        public IActionResult Dash(){
-            // stuff
-            return View("Index");
+        public async Task<IActionResult> Dash(){
+            User currUser = await _userManager.GetUserAsync(HttpContext.User);
+            ViewModel vm = new ViewModel();
+            vm.AllReservations = Query.OnePTodaysReservations(currUser.UserId, dbContext);
+            vm.CurrentUser = currUser;
+            return View("Index", vm);
         }
 
         // Practitioner Schedule View w/ current
