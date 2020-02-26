@@ -97,7 +97,7 @@ namespace massage.Models
             List<Timeslot> FilteredList = new List<Timeslot>();
             Customer thisCustomer = db.Customers.Include(c => c.Insurance).FirstOrDefault(c => c.CustomerId == CId);
             List<User> filtPs = db.Users.Include(u => u.InsurancesAccepted).ThenInclude(i => i.Insurance)
-                .Where(p => p.InsurancesAccepted.Any(ia => ia.InsuranceId == thisCustomer.InsuranceId)).ToList(); // get all practitioners who accept the customer's insurance
+                .Where(p => p.InsurancesAccepted.Any(ia => ia.InsuranceId == thisCustomer.Insurance.InsuranceId)).ToList(); // get all practitioners who accept the customer's insurance
             bool isPAvail;
             foreach (Timeslot ts in currentList)
             {

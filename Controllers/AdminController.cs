@@ -4,85 +4,184 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Authorization;
 using massage.Models;
-
+using Microsoft.AspNetCore.Http;
 
 namespace massage.Controllers
 {
-    [Authorize]
-    [Route("admin")]
     public class AdminController : Controller
     {
-        // Database setup
+        // database setup
         public ProjectContext dbContext;
-        private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
-        public AdminController(
-            ProjectContext context,
-            UserManager<User> userManager,
-            SignInManager<User> signInManager)
+        public AdminController(ProjectContext context)
         {
             dbContext = context;
-            _userManager = userManager;
-            _signInManager = signInManager;
+
         }
 
 //////////////////////////////// GET ////////////////////////////////
-
-        // Admin: dashboard
-        [HttpGet("dashboard")]
-        public IActionResult Dash(){
-            // stuff
-            return View("Index");
+        public IActionResult Dashboard(){
+            ViewModel vm = new ViewModel();
+            vm.CurrentUser = dbContext.Users.FirstOrDefault(u => u.UserId == HttpContext.Session.GetInt32("UserId"));
+            vm.AllUsers = dbContext.Users.ToList();
+            vm.AllCustomers = dbContext.Customers.ToList();
+            vm.AllInsurances = dbContext.Insurances.ToList();
+            vm.AllReservations = dbContext.Reservations.ToList();
+            vm.AllServices = dbContext.Services.ToList();
+            vm.AllTimeslots = dbContext.Timeslots.ToList();
+            return View(vm);
         }
 
-        // EMPLOYEE
-        // Admin: Employee Profile FORM
-        [HttpGet("user_profile/{userId}")]
-        public IActionResult UserProfile(int userId){
-            // stuff
+        [HttpPost]
+        public IActionResult AddTestUsers()
+        {
+            Testing.CreateUser(dbContext);
+            return RedirectToAction("Dashboard");
+        }
+
+        [HttpPost]
+        public IActionResult AddTestServices()
+        {
+            Testing.CreateServices(dbContext);
+            return RedirectToAction("Dashboard");
+        }
+
+        [HttpPost]
+        public IActionResult AddTestCustomers()
+        {
+            Testing.CreateCustomers(dbContext);
+            return RedirectToAction("Dashboard");
+        }
+
+        [HttpPost]
+        public IActionResult AddTestPSchedule()
+        {
+            Testing.CreatePSchedule(dbContext, 2);
+            return RedirectToAction("Dashboard");
+        }
+
+        [HttpPost]
+        public IActionResult AddTestTimeslots()
+        {
+            Testing.CreateTimeslots(dbContext);
+            return RedirectToAction("Dashboard");
+        }
+
+        [HttpPost]
+        public IActionResult AddTestInsurances()
+        {
+            Testing.CreateInsurances(dbContext);
+            return RedirectToAction("Dashboard");
+        }
+
+        [HttpGet]
+        [Route("practitioner/{PracId}")]
+        public IActionResult PractitionerProfile(int PracId)
+        {
+            ViewModel vm = new ViewModel();
+            vm.CurrentUser = dbContext.Users.FirstOrDefault(u => u.UserId == HttpContext.Session.GetInt32("UserId"));
+            vm.OneUser = dbContext.Users.SingleOrDefault(p => p.UserId == PracId);
+            vm.PSDict = QConvert.ScheduleFromQuery(Query.OnePsSchedules(vm.OneUser.UserId, dbContext));
+            vm.AllPSchedules = Query.OnePsSchedules(vm.OneUser.UserId, dbContext);
+            return View(vm);
+        }
+
+        [HttpPost]
+        public IActionResult NewPSchedule()
+        {
+            if (ModelState.IsValid)
+            {
+                // stuff
+                return RedirectToAction("UserProfile");
+            }
+            else
+            {
+                return View("UserProfile");
+            }
+        }
+
+
+
+
+
+        // SERVICE
+        // Admin: New Service FORM
+        [HttpGet("new/service")]
+        public IActionResult NewService()
+        {
             return View();
         }
 
-        // Admin: Employee template FORM
-        [HttpGet("user_template/{userId}")]
-        public IActionResult UserTemplate(int userId){
-            // stuff
-            return View();
-        }
-
-        // Admin: Employee Current Schedule
-        [HttpGet("user_current_sched/{userId}")]
-        public IActionResult UserCurrentSched(int userId){
-            // stuff
-            return View();
+        [HttpPost]
+        public IActionResult CreateService(Service newService)
+        {
+            User currentUser = dbContext.Users.Where(u => u.UserId == HttpContext.Session.GetInt32("UserId")).SingleOrDefault();
+            if (ModelState.IsValid)
+            {
+                dbContext.Add(newService);
+                dbContext.SaveChanges();
+                return RedirectToAction("Dashboard");
+            }
+            else
+            {
+                return View("newService");
+            }
         }
 
         // INSURANCE
-        // Admin: View list of all insurance LIST
-        [HttpGet("insurances")]
-        public IActionResult AllInsurance(){
-            // stuff
-            return View();
-        }
-
         // Admin: Add new insurance FORM
-        [HttpGet("new_insurance")]
-        public IActionResult NewInsurance(){
-            // stuff
+        [HttpGet("new/insurance")]
+        public IActionResult NewInsurance()
+        {
             return View();
         }
 
-        // Admin: Edit insurance FORM
-        [HttpGet("edit_insurance/{insurId}")]
-        public IActionResult EditInsurance(){
-            // stuff
+        [HttpPost]
+        public IActionResult CreateInsurance(Insurance newInsurance)
+        {
+            User currentUser = dbContext.Users.Where(u => u.UserId == HttpContext.Session.GetInt32("UserId")).SingleOrDefault();
+            if (ModelState.IsValid)
+            {
+                dbContext.Add(newInsurance);
+                dbContext.SaveChanges();
+                return RedirectToAction("Dashboard");
+            }
+            else
+            {
+                return View("NewInsurance");
+            }
+        }
+
+
+        // CUSTOMER
+        // Admin: New Customer FORM
+        [HttpGet("new/customer")]
+        public IActionResult NewCustomer()
+        {
             return View();
         }
+
+        [HttpPost]
+        public IActionResult CreateCustomer(Customer newCustomer)
+        {
+            User currentUser = dbContext.Users.Where(u => u.UserId == HttpContext.Session.GetInt32("UserId")).SingleOrDefault();
+            if (ModelState.IsValid)
+            {
+                dbContext.Add(newCustomer);
+                dbContext.SaveChanges();
+                return RedirectToAction("Dashboard");
+            }
+            else
+            {
+                return View("NewCustomer");
+            }
+        }
+
+
+
+
+        
 
         // Admin: DELETE
         [HttpGet("del_insurance/{insurId}")]  // this can be post of u REALLY want it to be.....

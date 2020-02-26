@@ -43,14 +43,14 @@ namespace massage.Models
 
         [Required]
         [Phone]
-        [Display(Name = "Phone Number")]
+        [Display(Name = "Phone Number (123-456-7890)")]
         public string Phone { get; set; }
 
         public string Notes { get; set; }
 
         public List<Reservation> Reservations { get; set; }
 
-        public int InsuranceId { get; set; }
+        //removed foreign key InsuranceID
         public Insurance Insurance { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <Title>Document</Title>
+</head>
+ @model ViewModel
+<body>
+    <div class="container">
+    <div class="row mt-2">
+            <h1>@Model.OneUser.FirstName Profile</h1>
+        </div>
+        <div class="row mt-2">
+            @if(@Model.AllPSchedules.Count <= 0)
+            {
+                <p>You have no PSchedules to Display</p>
+            <form action="NewPSchedule" controller="Admin" method="post">
+                <input type="submit" value="Create New PSchedule">
+            </form>
+            }
+            else {
+                <table class="table bg-white">
+                    <thead>                  
+                        <tr>
+                        <th>Time</th>
+                    @foreach(KeyValuePair<string, Dictionary<string,bool>> dayofweek in  @Model.PSDict){
+                        <th>@dayofweek.Key</th>
+                    }
+                        </tr>
+                    </thead>
+                    }
+                    <tbody>
+                        @foreach(KeyValuePair<string, Dictionary<string,bool>> dayofweek in  @Model.PSDict){
+                        <tr>
+                            @foreach(KeyValuePair<string,bool> timeofday in  dayofweek.Value){
+                            <td>@timeofday.Value</td>
+                            }
+                        </tr>
+                        }
+                    </tbody>
+                }
+                </table>
+            }
+        </div>
+    </div>
+</body>
+</html>

@@ -48,7 +48,7 @@ namespace massage.Models
             cToEdit.City = editedC.City;
             cToEdit.Email = editedC.Email;
             cToEdit.FirstName = editedC.FirstName;
-            cToEdit.InsuranceId = editedC.InsuranceId;
+            cToEdit.Insurance = editedC.Insurance;
             cToEdit.LastName = editedC.LastName;
             cToEdit.Notes = editedC.Notes;
             cToEdit.Phone = editedC.Phone;

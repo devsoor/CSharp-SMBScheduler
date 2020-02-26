@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <Title>Document</Title>
+</head>
+<body>
+    <div class="container">
+        <div class="row mt-2">
+            <h1>Create Customer</h1>
+        </div>
+        <div class="row mt-2">
+            @model Customer
+            <form asp-action="CreateCustomer" asp-controller="Admin" method="post">
+                <div class="form-group row">
+                    <div class="col-sm-5">
+                        <span asp-validation-for="FirstName"></span>
+                        <label asp-for="FirstName"></label>
+                    </div>
+                    <div class="col-sm-7">
+                        <input type="text" class="form-control border border-dark" asp-for="FirstName">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-5">
+                        <span asp-validation-for="LastName"></span>
+                        <label asp-for="LastName"></label>
+                    </div>
+                    <div class="col-sm-7">
+                        <input type="text" class="form-control border border-dark" asp-for="LastName">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Email"></label>
+                    <span asp-validation-for="Email"></span>
+                    <input class="form-control border border-dark" asp-for="Email" type="Email">
+                </div>
+                <div class="form-group">
+                    <label asp-for="Phone"></label>
+                    <span asp-validation-for="Phone"></span>
+                    <input class="form-control border border-dark" asp-for="Phone" type="tel" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required>
+                </div>           
+                <div class="form-group">
+                    <span asp-validation-for="Address2"></span>
+                    <label asp-for="Address2"></label>
+                    <input type="text" class="form-control border border-dark" asp-for="Address1" placeholder="1234 Main St">
+                </div>
+                <div class="form-group">
+                    <span asp-validation-for="Address2"></span>
+                    <label asp-for="Address2"></label>
+                    <input type="text" class="form-control border border-dark" asp-for="Address1" placeholder="Apt 35">
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <span asp-validation-for="City"></span>
+                        <label asp-for="City"></label>
+                        <input type="text" class="form-control border border-dark" asp-for="City">
+                    </div>
+                    <div class="form-group col-md-4">
+                        <span asp-validation-for="State"></span>
+                        <label asp-for="State"></label>
+                        <input type="text" class="form-control border border-dark" asp-for="State">
+                    </div>
+                    <div class="form-group col-md-2">
+                        <span asp-validation-for="Zip"></span>
+                        <label asp-for="Zip"></label>
+                        <input type="number" class="form-control border border-dark" asp-for="Zip">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-2">
+                        <span asp-validation-for="Notes"></span>
+                        <label asp-for="Notes"></label>
+                    </div>
+                    <div class="col-sm-10">
+                        <textarea class="form-control border border-dark" asp-for="Notes"></textarea>
+                    </div>
+                </div>
+                <div class="form-group row text-right">
+                    <div class="col-sm-12">
+                        <button type="submit" class="btn btn-primary">Create Customer</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div> 
+</body>
+</html>

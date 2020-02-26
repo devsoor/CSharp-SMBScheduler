@@ -4,30 +4,20 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Authorization;
 using massage.Models;
-
+using Microsoft.AspNetCore.Http;
 
 namespace massage.Controllers
 {
-    [Authorize]
     public class HomeController : Controller
     {
         // database setup
         public ProjectContext dbContext;
-        private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
-        public HomeController(
-            ProjectContext context,
-            UserManager<User> userManager,
-            SignInManager<User> signInManager)
+        public HomeController(ProjectContext context)
         {
             dbContext = context;
-            _userManager = userManager;
-            _signInManager = signInManager;
+
         }
 
         // all reservations
@@ -69,7 +59,7 @@ namespace massage.Controllers
             newCust.Phone = "1234567890";
             newCust.State = "MA";
             newCust.Zip = 02115;
-            newCust.InsuranceId = newIns.InsuranceId;
+            newCust.Insurance = newIns;
             dbContext.Add(newCust);
             dbContext.SaveChanges();
             Customer newCust2 = new Customer();
@@ -83,11 +73,11 @@ namespace massage.Controllers
             newCust2.Phone = "9087654321";
             newCust2.State = "CA";
             newCust2.Zip = 94611;
-            newCust2.InsuranceId = newIns2.InsuranceId;
+            newCust2.Insurance = newIns2;
             dbContext.Add(newCust2);
             dbContext.SaveChanges();
             User pract1 = new User();
-            pract1.PasswordHash = "AQAAAAEAACcQAAAAEOfdJHYZmxEQpJaWvaD4c7z4CiXIa5ZPfplYWFuCOPYYbXAUxjGKOM3zhm0plujL5g=="; // password hash for Password1!
+            pract1.Password = "AQAAAAEAACcQAAAAEOfdJHYZmxEQpJaWvaD4c7z4CiXIa5ZPfplYWFuCOPYYbXAUxjGKOM3zhm0plujL5g=="; // password hash for Password1!
             pract1.FirstName = "John";
             pract1.LastName = "Smith";
             pract1.Role = 1;
@@ -95,7 +85,7 @@ namespace massage.Controllers
             dbContext.Add(pract1);
             dbContext.SaveChanges();
             User pract2 = new User();
-            pract2.PasswordHash = "AQAAAAEAACcQAAAAEOfdJHYZmxEQpJaWvaD4c7z4CiXIa5ZPfplYWFuCOPYYbXAUxjGKOM3zhm0plujL5g=="; // password hash for Password1!
+            pract2.Password = "AQAAAAEAACcQAAAAEOfdJHYZmxEQpJaWvaD4c7z4CiXIa5ZPfplYWFuCOPYYbXAUxjGKOM3zhm0plujL5g=="; // password hash for Password1!
             pract2.FirstName = "Chris";
             pract2.LastName = "Rodger";
             pract2.Role = 1;
@@ -103,7 +93,7 @@ namespace massage.Controllers
             dbContext.Add(pract2);
             dbContext.SaveChanges();
             User recep1 = new User();
-            recep1.PasswordHash = "AQAAAAEAACcQAAAAEOfdJHYZmxEQpJaWvaD4c7z4CiXIa5ZPfplYWFuCOPYYbXAUxjGKOM3zhm0plujL5g=="; // password hash for Password1!
+            recep1.Password = "AQAAAAEAACcQAAAAEOfdJHYZmxEQpJaWvaD4c7z4CiXIa5ZPfplYWFuCOPYYbXAUxjGKOM3zhm0plujL5g=="; // password hash for Password1!
             recep1.FirstName = "Jane";
             recep1.LastName = "Doe";
             recep1.Role = 2;
@@ -111,7 +101,7 @@ namespace massage.Controllers
             dbContext.Add(recep1);
             dbContext.SaveChanges();
             User recep2 = new User();
-            recep2.PasswordHash = "AQAAAAEAACcQAAAAEOfdJHYZmxEQpJaWvaD4c7z4CiXIa5ZPfplYWFuCOPYYbXAUxjGKOM3zhm0plujL5g=="; // password hash for Password1!
+            recep2.Password = "AQAAAAEAACcQAAAAEOfdJHYZmxEQpJaWvaD4c7z4CiXIa5ZPfplYWFuCOPYYbXAUxjGKOM3zhm0plujL5g=="; // password hash for Password1!
             recep2.FirstName = "Jane";
             recep2.LastName = "Doe";
             recep2.Role = 2;
@@ -445,7 +435,7 @@ namespace massage.Controllers
             vm.AllReservations = dbContext.Reservations.ToList();
             vm.AllServices = dbContext.Services.ToList();
             vm.AllTimeslots = dbContext.Timeslots.ToList();
-            return PartialView(vm);
+            return RedirectToAction("Dashboard","Admin");
         }
 
         [HttpGet("/calendar")]

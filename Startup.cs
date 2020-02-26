@@ -21,40 +21,16 @@ namespace massage
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; set; }
+        public IConfiguration Configuration { get;}
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ProjectContext>(options => options.UseMySql(Configuration["DBInfo:ConnectionString"]));
             
-            services.AddIdentity<User, IdentityRole>()
-                    .AddEntityFrameworkStores<ProjectContext>()
-                    .AddDefaultTokenProviders();
-            
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-                services.AddAuthentication();
-            
             
             services.AddSession();
-
-            services.ConfigureApplicationCookie(options =>
-            {
-                options.LoginPath = $"/loginPath";
-                options.LogoutPath = $"/Identity/Account/Logout";
-                options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
-            });
-
-            services.Configure<IdentityOptions>(options =>
-            {
-                // Default Password settings.
-                options.Password.RequireDigit = false;
-                options.Password.RequireLowercase = false;
-                options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequireUppercase = false;
-                options.Password.RequiredLength = 7;
-                options.Password.RequiredUniqueChars = 1;
-            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -71,7 +47,6 @@ namespace massage
 
             app.UseStaticFiles();
             app.UseSession();
-            app.UseAuthentication();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

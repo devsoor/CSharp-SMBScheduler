@@ -4,36 +4,36 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Authorization;
 using massage.Models;
-
+using Microsoft.AspNetCore.Http;
 
 namespace massage.Controllers
 {
-    [Authorize]
     public class ReceptionistController : Controller
     {
         // database setup
         public ProjectContext dbContext;
-        private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
-        public ReceptionistController(
-            ProjectContext context,
-            UserManager<User> userManager,
-            SignInManager<User> signInManager)
+        public ReceptionistController(ProjectContext context)
         {
             dbContext = context;
-            _userManager = userManager;
-            _signInManager = signInManager;
+
         }
 
+        // all reservations
         [HttpGet]
-        public async Task<IActionResult> Dashboard()
+        public IActionResult Dashboard()
         {
-            User currentUser = await _userManager.GetUserAsync(HttpContext.User);
+
+            ViewModel vm = new ViewModel();
+            vm.CurrentUser = dbContext.Users.FirstOrDefault(u => u.UserId == HttpContext.Session.GetInt32("UserId"));
+            vm.AllUsers = dbContext.Users.ToList();
+            vm.AllCustomers = dbContext.Customers.ToList();
+            vm.AllInsurances = dbContext.Insurances.ToList();
+            vm.AllServices = dbContext.Services.ToList();
+            vm.AllTimeslots = dbContext.Timeslots.ToList();
+            // List<Reservation> list = Query.AllThisWeeksReservations(dbContext);
+            // var weeklyReservations = list;
             return View();
         }
 
@@ -46,9 +46,8 @@ namespace massage.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> NewReservation()
+        public IActionResult NewReservation()
         {
-            User currentUser = await _userManager.GetUserAsync(HttpContext.User);
             return View();
         }
 

@@ -6,27 +6,18 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
 using massage.Models;
-using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace massage.Controllers
 {
-    [AllowAnonymous]
     public class LoginController : Controller
     {
         // database setup
         public ProjectContext dbContext;
-        private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
-        public LoginController(
-            ProjectContext context,
-            UserManager<User> userManager,
-            SignInManager<User> signInManager)
+        public LoginController(ProjectContext context)
         {
             dbContext = context;
-            _userManager = userManager;
-            _signInManager = signInManager;
         }
         // routes
         [HttpGet("login")]
@@ -39,51 +30,57 @@ namespace massage.Controllers
             return View();
         }
         [HttpPost("submitregister")]
-        public async Task<IActionResult> SubmitRegister(User newUser) {
+        public IActionResult SubmitRegister(User newUser) {
             if (ModelState.IsValid) 
             { // pass validations
-                if (dbContext.Users.Any(u => u.UserName == newUser.UserName)){
-                    ModelState.AddModelError("UserName", "Username already in use");
+                if (dbContext.Users.Any(u => u.UserName == newUser.UserName)){ //user in db already
+                    ModelState.AddModelError("UserName", "Username already in use!");
                     return View("Register");
                 }
-                else { // valid, UserName not in use, go ahead and register
-                newUser.Role = 0;
-                IdentityResult result = await _userManager.CreateAsync(newUser, newUser.Password);
-                if(result.Succeeded) {
-                    await _signInManager.SignInAsync(newUser, isPersistent: false);
+                else
+                {//user not in db, can register
+                    PasswordHasher<User> Hasher = new PasswordHasher<User>();
+                    newUser.Password = Hasher.HashPassword(newUser, newUser.Password);
+                    dbContext.Add(newUser);
+                    dbContext.SaveChanges();
+                    User thisUser = dbContext.Users.FirstOrDefault(u => u.UserName == newUser.UserName);
+                    HttpContext.Session.SetInt32("UserId", thisUser.UserId);
                     return RedirectToAction("Dashboard", "Home");
-                } // CreateAsync failed
-    
-                return View("Register");
                 }
             } 
+            //failed validations
             return View("Register");
         }
         [HttpPost("submitlogin")]
-        public async Task<IActionResult> SubmitLogin(LoginUser loginUser) {
-            if (ModelState.IsValid) {
+        public IActionResult SubmitLogin(LoginUser loginUser)
+        {
+            if (ModelState.IsValid)
+            {
                 var userInDb = dbContext.Users.FirstOrDefault(u => u.UserName == loginUser.UserName);
-                if (userInDb == null) { // UserName not found in db
-                    ModelState.AddModelError("UserName", "Invalid Username");
-                    return View("Login");
-                } else { // success
-                    Microsoft.AspNetCore.Identity.SignInResult checkedUser = await _signInManager
-                    .PasswordSignInAsync(
-                        loginUser.UserName,
-                        loginUser.Password,
-                        isPersistent: false,
-                        lockoutOnFailure: false
-                    );
-                    if (checkedUser.Succeeded) return RedirectToAction("Dashboard", "Home");
-                    // checkedUser did not succeed
-                    ModelState.AddModelError("Password", "Username and Password do not match");
+                if (userInDb == null)
+                { // Username not found in db
+                    ModelState.AddModelError("Username", "Invalid Username/Password");
                     return View("Login");
                 }
-            } else return View("Login");
+                PasswordHasher<LoginUser> Hasher = new PasswordHasher<LoginUser>();
+                var result = Hasher.VerifyHashedPassword(loginUser, userInDb.Password, loginUser.Password);
+                if (result == 0)
+                { // password doesn't match
+                    ModelState.AddModelError("Username", "Invalid Username/Password");
+                    return View("Login");
+                }
+                else
+                { // success
+                    HttpContext.Session.SetInt32("UserId", userInDb.UserId);
+                    return RedirectToAction("Dashboard", "Admin");
+                }
+            }
+            //failed validations
+            return View("Login");
         }
         [HttpGet("logout")]
-        public async Task<IActionResult> Logout() {
-            await _signInManager.SignOutAsync();
+        public IActionResult Logout() {
+            HttpContext.Session.Clear();
             return RedirectToAction("Login");
         }
         public IActionResult Error() {
