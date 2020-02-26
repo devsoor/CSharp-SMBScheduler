@@ -4,9 +4,12 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using massage.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
+using massage.Models;
+
 
 namespace massage.Controllers
 {
@@ -17,7 +20,6 @@ namespace massage.Controllers
         public HomeController(ProjectContext context)
         {
             dbContext = context;
-
         }
 
         // all reservations
@@ -59,7 +61,7 @@ namespace massage.Controllers
             newCust.Phone = "1234567890";
             newCust.State = "MA";
             newCust.Zip = 02115;
-            newCust.Insurance = newIns;
+            newCust.Insurance = newIns.InsuranceId;
             dbContext.Add(newCust);
             dbContext.SaveChanges();
             Customer newCust2 = new Customer();
@@ -73,7 +75,7 @@ namespace massage.Controllers
             newCust2.Phone = "9087654321";
             newCust2.State = "CA";
             newCust2.Zip = 94611;
-            newCust2.Insurance = newIns2;
+            newCust2.Insurance = newIns2.InsuranceId;
             dbContext.Add(newCust2);
             dbContext.SaveChanges();
             User pract1 = new User();
@@ -435,7 +437,7 @@ namespace massage.Controllers
             vm.AllReservations = dbContext.Reservations.ToList();
             vm.AllServices = dbContext.Services.ToList();
             vm.AllTimeslots = dbContext.Timeslots.ToList();
-            return RedirectToAction("Dashboard","Admin");
+            return PartialView(vm);
         }
 
         [HttpGet("/calendar")]
