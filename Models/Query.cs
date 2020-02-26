@@ -144,7 +144,7 @@ namespace massage.Models
                 .Where(u => u.Role == 2)
                 .ToList();
         }
-        public static User OnePractitioner(string pID, ProjectContext db)
+        public static User OnePractitioner(int pID, ProjectContext db)
         {
             return db.Users
                 .Include(u => u.PSchedules)
@@ -154,18 +154,18 @@ namespace massage.Models
                 .Include(u => u.Services)
                 .Include(u => u.InsurancesAccepted)
                 .Where(u => u.Role == 1)
-                .FirstOrDefault(u => u.Id == pID);
+                .FirstOrDefault(u => u.UserId == pID);
         }
-        public static User OneReceptionist(string rID, ProjectContext db)
+        public static User OneReceptionist(int rID, ProjectContext db)
         {
             return db.Users
                 .Include(u => u.CreatedReservations)
                 .Where(u => u.Role == 2)
-                .FirstOrDefault(u => u.Id == rID);
+                .FirstOrDefault(u => u.UserId == rID);
         }
         public static User EditUser(User editedUser, ProjectContext db)
         {
-            User userToEdit = db.Users.FirstOrDefault(u => u.Id == editedUser.Id);
+            User userToEdit = db.Users.FirstOrDefault(u => u.UserId == editedUser.UserId);
             userToEdit.FirstName = editedUser.FirstName;
             userToEdit.LastName = editedUser.LastName;
             if (editedUser.Password.Length > 7) {
@@ -184,11 +184,11 @@ namespace massage.Models
                 .Include(u => u.Appointments)
                 .Include(u => u.Services)
                 .Include(u => u.InsurancesAccepted)
-                .FirstOrDefault(u => u.Id == userToEdit.Id);
+                .FirstOrDefault(u => u.UserId == userToEdit.UserId);
         }
-        public static void DeleteUser(string Id, ProjectContext db)
+        public static void DeleteUser(int Id, ProjectContext db)
         {
-            User userToDel = db.Users.FirstOrDefault(u => u.Id == Id);
+            User userToDel = db.Users.FirstOrDefault(u => u.UserId == Id);
             db.Remove(userToDel);
             db.SaveChanges();
             return;
@@ -201,7 +201,7 @@ namespace massage.Models
                 .Include(pat => pat.TimeSlot)
                 .ToList();
         }
-        public static List<PAvailTime> OnePractitionersAvailabilities(string pID, ProjectContext db)
+        public static List<PAvailTime> OnePractitionersAvailabilities(int pID, ProjectContext db)
         {
             return db.PAvailTimes
                 .Include(pat => pat.Practitioner)
@@ -209,7 +209,7 @@ namespace massage.Models
                 .Where(pat => pat.PractitionerId == pID)
                 .ToList();
         }
-        public static PAvailTime CreatePractitionerAvailability(string pID, int tsID, ProjectContext db)
+        public static PAvailTime CreatePractitionerAvailability(int pID, int tsID, ProjectContext db)
         {
             PAvailTime newPAT = new PAvailTime();
             newPAT.PractitionerId = pID;
@@ -229,7 +229,7 @@ namespace massage.Models
             db.SaveChanges();
             return;
         }
-        public static List<PAvailTime> UpdateAllOfOnePsAvails(string pID, List<PAvailTime> updatedPATs, ProjectContext db)
+        public static List<PAvailTime> UpdateAllOfOnePsAvails(int pID, List<PAvailTime> updatedPATs, ProjectContext db)
         {
             List<PAvailTime> oldPats = db.PAvailTimes.Where(pat => pat.PractitionerId == pID).ToList();
             foreach (PAvailTime oldPat in oldPats)
@@ -253,7 +253,7 @@ namespace massage.Models
                 .ToList();
         }
         // Practitioner's Services Queries
-        public static List<PService> OnePsServices(string pID, ProjectContext db)
+        public static List<PService> OnePsServices(int pID, ProjectContext db)
         {
             return db.PServices
                 .Include(ps => ps.Practitioner)
@@ -280,7 +280,7 @@ namespace massage.Models
             db.SaveChanges();
             return;
         }
-        public static List<PService> UpdateAllOfOnePsServices(string pID, List<PService> updatedPServices, ProjectContext db)
+        public static List<PService> UpdateAllOfOnePsServices(int pID, List<PService> updatedPServices, ProjectContext db)
         {
             List<PService> oldPServices = db.PServices.Where(ps => ps.PractitionerId == pID).ToList();
             foreach (PService oldPS in oldPServices)
@@ -303,7 +303,7 @@ namespace massage.Models
                 .ToList();
         }
         // Practitioner Insurance Queries
-        public static List<PInsurance> OnePsInsurances(string pID, ProjectContext db)
+        public static List<PInsurance> OnePsInsurances(int pID, ProjectContext db)
         {
             return db.PInsurances
                 .Include(pi => pi.Insurance)
@@ -331,7 +331,7 @@ namespace massage.Models
             db.SaveChanges();
             return;
         }
-        public static List<PInsurance> UpdateAllOfOnePsInsurances(string pID, List<PInsurance> updatedPIs, ProjectContext db)
+        public static List<PInsurance> UpdateAllOfOnePsInsurances(int pID, List<PInsurance> updatedPIs, ProjectContext db)
         {
             List<PInsurance> oldPInsurances = db.PInsurances.Where(pi => pi.PractitionerId == pID).ToList();
             foreach (PInsurance oldPI in oldPInsurances)
@@ -355,7 +355,7 @@ namespace massage.Models
                 .ToList();
         }
         // Practitioner Schedule (template) Queries
-        public static List<PSchedule> OnePsSchedules(string pID, ProjectContext db)
+        public static List<PSchedule> OnePsSchedules(int pID, ProjectContext db)
         {
             List<PSchedule> existingPSs = db.PSchedules
                 .Include(ps => ps.Practitioner)
@@ -387,7 +387,7 @@ namespace massage.Models
             }
             return existingPSs;
         }
-        public static List<PSchedule> UpdateAllOfOnePsSchedules(string pID, List<PSchedule> updatedPSchedules, ProjectContext db)
+        public static List<PSchedule> UpdateAllOfOnePsSchedules(int pID, List<PSchedule> updatedPSchedules, ProjectContext db)
         {
             if (updatedPSchedules.Count != 7)
             {
@@ -407,7 +407,7 @@ namespace massage.Models
             db.SaveChanges();
             return updatedPSchedules;
         }
-        public static List<PSchedule> ApproveAllOfOnePsSchedules(string pID, ProjectContext db)
+        public static List<PSchedule> ApproveAllOfOnePsSchedules(int pID, ProjectContext db)
         {
             List<PSchedule> PSchedules = db.PSchedules.Where(ps => ps.PractitionerId == pID).ToList();
             if (PSchedules.Count != 7)
@@ -487,7 +487,7 @@ namespace massage.Models
                 .ThenBy(r => r.Timeslot.Hour)
                 .ToList();
         }
-        public static List<Reservation> OnePThisMonthsReservations(string pID, ProjectContext db)
+        public static List<Reservation> OnePThisMonthsReservations(int pID, ProjectContext db)
         {
             return db.Reservations
                 .Include(r => r.Creator)
@@ -528,7 +528,7 @@ namespace massage.Models
                 .ThenBy(r => r.Timeslot.Hour)
                 .ToList();
         }
-        public static List<Reservation> OnePThisWeeksReservations(string pID, ProjectContext db)
+        public static List<Reservation> OnePThisWeeksReservations(int pID, ProjectContext db)
         {
             DateTime start = DateTime.Today;
             while (start.DayOfWeek.ToString() != "Sunday")
@@ -568,7 +568,7 @@ namespace massage.Models
                 .OrderBy(r => r.Timeslot.Hour)
                 .ToList();
         }
-        public static List<Reservation> OnePTodaysReservations(string pID, ProjectContext db)
+        public static List<Reservation> OnePTodaysReservations(int pID, ProjectContext db)
         {
             return db.Reservations
                 .Include(r => r.Creator)

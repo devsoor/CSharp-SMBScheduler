@@ -154,63 +154,63 @@ namespace massage.Controllers
             dbContext.SaveChanges();
             PService ps = new PService();
             ps.ServiceId = serv1.ServiceId;
-            ps.PractitionerId = pract1.Id;
+            ps.PractitionerId = pract1.UserId;
             dbContext.Add(ps);
             dbContext.SaveChanges();
             PService ps2 = new PService();
             ps2.ServiceId = serv2.ServiceId;
-            ps2.PractitionerId = pract1.Id;
+            ps2.PractitionerId = pract1.UserId;
             dbContext.Add(ps2);
             dbContext.SaveChanges();
             PService ps3 = new PService();
             ps3.ServiceId = serv3.ServiceId;
-            ps3.PractitionerId = pract1.Id;
+            ps3.PractitionerId = pract1.UserId;
             dbContext.Add(ps3);
             dbContext.SaveChanges();
             PService ps4 = new PService();
             ps4.ServiceId = serv2.ServiceId;
-            ps4.PractitionerId = pract2.Id;
+            ps4.PractitionerId = pract2.UserId;
             dbContext.Add(ps4);
             dbContext.SaveChanges();
             PService ps5 = new PService();
             ps5.ServiceId = serv3.ServiceId;
-            ps5.PractitionerId = pract2.Id;
+            ps5.PractitionerId = pract2.UserId;
             dbContext.Add(ps5);
             dbContext.SaveChanges();
             PInsurance pi1 = new PInsurance();
-            pi1.PractitionerId = pract1.Id;
+            pi1.PractitionerId = pract1.UserId;
             pi1.InsuranceId = newIns.InsuranceId;
             dbContext.Add(pi1);
             dbContext.SaveChanges();
             PInsurance pi2 = new PInsurance();
-            pi2.PractitionerId = pract1.Id;
+            pi2.PractitionerId = pract1.UserId;
             pi2.InsuranceId = newIns2.InsuranceId;
             dbContext.Add(pi2);
             dbContext.SaveChanges();
             PInsurance pi3 = new PInsurance();
-            pi3.PractitionerId = pract2.Id;
+            pi3.PractitionerId = pract2.UserId;
             pi3.InsuranceId = newIns.InsuranceId;
             dbContext.Add(pi3);
             dbContext.SaveChanges();
-            Query.OnePsSchedules(pract1.Id, dbContext);
-            Query.OnePsSchedules(pract2.Id, dbContext);
+            Query.OnePsSchedules(pract1.UserId, dbContext);
+            Query.OnePsSchedules(pract2.UserId, dbContext);
             CheckTimeslots();
             Timeslot tsToday = dbContext.Timeslots.OrderByDescending(t => t.Hour).FirstOrDefault(t => t.Date == DateTime.Today);
             Reservation newResToday = new Reservation();
-            newResToday.CreatorId = recep1.Id;
+            newResToday.CreatorId = recep1.UserId;
             newResToday.CustomerId = newCust.CustomerId;
             newResToday.Notes = "Important VIP Reservation!!!!!!";
-            newResToday.PractitionerId = pract1.Id;
+            newResToday.PractitionerId = pract1.UserId;
             newResToday.RoomId = room1.RoomId;
             newResToday.ServiceId = serv1.ServiceId;
             newResToday.TimeslotId = tsToday.TimeslotId;
             dbContext.Add(newResToday);
             dbContext.SaveChanges();
             Reservation newResToday2 = new Reservation();
-            newResToday2.CreatorId = recep2.Id;
+            newResToday2.CreatorId = recep2.UserId;
             newResToday2.CustomerId = newCust2.CustomerId;
             newResToday2.Notes = "Will they show up?";
-            newResToday2.PractitionerId = pract2.Id;
+            newResToday2.PractitionerId = pract2.UserId;
             newResToday2.RoomId = room2.RoomId;
             newResToday2.ServiceId = serv3.ServiceId;
             newResToday2.TimeslotId = tsToday.TimeslotId;
@@ -218,20 +218,20 @@ namespace massage.Controllers
             dbContext.SaveChanges();
             Timeslot tsTomorrow = dbContext.Timeslots.OrderByDescending(t => t.Hour).FirstOrDefault(t => t.Date == DateTime.Today.AddDays(1));
             Reservation newResTomorrow = new Reservation();
-            newResTomorrow.CreatorId = recep1.Id;
+            newResTomorrow.CreatorId = recep1.UserId;
             newResTomorrow.CustomerId = newCust.CustomerId;
             newResTomorrow.Notes = "Important VIP Reservation!!!!!!";
-            newResTomorrow.PractitionerId = pract1.Id;
+            newResTomorrow.PractitionerId = pract1.UserId;
             newResTomorrow.RoomId = room1.RoomId;
             newResTomorrow.ServiceId = serv1.ServiceId;
             newResTomorrow.TimeslotId = tsTomorrow.TimeslotId;
             dbContext.Add(newResTomorrow);
             dbContext.SaveChanges();
             Reservation newResTomorrow2 = new Reservation();
-            newResTomorrow2.CreatorId = recep2.Id;
+            newResTomorrow2.CreatorId = recep2.UserId;
             newResTomorrow2.CustomerId = newCust2.CustomerId;
             newResTomorrow2.Notes = "Will they show up?";
-            newResTomorrow2.PractitionerId = pract2.Id;
+            newResTomorrow2.PractitionerId = pract2.UserId;
             newResTomorrow2.RoomId = room2.RoomId;
             newResTomorrow2.ServiceId = serv3.ServiceId;
             newResTomorrow2.TimeslotId = tsTomorrow.TimeslotId;
@@ -428,7 +428,7 @@ namespace massage.Controllers
         public IActionResult Dashboard()
         {
             ViewModel vm = new ViewModel();
-            // vm.CurrentUser = dbContext.Users.FirstOrDefault(u => u.Id == HttpContext.Session.GetInt32("Id"));
+            // vm.CurrentUser = dbContext.Users.FirstOrDefault(u => u.UserId == HttpContext.Session.GetInt32("Id"));
             vm.AllUsers = dbContext.Users.ToList();
             vm.AllCustomers = dbContext.Customers.ToList();
             vm.AllInsurances = dbContext.Insurances.ToList();
@@ -448,7 +448,7 @@ namespace massage.Controllers
         public IActionResult userProfile()
         {
             ViewModel vm = new ViewModel();
-            // vm.CurrentUser = dbContext.Users.Include(u => u.PSchedules).Include(u => u.AvailTimes).Include(u => u.Appointments).FirstOrDefault(u => u.Id == HttpContext.Session.GetInt32("Id"));
+            // vm.CurrentUser = dbContext.Users.Include(u => u.PSchedules).Include(u => u.AvailTimes).Include(u => u.Appointments).FirstOrDefault(u => u.UserId == HttpContext.Session.GetInt32("Id"));
             return PartialView("UserProfile", vm);
         }
 
@@ -456,27 +456,27 @@ namespace massage.Controllers
     //     public IActionResult Index()
     //     {
     //         // debugg stuffffffff
-    //         // User currUser = dbContext.Users.Include(u => u.PSchedules).FirstOrDefault(u => u.Id == HttpContext.Session.GetInt32("Id"));
+    //         // User currUser = dbContext.Users.Include(u => u.PSchedules).FirstOrDefault(u => u.UserId == HttpContext.Session.GetInt32("Id"));
     //         if (currUser.PSchedules.Count == 0)
     //         {
     //             PSchedule newPS = new PSchedule();
-    //             newPS.PractitionerId = currUser.Id;
+    //             newPS.PractitionerId = currUser.UserId;
     //             newPS.DayOfWeek = "Monday";
     //             dbContext.Add(newPS);
     //             PSchedule newPS2 = new PSchedule();
-    //             newPS2.PractitionerId = currUser.Id;
+    //             newPS2.PractitionerId = currUser.UserId;
     //             newPS2.DayOfWeek = "Tuesday";
     //             dbContext.Add(newPS2);
     //             PSchedule newPS3 = new PSchedule();
-    //             newPS3.PractitionerId = currUser.Id;
+    //             newPS3.PractitionerId = currUser.UserId;
     //             newPS3.DayOfWeek = "Wednesday";
     //             dbContext.Add(newPS3);
     //             PSchedule newPS4 = new PSchedule();
-    //             newPS4.PractitionerId = currUser.Id;
+    //             newPS4.PractitionerId = currUser.UserId;
     //             newPS4.DayOfWeek = "Thursday";
     //             dbContext.Add(newPS4);
     //             PSchedule newPS5 = new PSchedule();
-    //             newPS5.PractitionerId = currUser.Id;
+    //             newPS5.PractitionerId = currUser.UserId;
     //             newPS5.DayOfWeek = "Friday";
     //             dbContext.Add(newPS5);
     //             dbContext.SaveChanges();

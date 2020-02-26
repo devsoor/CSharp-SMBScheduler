@@ -12,7 +12,7 @@ namespace massage.Models
         public int InsuranceId { get; set; }
         public Insurance Insurance { get; set; }
 
-        public string PractitionerId { get; set; }
+        public int PractitionerId { get; set; }
         public User Practitioner { get; set; }
     }
 }

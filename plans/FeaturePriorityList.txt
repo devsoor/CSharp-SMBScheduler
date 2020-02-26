@@ -3,8 +3,8 @@ Apppointment Scheduling Application
 Feature Priority List
 
 P0
--Login/Registration
--Have roles (Practitioners, Receptionists, Admins)
+(done)-Login/Registration
+(done)-Have roles (Practitioners, Receptionists, Admins)
     -To see different pages depending on their role
 -Have customer management (edit, add, view - insurance type, basic information)
 -Have Practitioner Management (personal schedule, insurances accepted)

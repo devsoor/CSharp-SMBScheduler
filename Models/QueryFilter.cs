@@ -52,7 +52,7 @@ namespace massage.Models
             return FinalFilter;
         }
 
-        public static List<Timeslot> ByPractitioner(string PId, List<Timeslot> currentList, ProjectContext db)
+        public static List<Timeslot> ByPractitioner(int PId, List<Timeslot> currentList, ProjectContext db)
         {
             List<Timeslot> FilteredList = new List<Timeslot>();
             foreach (Timeslot ts in currentList)
