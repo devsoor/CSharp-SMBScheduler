@@ -770,6 +770,21 @@ namespace massage.Models
                 .OrderBy(t => t.Hour)             
                 .ToList();
         }
+        public static List<Timeslot> OneDaysTimeslots(DateTime day, ProjectContext db)
+        {
+            return db.Timeslots
+                .Include(t => t.PsAvail)
+                .ThenInclude(pat => pat.Practitioner)
+                .Include(t => t.Reservations)
+                .Include(t => t.Reservations.Select(r => r.Practitioner))
+                .Include(t => t.Reservations.Select(r => r.Customer))
+                .Include(t => t.Reservations.Select(r => r.Creator))
+                .Include(t => t.Reservations.Select(r => r.Room))
+                .Include(t => t.Reservations.Select(r => r.Service))
+                .Where(t => t.Date == day)
+                .OrderBy(t => t.Hour)             
+                .ToList();
+        }
         public static Timeslot OneTimeslot(int tsID, ProjectContext db)
         {
             return db.Timeslots

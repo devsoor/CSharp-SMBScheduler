@@ -163,12 +163,13 @@ namespace massage.Controllers
             }
         }
 
-        // [HttpGet]
-        // public IActionResult SingleDayAvailability(DateTime day)
-        // {
-        //     ViewModel vm = new ViewModel();
-        //     vm.AllTimeslots
-        // }
+        [HttpGet]
+        public IActionResult SingleDayAvailability(DateTime day)
+        {
+            ViewModel vm = new ViewModel();
+            vm.AllTimeslots = Query.OneDaysTimeslots(day, dbContext);
+            return View("DayViewTimeslots", vm);
+        }
         
         [HttpGet]
         public IActionResult TodaysAvailability()
