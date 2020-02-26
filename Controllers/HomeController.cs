@@ -242,7 +242,6 @@ namespace massage.Controllers
             return RedirectToAction("Dashboard");
         }
 
-
         // Create New Entries
         public IActionResult NewService(Service newsvc)
         {
@@ -430,18 +429,14 @@ namespace massage.Controllers
         public IActionResult Dashboard()
         {
             ViewModel vm = new ViewModel();
-<<<<<<< Updated upstream
             vm.CurrentUser = dbContext.Users.FirstOrDefault(u => u.UserId == HttpContext.Session.GetInt32("UserId"));
-=======
-            vm.CurrentUser = dbContext.Users.FirstOrDefault(u => u.UserId == HttpContext.Session.GetInt32("Id"));
->>>>>>> Stashed changes
             vm.AllUsers = dbContext.Users.ToList();
             vm.AllCustomers = dbContext.Customers.ToList();
             vm.AllInsurances = dbContext.Insurances.ToList();
             vm.AllReservations = dbContext.Reservations.ToList();
             vm.AllServices = dbContext.Services.ToList();
             vm.AllTimeslots = dbContext.Timeslots.ToList();
-            return RedirectToAction("RDashboard", "Receptionist");
+            return PartialView(vm);
         }
 
         [HttpGet("/calendar")]

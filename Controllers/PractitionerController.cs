@@ -21,21 +21,20 @@ namespace massage.Controllers
         {
             dbContext = context;
         }
-        // User session to keep track who is logged in!!
+        // Logged in user
+        // e.g. return redirect($"users/{UserSession.UserId}")
         private User UserSession {
             get {return dbContext.Users.FirstOrDefault(u => u.UserId == HttpContext.Session.GetInt32("UserId"));}
             set {HttpContext.Session.SetInt32("UserId", value.UserId);}
         }
+        // Redirects all non-practitioner users to their respective dashboards
+        // Call at the beginning of all get methods with access restricted to practitioners
+        // e.g. public IActionResult Dashboard() {AccessCheck(); ...rest of action logic}
         private IActionResult AccessCheck() {
             User ActiveUser = UserSession;
-            if(ActiveUser == null) {
-                return RedirectToAction("Login", "Login");
-            } else if (ActiveUser.Role == 0) {
-                ////////// REPLACE WITH A REDIRECT TO DEFAULT DASHBOARD //////////
-                return RedirectToAction("Logout", "Login");
-            } else if (ActiveUser.Role == 2) {
-                return RedirectToAction("Dashboard", "Receptionist");
-            }
+            if(ActiveUser == null) return RedirectToAction("Login", "Login");
+            else if (ActiveUser.Role == 0) return RedirectToAction("Dashboard", "Home");
+            else if (ActiveUser.Role == 2) return RedirectToAction("Dashboard", "Receptionist");
             return null;
         }
 
@@ -43,8 +42,8 @@ namespace massage.Controllers
         
         // Practitioner dashboard
         [HttpGet("dashboard")]
-        public IActionResult Dash(){
-            
+        public IActionResult Dashboard () {
+            AccessCheck();
             ViewModel vm = new ViewModel();
             User currUser = dbContext.Users.FirstOrDefault(u => u.UserId == HttpContext.Session.GetInt32("UserId"));
             vm.AllReservations = Query.OnePTodaysReservations(currUser.UserId, dbContext);
@@ -55,6 +54,7 @@ namespace massage.Controllers
         // Practitioner Schedule View w/ current
         [HttpGet("schedule")]
         public IActionResult PracSched(){
+            AccessCheck();
             // stuff
             return View();
         }
@@ -62,6 +62,7 @@ namespace massage.Controllers
         // Practitioner Template View FORM
         [HttpGet("template")]
         public IActionResult PracTemplate(){
+            AccessCheck();
             // stuff
             return View();
         }
@@ -69,6 +70,7 @@ namespace massage.Controllers
         // Practitioner Profile View
         [HttpGet("profile")]
         public IActionResult PracProfile(){
+            AccessCheck();
             // stuff
             return View();
         }
@@ -76,6 +78,7 @@ namespace massage.Controllers
         // Practitioner Update Profile FORM
         [HttpGet("update_profile")]
         public IActionResult UpdatePracProf(){
+            AccessCheck();
             // stuff
             return View();
         }

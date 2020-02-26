@@ -78,11 +78,7 @@ namespace massage.Controllers
                 }
                 else
                 { // success
-<<<<<<< Updated upstream
-                    HttpContext.Session.SetInt32("UserId", userInDb.UserId);
-=======
                     UserSession = userInDb;
->>>>>>> Stashed changes
                     return RedirectToAction("Dashboard", "Home");
                 }
             }
