@@ -14,6 +14,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="~/plugins/fontawesome-free/css/all.min.css">
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="~/dist/css/adminlte.min.css">
   <link rel="stylesheet" href="~/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
@@ -35,30 +36,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
     ViewModel vm = Model;
   }
   <!-- Main Sidebar Container -->
-  <partial name="_RSidebarPartial" model="@vm"/>
+  <partial name="_ASidebarPartial" model="@vm"/>
 
   <!-- Content Wrapper. Contains page content -->
+  @* <partial name="_RDashPartial" model="@vm"/> *@
 
-  <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <div class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h3 class="m-0 text-dark">Schedules for @DateTime.Now.ToString("MMMM dd, yyyy")</h1>
-          </div><!-- /.col -->
-
-        </div><!-- /.row -->
-      </div><!-- /.container-fluid -->
-    </div>
-    <!-- /.content-header -->
-
-    <!-- Main content -->
-    <section class="content">
-        <partial name="_RDashPartial"/>
-    </section>
-    <!-- /.content -->
-  </div>
   <!-- /.content-wrapper -->
 
   <!-- Main Footer -->
