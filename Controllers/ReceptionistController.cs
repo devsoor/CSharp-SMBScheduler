@@ -164,7 +164,7 @@ namespace massage.Controllers
         }
 
         [HttpGet]
-        public IActionResult SingleDayAvailability(DateTime day)
+        public IActionResult OneDayAvailability(DateTime day)
         {
             ViewModel vm = new ViewModel();
             vm.AllTimeslots = Query.OneDaysTimeslots(day, dbContext);
@@ -184,16 +184,31 @@ namespace massage.Controllers
         {
             ViewModel vm = new ViewModel();
             vm.AllTimeslots = Query.ThisWeeksTimeslots(dbContext);
-            return View("DayViewTimeslots", vm);
+            return View("WeekViewTimeslots", vm);
         }
         [HttpGet]
         public IActionResult ThisMonthsAvailability()
         {
             ViewModel vm = new ViewModel();
             vm.AllTimeslots = Query.ThisMonthsTimeslots(dbContext);
-            return View("DayViewTimeslots", vm);
+            return View("MonthViewTimeslots", vm);
+        }
+        
+        [HttpGet]
+        public IActionResult OneWeeksAvailability(DateTime startDay)
+        {
+            ViewModel vm = new ViewModel();
+            vm.AllTimeslots = Query.OneWeeksTimeslots(startDay, dbContext);
+            return View("WeekViewTimeslots", vm);
         }
 
+        [HttpGet]
+        public IActionResult OneMonthsAvailability(DateTime dayInMonth)
+        {
+            ViewModel vm = new ViewModel();
+            vm.AllTimeslots = Query.OneMonthsTimeslots(dayInMonth, dbContext);
+            return View("MonthViewTimeslots", vm);
+        }
 
 
 

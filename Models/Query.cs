@@ -722,7 +722,23 @@ namespace massage.Models
                 .Include(t => t.Reservations.Select(r => r.Creator))
                 .Include(t => t.Reservations.Select(r => r.Room))
                 .Include(t => t.Reservations.Select(r => r.Service))
-                .Where(t => t.Date.Month == DateTime.Now.Month)
+                .Where(t => t.Date.Month == DateTime.Now.Month && t.Date.Year == DateTime.Now.Year)
+                .OrderBy(t => t.Date)
+                .ThenBy(t => t.Hour)                
+                .ToList();
+        }
+        public static List<Timeslot> ThisMonthsTimeslots(DateTime dateInMonth, ProjectContext db)
+        {
+            return db.Timeslots
+                .Include(t => t.PsAvail)
+                .ThenInclude(pat => pat.Practitioner)
+                .Include(t => t.Reservations)
+                .Include(t => t.Reservations.Select(r => r.Practitioner))
+                .Include(t => t.Reservations.Select(r => r.Customer))
+                .Include(t => t.Reservations.Select(r => r.Creator))
+                .Include(t => t.Reservations.Select(r => r.Room))
+                .Include(t => t.Reservations.Select(r => r.Service))
+                .Where(t => t.Date.Month == dateInMonth.Month && t.Date.Year == DateTime.Now.Year)
                 .OrderBy(t => t.Date)
                 .ThenBy(t => t.Hour)                
                 .ToList();
@@ -730,6 +746,34 @@ namespace massage.Models
         public static List<Timeslot> ThisWeeksTimeslots(ProjectContext db)
         {
             DateTime start = DateTime.Today;
+            while (start.DayOfWeek.ToString() != "Sunday")
+            {
+                start.AddDays(-1);
+            }
+            // now we have 'start' stored as our start date for the week
+            DateTime end = DateTime.Today;
+            while (end.DayOfWeek.ToString() != "Saturday")
+            {
+                end.AddDays(1);
+            }
+            // now we have 'end' stored as our end date for the week
+            return db.Timeslots
+                .Include(t => t.PsAvail)
+                .ThenInclude(pat => pat.Practitioner)
+                .Include(t => t.Reservations)
+                .Include(t => t.Reservations.Select(r => r.Practitioner))
+                .Include(t => t.Reservations.Select(r => r.Customer))
+                .Include(t => t.Reservations.Select(r => r.Creator))
+                .Include(t => t.Reservations.Select(r => r.Room))
+                .Include(t => t.Reservations.Select(r => r.Service))
+                .Where(t => t.Date >= start && t.Date <= end)
+                .OrderBy(t => t.Date)
+                .ThenBy(t => t.Hour)                
+                .ToList();
+        }
+        public static List<Timeslot> OneWeeksTimeslots(DateTime startDay, ProjectContext db)
+        {
+            DateTime start = startDay;
             while (start.DayOfWeek.ToString() != "Sunday")
             {
                 start.AddDays(-1);
