@@ -74,7 +74,6 @@ namespace massage.Controllers
         }
         
         // Admin: dashboard
-        [HttpGet("dashboard")]
         public IActionResult Dash(){
             // stuff
             return View("Index");
