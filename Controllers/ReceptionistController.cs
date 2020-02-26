@@ -27,27 +27,25 @@ namespace massage.Controllers
         }
         // Redirects non-practitioner users to their respective dashboards
         // see PractitionerController.AccessCheck for details
-        private IActionResult AccessCheck() {
+        private string[] AccessCheck() {
             User ActiveUser = UserSession;
-            if(ActiveUser == null) {
-                return RedirectToAction("Login", "Login");
-            } else if (ActiveUser.Role == 0) {
-                ////////// REPLACE WITH A REDIRECT TO DEFAULT DASHBOARD //////////
-                return RedirectToAction("Dashboard", "Home");
-            } else if (ActiveUser.Role == 1) {
-                return RedirectToAction("Dashboard", "Practitioner");
-            }
+            if(ActiveUser == null) return new string[]{"Login", "Login"};
+            else if (ActiveUser.Role == 0) return new string[]{"Dashboard", "Home"};
+            else if (ActiveUser.Role == 1) return new string[]{"Dashboard", "Practitioner"};
             return null;
         }
 
         // ROUTES
 
         // REC DASHBOARD
+        // Access from Receptionst: "dashboard"
+        // Access from anywhere else: "/rec/dashboard"
         [HttpGet("dashboard")]
         public IActionResult Dashboard()
         {
             // Checks User's role and login
-            AccessCheck();
+            string[] check = AccessCheck();
+            if(check != null) return RedirectToAction(check[0], check[1]);
             ViewModel vm = new ViewModel();
             vm.CurrentUser = dbContext.Users.FirstOrDefault(u => u.UserId == HttpContext.Session.GetInt32("UserId"));
             vm.AllUsers = dbContext.Users.ToList();
@@ -65,7 +63,8 @@ namespace massage.Controllers
         public IActionResult AllReservations()
         {
             // Checks User's role and login
-            AccessCheck();
+            string[] check = AccessCheck();
+            if(check != null) return RedirectToAction(check[0], check[1]);
             Query.AllReservations(dbContext);
             return View();
         }
@@ -75,7 +74,8 @@ namespace massage.Controllers
         public IActionResult NewReservation()
         {
             // Checks User's role and login
-            AccessCheck();
+            string[] check = AccessCheck();
+            if(check != null) return RedirectToAction(check[0], check[1]);
             ViewModel vm = new ViewModel();
             vm.AllUsers = dbContext.Users.ToList();
             vm.AllCustomers = dbContext.Customers.ToList();
