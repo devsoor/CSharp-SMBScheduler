@@ -182,12 +182,12 @@ namespace massage.Controllers
         }
 
         [HttpGet]
-        public IActionResult OneDayAvailability(DateTime day)
+        public IActionResult OneDayAvailability(DateTime oneDay)
         {
             // Checks User's role and login
             AccessCheck();
             ViewModel vm = new ViewModel();
-            vm.AllTimeslots = Query.OneDaysTimeslots(day, dbContext);
+            vm.AllTimeslots = Query.OneDaysTimeslots(oneDay, dbContext);
             return View("DayViewTimeslots", vm);
         }
         
