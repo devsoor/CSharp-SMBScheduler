@@ -429,7 +429,7 @@ namespace massage.Controllers
         public IActionResult Dashboard()
         {
             ViewModel vm = new ViewModel();
-            vm.CurrentUser = dbContext.Users.FirstOrDefault(u => u.UserId == HttpContext.Session.GetInt32("Id"));
+            vm.CurrentUser = dbContext.Users.FirstOrDefault(u => u.UserId == HttpContext.Session.GetInt32("UserId"));
             vm.AllUsers = dbContext.Users.ToList();
             vm.AllCustomers = dbContext.Customers.ToList();
             vm.AllInsurances = dbContext.Insurances.ToList();

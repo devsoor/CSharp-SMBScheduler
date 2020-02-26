@@ -25,7 +25,8 @@ namespace massage.Controllers
             get {return dbContext.Users.FirstOrDefault(u => u.UserId == HttpContext.Session.GetInt32("UserId"));}
             set {HttpContext.Session.SetInt32("UserId", value.UserId);}
         }
-        // Method that checks and Redirects to the correct User's Role Dashboard
+        // Redirects non-practitioner users to their respective dashboards
+        // see PractitionerController.AccessCheck for details
         private IActionResult AccessCheck() {
             User ActiveUser = UserSession;
             if(ActiveUser == null) {
