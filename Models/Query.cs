@@ -15,24 +15,22 @@ namespace massage.Models
         {
             return db.Customers
                 .Include(c => c.Insurance)
-                .Include(c => c.Reservations)
-                .Include(c => c.Reservations.Select(r => r.Practitioner))
-                .Include(c => c.Reservations.Select(r => r.Creator))
-                .Include(c => c.Reservations.Select(r => r.Service))
-                .Include(c => c.Reservations.Select(r => r.Room))
-                .Include(c => c.Reservations.Select(r => r.Timeslot))
+                .Include(c => c.Reservations).ThenInclude(r => r.Practitioner)
+                .Include(c => c.Reservations).ThenInclude(r => r.Creator)
+                .Include(c => c.Reservations).ThenInclude(r => r.Service)
+                .Include(c => c.Reservations).ThenInclude(r => r.Room)
+                .Include(c => c.Reservations).ThenInclude(r => r.Timeslot)
                 .ToList();
         }
         public static Customer OneCustomer(int custID, ProjectContext db)
         {
             return db.Customers
                 .Include(c => c.Insurance)
-                .Include(c => c.Reservations)
-                .Include(c => c.Reservations.Select(r => r.Practitioner))
-                .Include(c => c.Reservations.Select(r => r.Creator))
-                .Include(c => c.Reservations.Select(r => r.Service))
-                .Include(c => c.Reservations.Select(r => r.Room))
-                .Include(c => c.Reservations.Select(r => r.Timeslot))
+                .Include(c => c.Reservations).ThenInclude(r => r.Practitioner)
+                .Include(c => c.Reservations).ThenInclude(r => r.Creator)
+                .Include(c => c.Reservations).ThenInclude(r => r.Service)
+                .Include(c => c.Reservations).ThenInclude(r => r.Room)
+                .Include(c => c.Reservations).ThenInclude(r => r.Timeslot)
                 .FirstOrDefault(c => c.CustomerId == custID);
         }
         public static Customer CreateCustomer(Customer newC, ProjectContext db)
@@ -59,12 +57,11 @@ namespace massage.Models
             db.SaveChanges();
             return db.Customers
                 .Include(c => c.Insurance)
-                .Include(c => c.Reservations)
-                .Include(c => c.Reservations.Select(r => r.Practitioner))
-                .Include(c => c.Reservations.Select(r => r.Creator))
-                .Include(c => c.Reservations.Select(r => r.Service))
-                .Include(c => c.Reservations.Select(r => r.Room))
-                .Include(c => c.Reservations.Select(r => r.Timeslot))
+                .Include(c => c.Reservations).ThenInclude(r => r.Practitioner)
+                .Include(c => c.Reservations).ThenInclude(r => r.Creator)
+                .Include(c => c.Reservations).ThenInclude(r => r.Service)
+                .Include(c => c.Reservations).ThenInclude(r => r.Room)
+                .Include(c => c.Reservations).ThenInclude(r => r.Timeslot)
                 .FirstOrDefault(c => c.CustomerId == cToEdit.CustomerId);
         }
         public static void DeleteCustomer(int custID, ProjectContext db)
@@ -669,12 +666,11 @@ namespace massage.Models
             return db.Timeslots
                 .Include(t => t.PsAvail)
                 .ThenInclude(pat => pat.Practitioner)
-                .Include(t => t.Reservations)
-                .Include(t => t.Reservations.Select(r => r.Practitioner))
-                .Include(t => t.Reservations.Select(r => r.Customer))
-                .Include(t => t.Reservations.Select(r => r.Creator))
-                .Include(t => t.Reservations.Select(r => r.Room))
-                .Include(t => t.Reservations.Select(r => r.Service))
+                .Include(t => t.Reservations).ThenInclude(r => r.Practitioner)
+                .Include(t => t.Reservations).ThenInclude(r => r.Customer)
+                .Include(t => t.Reservations).ThenInclude(r => r.Creator)
+                .Include(t => t.Reservations).ThenInclude(r => r.Room)
+                .Include(t => t.Reservations).ThenInclude(r => r.Service)
                 .OrderBy(t => t.Date)
                 .ThenBy(t => t.Hour)                
                 .ToList();
@@ -684,12 +680,11 @@ namespace massage.Models
             return db.Timeslots
                 .Include(t => t.PsAvail)
                 .ThenInclude(pat => pat.Practitioner)
-                .Include(t => t.Reservations)
-                .Include(t => t.Reservations.Select(r => r.Practitioner))
-                .Include(t => t.Reservations.Select(r => r.Customer))
-                .Include(t => t.Reservations.Select(r => r.Creator))
-                .Include(t => t.Reservations.Select(r => r.Room))
-                .Include(t => t.Reservations.Select(r => r.Service))
+                .Include(t => t.Reservations).ThenInclude(r => r.Practitioner)
+                .Include(t => t.Reservations).ThenInclude(r => r.Customer)
+                .Include(t => t.Reservations).ThenInclude(r => r.Creator)
+                .Include(t => t.Reservations).ThenInclude(r => r.Room)
+                .Include(t => t.Reservations).ThenInclude(r => r.Service)
                 .Where(t => t.Date >= DateTime.Today)
                 .OrderBy(t => t.Date)
                 .ThenBy(t => t.Hour)                
@@ -700,12 +695,11 @@ namespace massage.Models
             return db.Timeslots
                 .Include(t => t.PsAvail)
                 .ThenInclude(pat => pat.Practitioner)
-                .Include(t => t.Reservations)
-                .Include(t => t.Reservations.Select(r => r.Practitioner))
-                .Include(t => t.Reservations.Select(r => r.Customer))
-                .Include(t => t.Reservations.Select(r => r.Creator))
-                .Include(t => t.Reservations.Select(r => r.Room))
-                .Include(t => t.Reservations.Select(r => r.Service))
+                .Include(t => t.Reservations).ThenInclude(r => r.Practitioner)
+                .Include(t => t.Reservations).ThenInclude(r => r.Customer)
+                .Include(t => t.Reservations).ThenInclude(r => r.Creator)
+                .Include(t => t.Reservations).ThenInclude(r => r.Room)
+                .Include(t => t.Reservations).ThenInclude(r => r.Service)
                 .Where(t => t.Date < DateTime.Today)
                 .OrderBy(t => t.Date)
                 .ThenBy(t => t.Hour)                
@@ -716,13 +710,27 @@ namespace massage.Models
             return db.Timeslots
                 .Include(t => t.PsAvail)
                 .ThenInclude(pat => pat.Practitioner)
-                .Include(t => t.Reservations)
-                .Include(t => t.Reservations.Select(r => r.Practitioner))
-                .Include(t => t.Reservations.Select(r => r.Customer))
-                .Include(t => t.Reservations.Select(r => r.Creator))
-                .Include(t => t.Reservations.Select(r => r.Room))
-                .Include(t => t.Reservations.Select(r => r.Service))
-                .Where(t => t.Date.Month == DateTime.Now.Month)
+                .Include(t => t.Reservations).ThenInclude(r => r.Practitioner)
+                .Include(t => t.Reservations).ThenInclude(r => r.Customer)
+                .Include(t => t.Reservations).ThenInclude(r => r.Creator)
+                .Include(t => t.Reservations).ThenInclude(r => r.Room)
+                .Include(t => t.Reservations).ThenInclude(r => r.Service)
+                .Where(t => t.Date.Month == DateTime.Now.Month && t.Date.Year == DateTime.Now.Year)
+                .OrderBy(t => t.Date)
+                .ThenBy(t => t.Hour)                
+                .ToList();
+        }
+        public static List<Timeslot> OneMonthsTimeslots(DateTime dateInMonth, ProjectContext db)
+        {
+            return db.Timeslots
+                .Include(t => t.PsAvail)
+                .ThenInclude(pat => pat.Practitioner)
+                .Include(t => t.Reservations).ThenInclude(r => r.Practitioner)
+                .Include(t => t.Reservations).ThenInclude(r => r.Customer)
+                .Include(t => t.Reservations).ThenInclude(r => r.Creator)
+                .Include(t => t.Reservations).ThenInclude(r => r.Room)
+                .Include(t => t.Reservations).ThenInclude(r => r.Service)
+                .Where(t => t.Date.Month == dateInMonth.Month && t.Date.Year == DateTime.Now.Year)
                 .OrderBy(t => t.Date)
                 .ThenBy(t => t.Hour)                
                 .ToList();
@@ -744,12 +752,38 @@ namespace massage.Models
             return db.Timeslots
                 .Include(t => t.PsAvail)
                 .ThenInclude(pat => pat.Practitioner)
-                .Include(t => t.Reservations)
-                .Include(t => t.Reservations.Select(r => r.Practitioner))
-                .Include(t => t.Reservations.Select(r => r.Customer))
-                .Include(t => t.Reservations.Select(r => r.Creator))
-                .Include(t => t.Reservations.Select(r => r.Room))
-                .Include(t => t.Reservations.Select(r => r.Service))
+                .Include(t => t.Reservations).ThenInclude(r => r.Practitioner)
+                .Include(t => t.Reservations).ThenInclude(r => r.Customer)
+                .Include(t => t.Reservations).ThenInclude(r => r.Creator)
+                .Include(t => t.Reservations).ThenInclude(r => r.Room)
+                .Include(t => t.Reservations).ThenInclude(r => r.Service)
+                .Where(t => t.Date >= start && t.Date <= end)
+                .OrderBy(t => t.Date)
+                .ThenBy(t => t.Hour)                
+                .ToList();
+        }
+        public static List<Timeslot> OneWeeksTimeslots(DateTime startDay, ProjectContext db)
+        {
+            DateTime start = startDay;
+            while (start.DayOfWeek.ToString() != "Sunday")
+            {
+                start.AddDays(-1);
+            }
+            // now we have 'start' stored as our start date for the week
+            DateTime end = DateTime.Today;
+            while (end.DayOfWeek.ToString() != "Saturday")
+            {
+                end.AddDays(1);
+            }
+            // now we have 'end' stored as our end date for the week
+            return db.Timeslots
+                .Include(t => t.PsAvail)
+                .ThenInclude(pat => pat.Practitioner)
+                .Include(t => t.Reservations).ThenInclude(r => r.Practitioner)
+                .Include(t => t.Reservations).ThenInclude(r => r.Customer)
+                .Include(t => t.Reservations).ThenInclude(r => r.Creator)
+                .Include(t => t.Reservations).ThenInclude(r => r.Room)
+                .Include(t => t.Reservations).ThenInclude(r => r.Service)
                 .Where(t => t.Date >= start && t.Date <= end)
                 .OrderBy(t => t.Date)
                 .ThenBy(t => t.Hour)                
@@ -760,13 +794,26 @@ namespace massage.Models
             return db.Timeslots
                 .Include(t => t.PsAvail)
                 .ThenInclude(pat => pat.Practitioner)
-                .Include(t => t.Reservations)
-                .Include(t => t.Reservations.Select(r => r.Practitioner))
-                .Include(t => t.Reservations.Select(r => r.Customer))
-                .Include(t => t.Reservations.Select(r => r.Creator))
-                .Include(t => t.Reservations.Select(r => r.Room))
-                .Include(t => t.Reservations.Select(r => r.Service))
+                .Include(t => t.Reservations).ThenInclude(r => r.Practitioner)
+                .Include(t => t.Reservations).ThenInclude(r => r.Customer)
+                .Include(t => t.Reservations).ThenInclude(r => r.Creator)
+                .Include(t => t.Reservations).ThenInclude(r => r.Room)
+                .Include(t => t.Reservations).ThenInclude(r => r.Service)
                 .Where(t => t.Date == DateTime.Today)
+                .OrderBy(t => t.Hour)             
+                .ToList();
+        }
+        public static List<Timeslot> OneDaysTimeslots(DateTime day, ProjectContext db)
+        {
+            return db.Timeslots
+                .Include(t => t.PsAvail)
+                .ThenInclude(pat => pat.Practitioner)
+                .Include(t => t.Reservations).ThenInclude(r => r.Practitioner)
+                .Include(t => t.Reservations).ThenInclude(r => r.Customer)
+                .Include(t => t.Reservations).ThenInclude(r => r.Creator)
+                .Include(t => t.Reservations).ThenInclude(r => r.Room)
+                .Include(t => t.Reservations).ThenInclude(r => r.Service)
+                .Where(t => t.Date == day)
                 .OrderBy(t => t.Hour)             
                 .ToList();
         }
@@ -775,12 +822,11 @@ namespace massage.Models
             return db.Timeslots
                 .Include(t => t.PsAvail)
                 .ThenInclude(pat => pat.Practitioner)
-                .Include(t => t.Reservations)
-                .Include(t => t.Reservations.Select(r => r.Practitioner))
-                .Include(t => t.Reservations.Select(r => r.Customer))
-                .Include(t => t.Reservations.Select(r => r.Creator))
-                .Include(t => t.Reservations.Select(r => r.Room))
-                .Include(t => t.Reservations.Select(r => r.Service))
+                .Include(t => t.Reservations).ThenInclude(r => r.Practitioner)
+                .Include(t => t.Reservations).ThenInclude(r => r.Customer)
+                .Include(t => t.Reservations).ThenInclude(r => r.Creator)
+                .Include(t => t.Reservations).ThenInclude(r => r.Room)
+                .Include(t => t.Reservations).ThenInclude(r => r.Service)
                 .FirstOrDefault(t => t.TimeslotId == tsID);
         }
         public static Timeslot CreateTimeslot(Timeslot newTS, ProjectContext db)
