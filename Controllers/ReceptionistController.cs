@@ -179,6 +179,21 @@ namespace massage.Controllers
             return View("DayViewTimeslots", vm);
         }
 
+        [HttpGet]
+        public IActionResult ThisWeeksAvailability()
+        {
+            ViewModel vm = new ViewModel();
+            vm.AllTimeslots = Query.ThisWeeksTimeslots(dbContext);
+            return View("DayViewTimeslots", vm);
+        }
+        [HttpGet]
+        public IActionResult ThisMonthsAvailability()
+        {
+            ViewModel vm = new ViewModel();
+            vm.AllTimeslots = Query.ThisMonthsTimeslots(dbContext);
+            return View("DayViewTimeslots", vm);
+        }
+
 
 
 
