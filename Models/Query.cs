@@ -727,7 +727,7 @@ namespace massage.Models
                 .ThenBy(t => t.Hour)                
                 .ToList();
         }
-        public static List<Timeslot> ThisMonthsTimeslots(DateTime dateInMonth, ProjectContext db)
+        public static List<Timeslot> OneMonthsTimeslots(DateTime dateInMonth, ProjectContext db)
         {
             return db.Timeslots
                 .Include(t => t.PsAvail)
