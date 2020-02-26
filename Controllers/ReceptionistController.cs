@@ -56,7 +56,7 @@ namespace massage.Controllers
         }
         
         [HttpGet]
-        public IActionResult Dashboard()
+        public IActionResult RDashboard()
         {
 
             ViewModel vm = new ViewModel();
@@ -68,7 +68,7 @@ namespace massage.Controllers
             vm.AllTimeslots = dbContext.Timeslots.ToList();
             // List<Reservation> list = Query.AllThisWeeksReservations(dbContext);
             // var weeklyReservations = list;
-            return View();
+            return View(vm);
         }
 
 
@@ -82,21 +82,28 @@ namespace massage.Controllers
         [HttpGet]
         public IActionResult NewReservation()
         {
-            return View();
+            ViewModel vm = new ViewModel();
+            vm.CurrentUser = dbContext.Users.FirstOrDefault(u => u.UserId == HttpContext.Session.GetInt32("UserId"));
+            vm.AllUsers = dbContext.Users.ToList();
+            vm.AllCustomers = dbContext.Customers.ToList();
+            vm.AllInsurances = dbContext.Insurances.ToList();
+            vm.AllServices = dbContext.Services.ToList();
+            vm.AllTimeslots = dbContext.Timeslots.ToList();
+            return View(vm);
         }
 
 
         [HttpPost]
-        public IActionResult CreateReservation(Reservation newReservation)
+        public IActionResult CreateReservation(ViewModel vm)
         {
             if (ModelState.IsValid)
             {
-                Query.CreateReservation(newReservation, dbContext);
-                return RedirectToAction("Dashboard", "Receptionist");
+                Query.CreateReservation(vm.OneReservation, dbContext);
+                return RedirectToAction("RDashboard", "Receptionist");
             }
             else
             {
-                return View("newReservation");
+                return View("NewReservation");
             }
         }
 
@@ -118,17 +125,24 @@ namespace massage.Controllers
         [HttpGet]
         public IActionResult NewCustomer()
         {
-            return View();
+            ViewModel vm = new ViewModel();
+            vm.CurrentUser = dbContext.Users.FirstOrDefault(u => u.UserId == HttpContext.Session.GetInt32("UserId"));
+            vm.AllUsers = dbContext.Users.ToList();
+            vm.AllCustomers = dbContext.Customers.ToList();
+            vm.AllInsurances = dbContext.Insurances.ToList();
+            vm.AllServices = dbContext.Services.ToList();
+            vm.AllTimeslots = dbContext.Timeslots.ToList();
+            return View(vm);
         }
 
         [HttpPost]
-        public IActionResult CreateCustomer(User customer)
+        public IActionResult CreateCustomer(ViewModel vm)
         {
             if (ModelState.IsValid)
             {
-                dbContext.Add(customer);
+                dbContext.Add(vm.OneCustomer);
                 dbContext.SaveChanges();
-                return RedirectToAction("Dashboard", "Receptionist");
+                return RedirectToAction("RDashboard", "Receptionist");
             }
             else
             {

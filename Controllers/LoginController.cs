@@ -99,7 +99,7 @@ namespace massage.Controllers
                 else
                 { // success
                     HttpContext.Session.SetInt32("UserId", userInDb.UserId);
-                    return RedirectToAction("Dashboard", "Admin");
+                    return RedirectToAction("Dashboard", "Home");
                 }
             }
             //failed validations
