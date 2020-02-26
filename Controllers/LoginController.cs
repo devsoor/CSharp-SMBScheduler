@@ -21,29 +21,9 @@ namespace massage.Controllers
         }
 
         // User session to keep track who is logged in!!
-        private int UserIdSession {
-            get {
-                    if(HttpContext.Session.GetInt32("UserId") != null ) {
-                        return (int)HttpContext.Session.GetInt32("UserId");
-                    }
-                    else {
-                        return -1;
-                    }
-                }
-            set {HttpContext.Session.SetInt32("userId", (int)value);}
-        } 
-
-        // User's Role session to keep track their roles
-        private int UserRoleSession {
-            get {
-                    if(HttpContext.Session.GetInt32("Role") != null ) {
-                        return (int)HttpContext.Session.GetInt32("Role");
-                    }
-                    else {
-                        return -1;
-                    }
-                }
-            set {HttpContext.Session.SetInt32("Role", (int)value);}
+        private User UserSession {
+            get {return dbContext.Users.FirstOrDefault(u => u.UserId == HttpContext.Session.GetInt32("UserId"));}
+            set {HttpContext.Session.SetInt32("UserId", value.UserId);}
         } 
 
         // routes
@@ -98,7 +78,11 @@ namespace massage.Controllers
                 }
                 else
                 { // success
+<<<<<<< Updated upstream
                     HttpContext.Session.SetInt32("UserId", userInDb.UserId);
+=======
+                    UserSession = userInDb;
+>>>>>>> Stashed changes
                     return RedirectToAction("Dashboard", "Home");
                 }
             }
@@ -108,7 +92,7 @@ namespace massage.Controllers
         [HttpGet("logout")]
         public IActionResult Logout() {
             HttpContext.Session.Clear();
-            return RedirectToAction("Login");
+            return RedirectToAction("Login", "Login");
         }
         public IActionResult Error() {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });

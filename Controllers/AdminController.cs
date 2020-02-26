@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace massage.Controllers
 {
+    [Route("admin")]
     public class AdminController : Controller
     {
         // database setup
@@ -19,35 +20,31 @@ namespace massage.Controllers
             dbContext = context;
 
         }
-
         // User session to keep track who is logged in!!
-        private int UserIdSession {
-            get {
-                    if(HttpContext.Session.GetInt32("UserId") != null ) {
-                        return (int)HttpContext.Session.GetInt32("UserId");
-                    }
-                    else {
-                        return -1;
-                    }
-                }
-            set {HttpContext.Session.SetInt32("userId", (int)value);}
-        } 
-
-        // User's Role session to keep track their roles
-        private int UserRoleSession {
-            get {
-                    if(HttpContext.Session.GetInt32("Role") != null ) {
-                        return (int)HttpContext.Session.GetInt32("Role");
-                    }
-                    else {
-                        return -1;
-                    }
-                }
-            set {HttpContext.Session.SetInt32("Role", (int)value);}
-        } 
+        private User UserSession {
+            get {return dbContext.Users.FirstOrDefault(u => u.UserId == HttpContext.Session.GetInt32("UserId"));}
+            set {HttpContext.Session.SetInt32("UserId", value.UserId);}
+        }
+        private IActionResult AccessCheck() {
+            User ActiveUser = UserSession;
+            if(ActiveUser == null) {
+                return RedirectToAction("Login", "Login");
+            } else if (ActiveUser.Role == 0) {
+                ////////// REPLACE WITH A REDIRECT TO DEFAULT DASHBOARD //////////
+                return RedirectToAction("Logout", "Login");
+            } else if (ActiveUser.Role == 2) {
+                return RedirectToAction("Dashboard", "Receptionist");
+            } else if (ActiveUser.Role == 1) {
+                return RedirectToAction("Dashboard", "Practitioner");
+            }
+            return null;
+        }
 
 //////////////////////////////// GET ////////////////////////////////
+        
+        [HttpGet("dashboard")]
         public IActionResult Dashboard(){
+            AccessCheck();
             ViewModel vm = new ViewModel();
             vm.CurrentUser = dbContext.Users.FirstOrDefault(u => u.UserId == HttpContext.Session.GetInt32("UserId"));
             vm.AllUsers = dbContext.Users.ToList();
@@ -65,19 +62,22 @@ namespace massage.Controllers
             Testing.CreateUser(dbContext);
             return RedirectToAction("Dashboard");
         }
-        
+
         // logout user clear session
         [HttpGet("logout")]
         public IActionResult Logout(){
             HttpContext.Session.Clear();
             return RedirectToAction("Index");
         }
+<<<<<<< Updated upstream
         
         // Admin: dashboard
         public IActionResult Dash(){
             // stuff
             return View("Index");
         }
+=======
+>>>>>>> Stashed changes
 
         [HttpPost]
         public IActionResult AddTestServices()
