@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using massage.Models;
 
@@ -17,7 +16,6 @@ namespace massage.Controllers
     [Route("practitioner")]
     public class PractitionerController : Controller
     {
-        // Database setup
         public ProjectContext dbContext;
         public PractitionerController(ProjectContext context)
         {

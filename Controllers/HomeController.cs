@@ -4,9 +4,12 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using massage.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
+using massage.Models;
+
 
 namespace massage.Controllers
 {
@@ -17,7 +20,6 @@ namespace massage.Controllers
         public HomeController(ProjectContext context)
         {
             dbContext = context;
-
         }
 
         // User session to keep track who is logged in!!
@@ -468,7 +470,7 @@ namespace massage.Controllers
             vm.AllReservations = dbContext.Reservations.ToList();
             vm.AllServices = dbContext.Services.ToList();
             vm.AllTimeslots = dbContext.Timeslots.ToList();
-            return RedirectToAction("Dashboard","Admin");
+            return PartialView(vm);
         }
 
         [HttpGet("/calendar")]
