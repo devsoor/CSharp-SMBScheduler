@@ -31,6 +31,7 @@ namespace massage.Models
         [MaxLength(29, ErrorMessage="Username must be less than 30 characters long")]
         public override string UserName { get; set; }
 
+        [NotMapped]
         [Required]
         [MinLength(8, ErrorMessage="Password must be at least 8 characters in length.")]
         [DataType(DataType.Password)]
