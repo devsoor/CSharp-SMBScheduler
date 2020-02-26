@@ -30,11 +30,11 @@ namespace massage.Controllers
         // Redirects all non-practitioner users to their respective dashboards
         // Call at the beginning of all get methods with access restricted to practitioners
         // e.g. public IActionResult Dashboard() {AccessCheck(); ...rest of action logic}
-        private IActionResult AccessCheck() {
+        private string[] AccessCheck() {
             User ActiveUser = UserSession;
-            if(ActiveUser == null) return RedirectToAction("Login", "Login");
-            else if (ActiveUser.Role == 0) return RedirectToAction("Dashboard", "Home");
-            else if (ActiveUser.Role == 2) return RedirectToAction("Dashboard", "Receptionist");
+            if(ActiveUser == null) return new string[]{"Login", "Login"};
+            else if (ActiveUser.Role == 0) return new string[]{"Dashboard", "Home"};
+            else if (ActiveUser.Role == 2) return new string[]{"Dashboard", "Receptionist"};
             return null;
         }
 
@@ -43,7 +43,10 @@ namespace massage.Controllers
         // Practitioner dashboard
         [HttpGet("dashboard")]
         public IActionResult Dashboard () {
-            AccessCheck();
+            string[] check = AccessCheck();
+            if(check != null) {
+                System.Console.WriteLine("Redirecting to " + check[0] + " " + check[1]);
+                return RedirectToAction(check[0], check[1]);}
             ViewModel vm = new ViewModel();
             User currUser = dbContext.Users.FirstOrDefault(u => u.UserId == HttpContext.Session.GetInt32("UserId"));
             vm.AllReservations = Query.OnePTodaysReservations(currUser.UserId, dbContext);
@@ -54,7 +57,8 @@ namespace massage.Controllers
         // Practitioner Schedule View w/ current
         [HttpGet("schedule")]
         public IActionResult PracSched(){
-            AccessCheck();
+            string[] check = AccessCheck();
+            if(check != null) return RedirectToAction(check[0], check[1]);
             // stuff
             return View();
         }
@@ -62,7 +66,8 @@ namespace massage.Controllers
         // Practitioner Template View FORM
         [HttpGet("template")]
         public IActionResult PracTemplate(){
-            AccessCheck();
+            string[] check = AccessCheck();
+            if(check != null) return RedirectToAction(check[0], check[1]);
             // stuff
             return View();
         }
@@ -70,7 +75,8 @@ namespace massage.Controllers
         // Practitioner Profile View
         [HttpGet("profile")]
         public IActionResult PracProfile(){
-            AccessCheck();
+            string[] check = AccessCheck();
+            if(check != null) return RedirectToAction(check[0], check[1]);
             // stuff
             return View();
         }
@@ -78,7 +84,8 @@ namespace massage.Controllers
         // Practitioner Update Profile FORM
         [HttpGet("update_profile")]
         public IActionResult UpdatePracProf(){
-            AccessCheck();
+            string[] check = AccessCheck();
+            if(check != null) return RedirectToAction(check[0], check[1]);
             // stuff
             return View();
         }

@@ -25,18 +25,12 @@ namespace massage.Controllers
             get {return dbContext.Users.FirstOrDefault(u => u.UserId == HttpContext.Session.GetInt32("UserId"));}
             set {HttpContext.Session.SetInt32("UserId", value.UserId);}
         }
-        private IActionResult AccessCheck() {
+        private string[] AccessCheck() {
             User ActiveUser = UserSession;
-            if(ActiveUser == null) {
-                return RedirectToAction("Login", "Login");
-            } else if (ActiveUser.Role == 0) {
-                ////////// REPLACE WITH A REDIRECT TO DEFAULT DASHBOARD //////////
-                return RedirectToAction("Logout", "Login");
-            } else if (ActiveUser.Role == 2) {
-                return RedirectToAction("Dashboard", "Receptionist");
-            } else if (ActiveUser.Role == 1) {
-                return RedirectToAction("Dashboard", "Practitioner");
-            }
+            if(ActiveUser == null) return new string[]{"Login", "Login"};
+            else if (ActiveUser.Role == 0) return new string[]{"Dashboard", "Home"};
+            else if (ActiveUser.Role == 2) return new string[]{"Dashboard", "Receptionist"};
+            else if (ActiveUser.Role == 1) return new string[]{"Dashboard", "Practitioner"};
             return null;
         }
 
@@ -44,7 +38,8 @@ namespace massage.Controllers
         
         [HttpGet("dashboard")]
         public IActionResult Dashboard(){
-            AccessCheck();
+            string[] check = AccessCheck();
+            if(check != null) return RedirectToAction(check[0], check[1]);
             ViewModel vm = new ViewModel();
             vm.CurrentUser = dbContext.Users.FirstOrDefault(u => u.UserId == HttpContext.Session.GetInt32("UserId"));
             vm.AllUsers = dbContext.Users.ToList();
@@ -109,6 +104,8 @@ namespace massage.Controllers
         [Route("practitioner/{PracId}")]
         public IActionResult PractitionerProfile(int PracId)
         {
+            string[] check = AccessCheck();
+            if(check != null) return RedirectToAction(check[0], check[1]);
             ViewModel vm = new ViewModel();
             vm.CurrentUser = dbContext.Users.FirstOrDefault(u => u.UserId == HttpContext.Session.GetInt32("UserId"));
             vm.OneUser = dbContext.Users.SingleOrDefault(p => p.UserId == PracId);
@@ -140,6 +137,8 @@ namespace massage.Controllers
         [HttpGet("new/service")]
         public IActionResult NewService()
         {
+            string[] check = AccessCheck();
+            if(check != null) return RedirectToAction(check[0], check[1]);
             return View();
         }
 
@@ -164,6 +163,8 @@ namespace massage.Controllers
         [HttpGet("new/insurance")]
         public IActionResult NewInsurance()
         {
+            string[] check = AccessCheck();
+            if(check != null) return RedirectToAction(check[0], check[1]);
             return View();
         }
 
@@ -189,6 +190,8 @@ namespace massage.Controllers
         [HttpGet("new/customer")]
         public IActionResult NewCustomer()
         {
+            string[] check = AccessCheck();
+            if(check != null) return RedirectToAction(check[0], check[1]);
             return View();
         }
 
@@ -216,6 +219,8 @@ namespace massage.Controllers
         // Admin: DELETE
         [HttpGet("del_insurance/{insurId}")]  // this can be post of u REALLY want it to be.....
         public IActionResult DeleteInsurance(){
+            string[] check = AccessCheck();
+            if(check != null) return RedirectToAction(check[0], check[1]);
             return View();
         }
 
