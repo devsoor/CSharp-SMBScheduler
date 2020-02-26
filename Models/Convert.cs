@@ -55,7 +55,7 @@ namespace massage.Models
             }
             return formattedSchedule;
         }
-        public static List<PSchedule> ScheduleToQuery(Dictionary<string, Dictionary<string, bool>> frontEndPS, int practID)
+        public static List<PSchedule> ScheduleToQuery(Dictionary<string, Dictionary<string, bool>> frontEndPS, string practID)
         {
             List<PSchedule> queryReadyList = new List<PSchedule>();
             foreach (KeyValuePair<string, Dictionary<string, bool>> outerKVP in frontEndPS)

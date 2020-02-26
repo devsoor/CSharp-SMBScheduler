@@ -11,10 +11,6 @@ namespace massage.Models
 {
     public class User: IdentityUser
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int UserId { get; set; }
-
         [Required]
         [MinLength(2)]
         [MaxLength(255, ErrorMessage="First Name may not be more than 255 characters long")]

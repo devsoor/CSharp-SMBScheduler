@@ -14,10 +14,10 @@ namespace massage.Models
         public int CustomerId { get; set; }
         public Customer Customer { get; set; }
 
-        public int PractitionerId { get; set; }
+        public string PractitionerId { get; set; }
         public User Practitioner { get; set; }
 
-        public int CreatorId { get; set; }
+        public string CreatorId { get; set; }
         public User Creator { get; set; }
 
         public int ServiceId { get; set; }

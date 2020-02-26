@@ -9,7 +9,7 @@ namespace massage.Models
         [Key]
         public int PAvailTimeId { get; set; }
 
-        public int PractitionerId { get; set; }
+        public string PractitionerId { get; set; }
 
         public User Practitioner { get; set; }
 

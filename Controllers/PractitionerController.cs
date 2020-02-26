@@ -38,7 +38,7 @@ namespace massage.Controllers
         public async Task<IActionResult> Dash(){
             User currUser = await _userManager.GetUserAsync(HttpContext.User);
             ViewModel vm = new ViewModel();
-            vm.AllReservations = Query.OnePTodaysReservations(currUser.UserId, dbContext);
+            vm.AllReservations = Query.OnePTodaysReservations(currUser.Id, dbContext);
             vm.CurrentUser = currUser;
             return View("Index", vm);
         }
