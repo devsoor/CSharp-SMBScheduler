@@ -87,6 +87,28 @@ namespace massage.Controllers
             vm.OneReservation.CreatorId = vm.CurrentUser.UserId;
             return View(vm);
         }
+        [HttpGet("newinsurance")]
+        public IActionResult NewInsurance()
+        {
+            string[] check = AccessCheck();
+            if(check != null) return RedirectToAction(check[0], check[1]);
+            return View();
+        }
+        [HttpPost("CreateInsurance")]
+        public IActionResult CreateInsurance(Insurance newInsurance)
+        {
+            User currentUser = dbContext.Users.Where(u => u.UserId == HttpContext.Session.GetInt32("UserId")).SingleOrDefault();
+            if (ModelState.IsValid)
+            {
+                dbContext.Add(newInsurance);
+                dbContext.SaveChanges();
+                return RedirectToAction("Dashboard");
+            }
+            else
+            {
+                return View("NewInsurance");
+            }
+        }
 
         // Create Reservation from timeslot id
         [HttpPost("CreateReservation")]

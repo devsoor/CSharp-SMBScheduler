@@ -158,7 +158,7 @@ namespace massage.Controllers
 
         // INSURANCE
         // Admin: Add new insurance FORM
-        [HttpGet("new/insurance")]
+        [HttpGet("newinsurance")]
         public IActionResult NewInsurance()
         {
             string[] check = AccessCheck();
@@ -180,6 +180,13 @@ namespace massage.Controllers
             {
                 return View("NewInsurance");
             }
+        }
+        [HttpGet("Customers")]
+        public IActionResult Customers() {
+            ViewModel vm = new ViewModel();
+            vm.CurrentUser = UserSession;
+            vm.AllCustomers = Query.AllCustomers(dbContext);
+            return View(vm);
         }
 
 
