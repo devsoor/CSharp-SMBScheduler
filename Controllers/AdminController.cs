@@ -36,7 +36,7 @@ namespace massage.Controllers
 
 //////////////////////////////// GET ////////////////////////////////
         
-        [HttpGet("dashboard")]
+        [HttpGet("/dashboard")]
         public IActionResult Dashboard(){
             string[] check = AccessCheck();
             if(check != null) return RedirectToAction(check[0], check[1]);
