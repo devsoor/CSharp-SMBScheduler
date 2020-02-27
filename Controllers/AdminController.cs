@@ -119,18 +119,11 @@ namespace massage.Controllers
             return View(vm);
         }
 
-        [HttpGet]
+        [HttpGet("getpracsched")]
         public IActionResult NewPSchedule()
         {
-            if (ModelState.IsValid)
-            {
-                // stuff
-                return RedirectToAction("UserProfile");
-            }
-            else
-            {
-                return View("UserProfile");
-            }
+            User currentUser = dbContext.Users.FirstOrDefault(u => u.UserId == HttpContext.Session.GetInt32("UserId"));
+            return RedirectToAction("PractitionerProfile", new { PracId = currentUser.UserId});
         }
 
 
@@ -306,6 +299,10 @@ namespace massage.Controllers
             else {
                 return View("UserProfile");
             }
+        }
+        [HttpPost]
+        public IActionResult togglePracSched(){
+            return RedirectToAction("PractitionerProfile");
         }
 
     }   // END CONTROLLER
