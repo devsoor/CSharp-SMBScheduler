@@ -86,18 +86,69 @@ namespace massage.Controllers
             return View(vm);
         }
 
-        // SUBMIT: create Reservation
-        [HttpPost("CreateReservation")]
-        public IActionResult CreateReservation(ViewModel vm)
+        // Create Reservation from timeslot id
+        [HttpGet("CreateRes/{tsID}/{custID}/{practID}/{servID}")]
+        public IActionResult CreateReservation(int tsID, int custID, int practID, int servID)
         {
+            string[] check = AccessCheck();
+            if(check != null) return RedirectToAction(check[0], check[1]);
+            Timeslot thisTS = Query.OneTimeslot(tsID, dbContext);
+            int roomID = 1;
+            List<int> roomIDList = new List<int>();
+            foreach (Reservation resv in thisTS.Reservations)
+            {
+                roomIDList.Add(resv.RoomId);
+            }
+            while (roomIDList.IndexOf(roomID) != -1)
+            {
+                roomID ++;
+            }
+            Reservation newRes = new Reservation();            
+            newRes.TimeslotId = tsID;
+            newRes.CustomerId = custID;
+            newRes.PractitionerId = practID;
+            newRes.ServiceId = servID;
+            newRes.RoomId = roomID;
+            newRes.CreatorId = UserSession.UserId;
+            newRes.Notes = "";
+            
+            ViewModel vm = new ViewModel();
+            vm.OneTimeslot = Query.OneTimeslot(tsID, dbContext);
+            vm.AllPractitioners = dbContext.Users.Include(u => u.Services).ThenInclude(s => s.Service).Where(u => u.Role == 1).Where(u => u.AvailTimes.Any(pat => pat.TimeslotId == tsID)).ToList();
+            vm.AllCustomers = Query.AllCustomers(dbContext);
+            List<Service> serviceList = new List<Service>();
+            foreach (User p in vm.AllPractitioners)
+            {
+                foreach (PService ps in p.Services)
+                {
+                    if (serviceList.IndexOf(ps.Service) == -1)
+                    {
+                        serviceList.Add(ps.Service);
+                    }
+                }
+            }
+            vm.AllServices = serviceList;
+            vm.AllInsurances = Query.AllInsurances(dbContext);
+            vm.OneReservation = newRes;
+            return View("ReservationForm", vm);
+        }
+        [HttpPost("SubmitReservation")]
+        public IActionResult SubmitReservation(ViewModel vm)
+        {
+            string[] check = AccessCheck();
+            if(check != null) return RedirectToAction(check[0], check[1]);
             if (ModelState.IsValid)
             {
+                // manual validations
+                if (vm.OneReservation.CreatorId == 0 || vm.OneReservation.CustomerId == 0 || vm.OneReservation.PractitionerId == 0 || vm.OneReservation.RoomId == 0 || vm.OneReservation.ServiceId == 0 || vm.OneReservation.TimeslotId == 0)
+                {
+                    ViewBag.CustomError = "An association value was 0, an error has occured";
+                }
                 Query.CreateReservation(vm.OneReservation, dbContext);
-                return RedirectToAction("RDashboard", "Receptionist");
+                return RedirectToAction("Dashboard");
             }
-            else
-            {
-                return View("NewReservation");
+            else {
+                return View("ReservationForm", vm);
             }
         }
 
