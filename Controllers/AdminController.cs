@@ -119,14 +119,19 @@ namespace massage.Controllers
             return View(vm);
         }
 
-        [HttpGet("getpracsched")]
-        public IActionResult NewPSchedule()
-        {
-            User currentUser = dbContext.Users.FirstOrDefault(u => u.UserId == HttpContext.Session.GetInt32("UserId"));
-            return RedirectToAction("PractitionerProfile", new { PracId = currentUser.UserId});
+        // [HttpGet("getpracsched")]
+        // public IActionResult NewPSchedule()
+        // {
+
+        // }
+
+        [HttpPost("togglepracsched/{id}")]
+        public IActionResult togglePracSched(ViewModel result, int id){
+            System.Console.WriteLine($"####################################################{ result.PSDict.Keys}");
+            List<PSchedule> Schedules = QConvert.ScheduleToQuery(result.PSDict, id);
+            Query.UpdateAllOfOnePsSchedules(id, Schedules, dbContext);
+            return RedirectToAction("Dashboard");
         }
-
-
 
 
 
@@ -306,10 +311,6 @@ namespace massage.Controllers
             else {
                 return View("UserProfile");
             }
-        }
-        [HttpPost]
-        public IActionResult togglePracSched(){
-            return RedirectToAction("PractitionerProfile");
         }
 
     }   // END CONTROLLER

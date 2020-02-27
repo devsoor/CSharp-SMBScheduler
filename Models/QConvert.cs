@@ -71,7 +71,7 @@ namespace massage.Models
                     string unParsedHour = innerKVP.Key.Substring(0,4);
                     string parsedHour = "";
                     int numHour = Int32.Parse(unParsedHour[0].ToString());
-                    if (unParsedHour[0] == '1')
+                    if (unParsedHour[0] == '1' && unParsedHour[1] != 'p')
                     {
                         parsedHour = unParsedHour.Substring(0,2);
                     }
