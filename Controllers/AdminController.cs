@@ -51,7 +51,7 @@ namespace massage.Controllers
             return View(vm);
         }
 
-        [HttpPost]
+        [HttpGet("AddTestUsers")]
         public IActionResult AddTestUsers()
         {
             Testing.CreateUser(dbContext);
