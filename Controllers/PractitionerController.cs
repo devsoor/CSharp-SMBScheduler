@@ -12,7 +12,6 @@ using massage.Models;
 
 namespace massage.Controllers
 {
-    [Authorize]
     [Route("prac")]
     public class PractitionerController : Controller
     {
@@ -44,14 +43,12 @@ namespace massage.Controllers
         [HttpGet("dashboard")]
         public IActionResult Dashboard () {
             string[] check = AccessCheck();
-            if(check != null) {
-                System.Console.WriteLine("Redirecting to " + check[0] + " " + check[1]);
-                return RedirectToAction(check[0], check[1]);}
+            if(check != null) return RedirectToAction(check[0], check[1]);
             ViewModel vm = new ViewModel();
             User currUser = dbContext.Users.FirstOrDefault(u => u.UserId == HttpContext.Session.GetInt32("UserId"));
             vm.AllReservations = Query.OnePTodaysReservations(currUser.UserId, dbContext);
             vm.CurrentUser = currUser;
-            return View("Index", vm);
+            return View("PDashboard", vm);
         }
 
         // Practitioner Schedule View w/ current
