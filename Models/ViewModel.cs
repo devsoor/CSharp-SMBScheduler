@@ -36,6 +36,7 @@ namespace massage.Models
         public Reservation OneReservation { get; set; }
 
         public List<Service> AllServices { get; set; }
+        public List<User> AllPractitioners { get; set; }
 
         public Service OneService { get; set; }
 

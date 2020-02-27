@@ -53,9 +53,8 @@ namespace massage.Controllers
             vm.AllInsurances = dbContext.Insurances.ToList();
             vm.AllServices = dbContext.Services.ToList();
             vm.AllTimeslots = dbContext.Timeslots.ToList();
-            // List<Reservation> list = Query.AllThisWeeksReservations(dbContext);
-            // var weeklyReservations = list;
-            return View("RDashboard", vm);
+            vm.AllPractitioners = Query.AllPractitioners(dbContext);
+            return View("RDashboard",vm);
         }
 
         // ALL RESERVATIONS
@@ -70,23 +69,25 @@ namespace massage.Controllers
         }
 
         // FORM PAGE??
-        [HttpGet("new_res")]
+        [HttpGet("NewReservation")]
         public IActionResult NewReservation()
         {
             // Checks User's role and login
             string[] check = AccessCheck();
             if(check != null) return RedirectToAction(check[0], check[1]);
             ViewModel vm = new ViewModel();
+            vm.CurrentUser = dbContext.Users.FirstOrDefault(u => u.UserId == HttpContext.Session.GetInt32("UserId"));
             vm.AllUsers = dbContext.Users.ToList();
             vm.AllCustomers = dbContext.Customers.ToList();
             vm.AllInsurances = dbContext.Insurances.ToList();
             vm.AllServices = dbContext.Services.ToList();
             vm.AllTimeslots = dbContext.Timeslots.ToList();
+            vm.AllPractitioners = Query.AllPractitioners(dbContext);
             return View(vm);
         }
 
         // SUBMIT: create Reservation
-        [HttpPost]
+        [HttpPost("CreateReservation")]
         public IActionResult CreateReservation(ViewModel vm)
         {
             if (ModelState.IsValid)
@@ -113,17 +114,22 @@ namespace massage.Controllers
         public IActionResult AllCustomers()
         {
             // Checks User's role and login
-            AccessCheck();
+            // Checks User's role and login
+            string[] check = AccessCheck();
+            if(check != null) return RedirectToAction(check[0], check[1]);
             return View();
         }
 
         // NEW CUSTOMER FORM?
-        [HttpGet]
+        [HttpGet("NewCustomer")]
         public IActionResult NewCustomer()
         {
             // Checks User's role and login
-            AccessCheck();
+            // Checks User's role and login
+            string[] check = AccessCheck();
+            if(check != null) return RedirectToAction(check[0], check[1]);
             ViewModel vm = new ViewModel();
+            vm.CurrentUser = dbContext.Users.FirstOrDefault(u => u.UserId == HttpContext.Session.GetInt32("UserId"));
             vm.AllUsers = dbContext.Users.ToList();
             vm.AllCustomers = dbContext.Customers.ToList();
             vm.AllInsurances = dbContext.Insurances.ToList();
@@ -133,14 +139,14 @@ namespace massage.Controllers
         }
 
         // SUBMIT: create new customer
-        [HttpPost]
+        [HttpPost("CreateCustomer")]
         public IActionResult CreateCustomer(ViewModel vm)
         {
             if (ModelState.IsValid)
             {
                 dbContext.Add(vm.OneCustomer);
                 dbContext.SaveChanges();
-                return RedirectToAction("RDashboard", "Receptionist");
+                return RedirectToAction("Dashboard");
             }
             else
             {
@@ -148,12 +154,19 @@ namespace massage.Controllers
             }
         }
 
+        [HttpGet("PractitionerShow/{id}")]
+        public IActionResult PractitionerShow(int userId)
+        {
+            // Checks User's role and login
+            return RedirectToAction("Dashboard");;
+        }
         // MY PROFILE
         [HttpGet]
         public IActionResult MyProfile()
         {
             // Checks User's role and login
-            AccessCheck();
+            string[] check = AccessCheck();
+            if(check != null) return RedirectToAction(check[0], check[1]);
             return View();
         }
 
@@ -185,7 +198,8 @@ namespace massage.Controllers
         public IActionResult OneDayAvailability(DateTime oneDay)
         {
             // Checks User's role and login
-            AccessCheck();
+            string[] check = AccessCheck();
+            if(check != null) return RedirectToAction(check[0], check[1]);
             ViewModel vm = new ViewModel();
             vm.AllTimeslots = Query.OneDaysTimeslots(oneDay, dbContext);
             return View("DayViewTimeslots", vm);
@@ -195,7 +209,8 @@ namespace massage.Controllers
         public IActionResult TodaysAvailability()
         {
             // Checks User's role and login
-            AccessCheck();
+            string[] check = AccessCheck();
+            if(check != null) return RedirectToAction(check[0], check[1]);
             ViewModel vm = new ViewModel();
             vm.AllTimeslots = Query.TodaysTimeslots(dbContext);
             return View("DayViewTimeslots", vm);
@@ -205,7 +220,8 @@ namespace massage.Controllers
         public IActionResult ThisWeeksAvailability()
         {
             // Checks User's role and login
-            AccessCheck();
+            string[] check = AccessCheck();
+            if(check != null) return RedirectToAction(check[0], check[1]);
             ViewModel vm = new ViewModel();
             vm.AllTimeslots = Query.ThisWeeksTimeslots(dbContext);
             return View("WeekViewTimeslots", vm);
@@ -213,8 +229,9 @@ namespace massage.Controllers
         [HttpGet]
         public IActionResult ThisMonthsAvailability()
         {
-            // Checks User's role and login
-            AccessCheck();
+              // Checks User's role and login
+            string[] check = AccessCheck();
+            if(check != null) return RedirectToAction(check[0], check[1]);
             ViewModel vm = new ViewModel();
             vm.AllTimeslots = Query.ThisMonthsTimeslots(dbContext);
             return View("MonthViewTimeslots", vm);
@@ -224,7 +241,8 @@ namespace massage.Controllers
         public IActionResult OneWeeksAvailability(DateTime startDay)
         {
             // Checks User's role and login
-            AccessCheck();
+            string[] check = AccessCheck();
+            if(check != null) return RedirectToAction(check[0], check[1]);
             ViewModel vm = new ViewModel();
             vm.AllTimeslots = Query.OneWeeksTimeslots(startDay, dbContext);
             return View("WeekViewTimeslots", vm);
@@ -234,7 +252,8 @@ namespace massage.Controllers
         public IActionResult OneMonthsAvailability(DateTime dayInMonth)
         {
             // Checks User's role and login
-            AccessCheck();
+            string[] check = AccessCheck();
+            if(check != null) return RedirectToAction(check[0], check[1]);
             ViewModel vm = new ViewModel();
             vm.AllTimeslots = Query.OneMonthsTimeslots(dayInMonth, dbContext);
             return View("MonthViewTimeslots", vm);

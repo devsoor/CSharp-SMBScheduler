@@ -31,7 +31,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <partial name="_NavPartial">
   <!-- /.navbar -->
 
-   @{
+  @{
     ViewModel vm = Model;
   }
   <partial name="_RSidebarPartial" model="vm"/>
@@ -54,7 +54,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
     <!-- Main content -->
     <section class="content">
-        <partial name="_RDashPartial"/>
+        @{
+        ViewModel vm1 = Model;
+        }
+
+        @* @foreach (var u in vm1.AllPractitioners)
+            {
+                <h2>@u.FirstName</h2>;
+            } *@
+        <partial name="_RDashPartial" model="vm1"/>
     </section>
     <!-- /.content -->
   </div>

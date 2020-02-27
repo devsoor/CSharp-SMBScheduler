@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using massage.Models;
-
+using Newtonsoft.Json;
 
 namespace massage.Controllers
 {
@@ -463,15 +463,14 @@ namespace massage.Controllers
             ViewModel vm = new ViewModel();
             CheckTimeslots();
             vm.AllTimeslots = Query.ThisMonthsTimeslots(dbContext);
+            vm.AllUsers = Query.AllPractitioners(dbContext);
             return PartialView("Calendar", vm);
         }
         [HttpGet("calendarJson")]
         public JsonResult calendarJson()
         {
-            System.Console.WriteLine("Entering calendar json ajax call");
             List<Timeslot> allTimeslots = Query.ThisMonthsTimeslots(dbContext);
             List<object> eventResults = new List<object>();
-            System.Console.WriteLine("Got all timeslots, running loop now");
             foreach (Timeslot ts in allTimeslots)
             {
                 long myStart = (long)(ts.Date.AddHours(ts.Hour) - (new DateTime(1970, 1, 1))).TotalMilliseconds;
@@ -487,9 +486,14 @@ namespace massage.Controllers
                 success = 1,
                 result = eventResults
             };
-            System.Console.WriteLine("created all timeslot json objects, returning json to ajax call now");
             return Json(jsonEvents);
         }
+        // [HttpPost("calendarFilterJson")]
+        // public JsonResult calendarFilterJson(string body)
+        // {
+        //     System.Console.WriteLine(body);
+            
+        // }
 
         [HttpGet("/userProfile")]
         public IActionResult userProfile()

@@ -27,11 +27,11 @@
 <aside class="wrapper">
   <!-- Navbar -->
   <partial name="_NavPartial">
-  <!-- Navbar -->
 
-  <!-- Main Sidebar Container -->
-  <partial name="_SidebarPartial">
-  <!-- Main Sidebar Container -->
+  @{
+    ViewModel vm = Model;
+  }
+  <partial name="_RSidebarPartial" model="vm"/>
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
@@ -48,151 +48,46 @@
 
     <!-- Main content -->
     <section class="content">
-            <div class="card card-info">
-              <div class="card-header">
-                <h3 class="card-title">Fill in details of the reservation</h3>
-              </div>
-              <!-- /.card-header -->
-              <!-- form start -->
-              <form class="form" asp-action="CreateReservation" asp-controller="Home" method="post">
-                <div class="card-body">
-                  <ul class="nav nav-tabs" id="apptTab" role="tablist">
-                    <li class="nav-item">
-                      <a class="nav-link active" id="customerInfo-tab" data-toggle="tab" href="#customerInfo" role="tab"
-                        aria-controls="customerInfo" aria-selected="true">Customer info</a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" id="service-tab" data-toggle="tab" href="#service" role="tab"
-                        aria-controls="service" aria-selected="true">Service & Insurance</a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" id="calendar-tab" data-toggle="tab" href="#calendar" role="tab" aria-controls="calendar"
-                        aria-selected="false">Calendar</a>
-                    </li>
-                  </ul>
-              <div class="tab-content" id="customerInfoTab">
-                <div class="tab-pane fade show active" id="customerInfo" role="tabpanel" aria-labelledby="customerInfo-tab">
-                  <div class="col-sm-8">
-                  <div class="form-row mb-2">
-                    <div class="col-sm-4">
-                      <label asp-for="@Model.OneCustomer.FirstName">First Name</label>
-                      <input type="text" asp-for="@Model.OneCustomer.FirstName" class="form-control" placeholder="First Name">
-                      <div class="text-danger small" style="height: 5px;"><span asp-validation-for="@Model.OneCustomer.FirstName"></span></div>
-                    </div>
-                    <div class="col-sm-4">
-                      <label asp-for="@Model.OneCustomer.LastName">Last Name</label>
-                      <input type="text" asp-for="@Model.OneCustomer.LastName" class="form-control" placeholder="Last Name">
-                      <div class="text-danger small" style="height: 5px;"><span asp-validation-for="@Model.OneCustomer.LastName"></span></div>
-                    </div>
-                  </div>
-                  </div>
-                  
-                  <div class="col-sm-8">
-                    <label asp-for="@Model.OneCustomer.Email">Email</label>
-                    <input type="email" asp-for="@Model.OneCustomer.Email" class="form-control" placeholder="Email">
-                    <div class="text-danger small" style="height: 5px;"><span asp-validation-for="@Model.OneCustomer.Email"></span></div>
-                  </div>
-
-                  <div class="col-sm-8">
-                    <label asp-for="@Model.OneCustomer.Phone">Phone</label>
-                    <input type="text" asp-for="@Model.OneCustomer.Phone" class="form-control" placeholder="Phone">
-                    <div class="text-danger small" style="height: 5px;"><span asp-validation-for="@Model.OneCustomer.Phone"></span></div>
-                  </div>
-
-                  <div class="col-sm-8">
-                    <label asp-for="@Model.OneCustomer.Address1">Address1</label>
-                    <input type="text" asp-for="@Model.OneCustomer.Address1" class="form-control" placeholder="Address1">
-                    <div class="text-danger small" style="height: 5px;"><span asp-validation-for="@Model.OneCustomer.Address1"></span></div>
-                  </div>
-
-                  <div class="col-sm-8">
-                    <label asp-for="@Model.OneCustomer.Address2">Address2</label>
-                    <input type="text" asp-for="@Model.OneCustomer.Address2" class="form-control" placeholder="eg. Unit Number, Apt Number">
-                  </div>
-
-
-                  <div class="col-sm-8">
-                    <div class="form-row mb-2">
-                      <input type="hidden" name="country" id="countryId" value="US"/>
-                      <div class="col-sm-4">
-                        <label for="stateId">State</label>
-                        <select asp-for="@Model.OneCustomer.State" class="states form-control mb-2" id="stateId">
-                          <option value="">Select State</option>
-                          @* <option selected value="Washington" stateid="WA" >Washington</option> *@
-                        </select>
-                      </div>
-                      <div class="col-sm-4">
-                        <label for="cityId">City</label>
-                        <select asp-for="@Model.OneCustomer.City" class="cities form-control mb-2" id="cityId">
-                          <option value="">Select City</option>
-                        </select>
-                      </div>
-
-                      <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-                      <script src="//geodata.solutions/includes/statecity.js"></script>
-                    </div>
-                  </div>
-
-
-                  <div class="col-sm-8">
-                    <div class="form-row mb-2">
-                      <div class="col-sm-4">
-                        <div class="row p-2"><label asp-for="@Model.OneCustomer.Zip">Zipcode</label></div>
-                        <input asp-for="@Model.OneCustomer.Zip" type="text" placeholder="5-digit zip code" pattern="[\d{5}$]{5}" title="Must be 5 digit zipcode">
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="col">
-                    <div class="form-row mb-2">
-                        <label asp-for="@Model.OneCustomer.Notes">Notes</label>
-                        <textarea class="form-control rounded-0" asp-for="@Model.OneCustomer.Notes" rows="3" placeholder="Enter customer notes"></textarea>
-                      </div>
-                  </div>
-              </div>
-
-              <!-- Tab 3: Service -->
-                <div class="tab-pane fade" id="service" role="tabpanel" aria-labelledby="service-tab">
-                  <div class="col">
-                    <label for="service">Service:</label>
-                    <div class="col-sm-3 mb-2">
-                        <select class="form-control select" asp-for="@Model.OneService.Name">
-                          @foreach (var service in Model.AllServices)
-                          {
-                            <option value="@service.Name">@service.Name</option>
-                          }
-                        </select>            
-                    </div>
-                    <label for="insurance">Insurance Accepted:</label>
-                    <div class="col-sm-3 mb-2">
-                        <select class="form-control select" asp-for="@Model.OneInsurance.Name">
-                          @foreach (var insurance in Model.AllInsurances)
-                          {
-                            <option value="@insurance.Name">@insurance.Name</option>
-                          }
-                        </select>            
-                    </div>
-                    </div>
-                </div>
-
-                <!-- Tab 3: Calendar -->
-                <div class="tab-pane fade" id="calendar" role="tabpanel" aria-labelledby="calendar-tab">
-                  <!-- Skills -->
-                  <div class="form-row mb-2">
-                  <div id="pscheduler"></div>
-  
-                  </div>
+        <div class="card card-info">
+          <div class="card-header">
+            <h3 class="card-title">Fill in details of the reservation</h3>
+          </div>
+ 
+          <form class="form" asp-action="CreateReservation" asp-controller="Home" method="post">
+            <div class="card-body">
+              <div class="col">
+                <label for="service">Service:</label>
+                <div class="col-sm-3 mb-2">
+                    <select class="form-control select" asp-for="@Model.OneService.Name">
+                      @foreach (var service in Model.AllServices)
+                      {
+                        <option value="@service.Name">@service.Name</option>
+                      }
+                    </select>            
                 </div>
               </div>
-
-                  </div>
-        
-                <div class="card-footer">
-                  <button type="submit" class="btn btn-info">Submit</button>
-                  <button type="submit" class="btn btn-danger float-right">Cancel</button>
+              <div class="col">
+                <label for="service">Practiontioner:</label>
+                <div class="col-sm-3 mb-2">
+                    <select class="form-control select" asp-for="@Model.OneService.Name">
+                      @foreach (var prac in Model.AllPractitioners)
+                      {
+                        <option value="@prac.UserId">@prac.FirstName @prac.LastName</option>
+                      }
+                    </select>            
                 </div>
-              </form>
+              </div>
             </div>
+              <div class="form-row mb-2">
+              <div id="pscheduler"></div>
+          </div>
+            <div class="card-footer">
+              <button type="submit" class="btn btn-info">Submit</button>
+              <button type="submit" class="btn btn-danger float-right">Cancel</button>
+            </div>
+          </form>
+
+        </div>
     </section>
     <!-- /.content -->
   </div>
@@ -203,12 +98,6 @@
     </div>
     <strong>Copyright &copy; 2020 <a href="h">massage.com</a>.</strong> All rights reserved.
   </footer>
-
-  <!-- Control Sidebar -->
-  <aside class="control-sidebar control-sidebar-dark">
-    <!-- Control sidebar content goes here -->
-  </aside>
-  <!-- /.control-sidebar -->
 </aside>
 <!-- ./wrapper -->
 
