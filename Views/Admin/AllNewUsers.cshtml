@@ -1,0 +1,23 @@
+@model User
+
+<div class="table">
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Role</th>
+                <th>Set Role</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+            @foreach(var user in ViewBag.AllNewUsers){
+                <tr>
+                    <td>@user.FirstName @user.LastName</td>
+                    <td>@user.Role</td>
+                    <td><a href="setrole_rec/@user.UserId">Set Rec </a> | <a href="setrole_prac/@user.UserId"> Set Prac</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

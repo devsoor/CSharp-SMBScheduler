@@ -58,12 +58,6 @@ namespace massage.Controllers
             return RedirectToAction("Dashboard");
         }
 
-        // logout user clear session
-        [HttpGet("logout")]
-        public IActionResult Logout(){
-            HttpContext.Session.Clear();
-            return RedirectToAction("Index");
-        }
 
         [HttpGet]
         public IActionResult AddTestServices()
@@ -222,6 +216,33 @@ namespace massage.Controllers
             string[] check = AccessCheck();
             if(check != null) return RedirectToAction(check[0], check[1]);
             return View();
+        }
+
+
+
+
+        // ADMIN: Add Roles
+        [HttpGet("all_newusers")]
+        public IActionResult AllNewUsers(){
+            string[] check = AccessCheck();
+            if(check != null) return RedirectToAction(check[0], check[1]);
+
+            ViewBag.AllNewUsers = dbContext.Users.Where(n => n.Role == 0);
+            return View();
+        }
+        [HttpGet("setrole_prac/{id}")]
+        public IActionResult SetRoleP(int id){
+            User thisUser = dbContext.Users.FirstOrDefault(u => u.UserId == id);
+            thisUser.Role = 1;
+            dbContext.SaveChanges();
+            return RedirectToAction("AllNewUsers");
+        }
+        [HttpGet("setrole_rec/{id}")]
+        public IActionResult SetRoleR(int id){
+            User thisUser = dbContext.Users.FirstOrDefault(u => u.UserId == id);
+            thisUser.Role = 2;
+            dbContext.SaveChanges();
+            return RedirectToAction("AllNewUsers");
         }
 
 //////////////////////////////// POST ////////////////////////////////
