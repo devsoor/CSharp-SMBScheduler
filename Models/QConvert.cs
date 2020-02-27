@@ -128,6 +128,7 @@ namespace massage.Models
             {
                 parsedTSList = QueryFilter.ByService(sID, parsedTSList, db);
             }
+
             return TimeslotsToEvents(parsedTSList);
         }
     }

@@ -34,10 +34,10 @@ namespace massage.Models
          
             // filter based on rooms available
             int count;
-            foreach (Timeslot ts in pFilteredTimeslots)
+            foreach (Timeslot pts in pFilteredTimeslots)
             {
                 count = 0;
-                foreach (Reservation resv in ts.Reservations)
+                foreach (Reservation resv in pts.Reservations)
                 {
                     if (PossibleRooms.IndexOf(resv.Room) != -1) // the room for this reservation is in our list of possible rooms for this service
                     {
@@ -46,9 +46,10 @@ namespace massage.Models
                 }
                 if (count < PossibleRooms.Count)
                 {
-                    FinalFilter.Add(ts);
+                    FinalFilter.Add(pts);
                 }
             }
+            Console.WriteLine("TOTAL FILTPS:", filtPs.Count);
             return FinalFilter;
         }
 

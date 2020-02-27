@@ -3,7 +3,7 @@ $(document).ready(getCalendar);
 function getCalendar(){
   var theBody = {
     'PractitionerId': $('#practSelector').val(),
-    'ServiceId': $('#custSelector').val(),
+    'ServiceId': $('#servSelector').val(),
     'CustomerId': $('#custSelector').val(),
   }
   var theBodyString = JSON.stringify(theBody);
