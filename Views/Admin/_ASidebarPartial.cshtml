@@ -22,7 +22,7 @@
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-          <li class="nav-item has-treeview menu-open">
+          <li class="nav-item has-treeview menu-closed">
             <a href="#" class="nav-link active">
               <i class="nav-icon fas fa-users"></i>
               <p>
@@ -31,15 +31,25 @@
               </p>
             </a>
             <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="#" class="nav-link active">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Prac 1</p>
-                </a>
-              </li>
+              @if(@Model.NewEmps) {
+                <li class="nav-item">
+                  <a href="all_newusers" class="nav-link active" style="background-color:red">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>New Employees</p>
+                  </a>
+                </li>
+              }
+              @foreach (User u in Model.AllUsers) {
+                <li class="nav-item">
+                  <a href="users/@u.UserId" class="nav-link active">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>@u.UserName</p>
+                  </a>
+                </li>
+              }
             </ul>
           </li>
-          <li class="nav-item has-treeview menu-open">
+          <li class="nav-item has-treeview menu-closed">
             <a href="#" class="nav-link active">
               <i class="nav-icon fas fa-calendar-alt"></i>
               <p>
@@ -49,7 +59,7 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="#" class="nav-link">
+                <a href="appointments" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Appointments</p>
                 </a>
@@ -57,7 +67,7 @@
    
             </ul>
           </li>
-          <li class="nav-item has-treeview menu-open">
+          <li class="nav-item has-treeview menu-closed">
             <a href="#" class="nav-link active">
               <i class="nav-icon fas fa-medkit"></i>
               <p>
@@ -67,20 +77,20 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="#" class="nav-link">
+                <a href="Insurances" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>View/Delete</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="NewInsurance" class="nav-link">
+                <a href="NewInsurance" class="nav-link active">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Add</p>
                 </a>
               </li>
             </ul>
           </li>
-          <li class="nav-item has-treeview menu-open">
+          <li class="nav-item has-treeview menu-closed">
             <a href="#" class="nav-link active">
               <i class="nav-icon fas fa-th"></i>
               <p>
@@ -96,7 +106,7 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="NewCustomer" class="nav-link">
+                <a href="NewCustomer" class="nav-link active">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Add</p>
                 </a>
