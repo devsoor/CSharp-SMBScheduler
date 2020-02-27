@@ -45,12 +45,13 @@
         <div class="row mb-2">
       
           <form class="form" asp-action="CreateReservation" asp-controller="Receptionist" method="post">
+            <input type="hidden" asp-for="@Model.OneReservation.CreatorId" value="@Model.CurrentUser.UserId">
             <div class="card-body">
               <div class="row">
                 <div class="col">
                   <label for="service">Customer:</label>
                   <div class="col mb-2">
-                      <select id="custSelector" class="form-control select" asp-for="@Model.OneCustomer.CustomerId">
+                      <select id="custSelector" class="form-control select" asp-for="@Model.OneReservation.CustomerId">
                         <option value="0">Any Customer</option>
                         @foreach (var cust in Model.AllCustomers)
                         {
@@ -62,7 +63,7 @@
                 <div class="col">
                   <label for="service">Service:</label>
                   <div class="col mb-2">
-                      <select id="servSelector" class="form-control select" asp-for="@Model.OneService.ServiceId">
+                      <select id="servSelector" class="form-control select" asp-for="@Model.OneReservation.ServiceId">
                         <option value="0">Any Service</option>
                         @foreach (var service in Model.AllServices)
                         {
@@ -74,7 +75,7 @@
                 <div class="col">
                   <label for="service">Practiontioner:</label>
                   <div class="col mb-2">
-                      <select id="practSelector" class="form-control select" asp-for="@Model.OneUser.UserId">
+                      <select id="practSelector" class="form-control select" asp-for="@Model.OneReservation.PractitionerId">
                         <option value="0">Any Practitioner</option>
                         @foreach (var prac in Model.AllPractitioners)
                         {
@@ -83,7 +84,7 @@
                       </select>            
                   </div>
                 </div>
-                <input type="hidden" value="0" name="@Model.OneReservation.TimeslotId" id="tsid">
+                <input type="hidden" value="0" asp-for="@Model.OneReservation.TimeslotId" id="tsid">
               </div>
               <div class="row">@ViewBag.errormsg</div>
             </div>
@@ -127,7 +128,7 @@
 <script src="~/plugins/fullcalendar-bootstrap/main.min.js"></script>
 
 <!--Practiontioner Scheduler -->
-<script src="~/js/timeslotCalendar.js"></script>
+<script src="~/js/timeslotCalendar.js?v=2"></script>
 
 </body>
 </html>

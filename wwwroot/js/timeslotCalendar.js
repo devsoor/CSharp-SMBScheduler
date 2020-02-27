@@ -1,4 +1,6 @@
+
 var oldList;
+var lastClicked;
 $(document).ready(getCalendar);
 function getCalendar(){
   var theBody = {
@@ -25,9 +27,7 @@ function makeCalendar(myEventList){
 
 
   var Calendar = FullCalendar.Calendar;
-
   var calendarEl = document.getElementById('calendar');
-
   var calendar = new Calendar(calendarEl, {
     timeZone: 'UTC',
     plugins: [ 'bootstrap', 'interaction', 'dayGrid', 'timeGrid' ],
@@ -39,12 +39,10 @@ function makeCalendar(myEventList){
     //Random default events
     events    : myEventList.result,
     eventClick: function(info){
-      let oldtsid = $('#tsid').val();
-      if (oldtsid != "0"){
-        // need to somehow change hte old events bg color back to black
-      }
-        $('#tsid').val(info.event.id);
-        info.event.borderColor = "red";
+      $('#tsid').val(info.event.id);
+      console.log(info.event.id);
+      info.el.style.borderColor = "red";
+      info.el.style.backgroundColor = "#FF0000";
     },
     editable  : false,
     droppable : false, // this allows things to be dropped onto the calendar !!!

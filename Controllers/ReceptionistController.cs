@@ -47,12 +47,12 @@ namespace massage.Controllers
             string[] check = AccessCheck();
             if(check != null) return RedirectToAction(check[0], check[1]);
             ViewModel vm = new ViewModel();
-            vm.CurrentUser = dbContext.Users.FirstOrDefault(u => u.UserId == HttpContext.Session.GetInt32("UserId"));
-            vm.AllUsers = dbContext.Users.ToList();
-            vm.AllCustomers = dbContext.Customers.ToList();
-            vm.AllInsurances = dbContext.Insurances.ToList();
-            vm.AllServices = dbContext.Services.ToList();
-            vm.AllTimeslots = dbContext.Timeslots.ToList();
+            vm.CurrentUser = Query.OneReceptionist(UserSession.UserId, dbContext);
+            vm.AllUsers = Query.AllUsers(dbContext);
+            vm.AllCustomers = Query.AllCustomers(dbContext);
+            vm.AllInsurances = Query.AllInsurances(dbContext);
+            vm.AllServices = Query.AllServices(dbContext);
+            vm.AllTimeslots = Query.AllTimeslots(dbContext);
             vm.AllPractitioners = Query.AllPractitioners(dbContext);
             return View("RDashboard",vm);
         }
@@ -76,12 +76,12 @@ namespace massage.Controllers
             string[] check = AccessCheck();
             if(check != null) return RedirectToAction(check[0], check[1]);
             ViewModel vm = new ViewModel();
-            vm.CurrentUser = dbContext.Users.FirstOrDefault(u => u.UserId == HttpContext.Session.GetInt32("UserId"));
-            vm.AllUsers = dbContext.Users.ToList();
-            vm.AllCustomers = dbContext.Customers.ToList();
-            vm.AllInsurances = dbContext.Insurances.ToList();
-            vm.AllServices = dbContext.Services.ToList();
-            vm.AllTimeslots = dbContext.Timeslots.ToList();
+            vm.CurrentUser = Query.OneReceptionist(UserSession.UserId, dbContext);
+            vm.AllUsers = Query.AllUsers(dbContext);
+            vm.AllCustomers = Query.AllCustomers(dbContext);
+            vm.AllInsurances = Query.AllInsurances(dbContext);
+            vm.AllServices = Query.AllServices(dbContext);
+            vm.AllTimeslots = Query.AllTimeslots(dbContext);
             vm.AllPractitioners = Query.AllPractitioners(dbContext);
             vm.OneReservation = new Reservation();
             vm.OneReservation.CreatorId = vm.CurrentUser.UserId;
@@ -94,18 +94,19 @@ namespace massage.Controllers
         {
             string[] check = AccessCheck();
             if(check != null) return RedirectToAction(check[0], check[1]);
+            if (vm.OneReservation.CreatorId == 0 || vm.OneReservation.CustomerId == 0 || vm.OneReservation.PractitionerId == 0 || vm.OneReservation.ServiceId == 0 || vm.OneReservation.TimeslotId == 0)
+            {
+                ViewBag.errormsg = "You must select all options!";
+                vm.CurrentUser = Query.OneReceptionist(UserSession.UserId, dbContext);
+                vm.AllUsers = Query.AllUsers(dbContext);
+                vm.AllCustomers = Query.AllCustomers(dbContext);
+                vm.AllInsurances = Query.AllInsurances(dbContext);
+                vm.AllServices = Query.AllServices(dbContext);
+                vm.AllTimeslots = Query.AllTimeslots(dbContext);
+                vm.AllPractitioners = Query.AllPractitioners(dbContext);
+                return View("NewReservation", vm);
+            }
             Timeslot thisTS = Query.OneTimeslot(vm.OneReservation.TimeslotId, dbContext);
-            int roomID = 1;
-            List<int> roomIDList = new List<int>();
-            foreach (Reservation resv in thisTS.Reservations)
-            {
-                roomIDList.Add(resv.RoomId);
-            }
-            while (roomIDList.IndexOf(roomID) != -1)
-            {
-                roomID ++;
-            }
-            vm.OneReservation.RoomId = roomID;
             vm.OneTimeslot = thisTS;
             vm.AllPractitioners = Query.AllPractitioners(dbContext);
             vm.OneCustomer = Query.OneCustomer(vm.OneReservation.CustomerId, dbContext);
@@ -118,18 +119,35 @@ namespace massage.Controllers
         {
             string[] check = AccessCheck();
             if(check != null) return RedirectToAction(check[0], check[1]);
+            if (vm.OneReservation.TimeslotId == 0)
+            {
+                int roomID = 1;
+                Timeslot thisTS = Query.OneTimeslot(vm.OneReservation.TimeslotId, dbContext);
+                List<int> roomIDList = new List<int>();
+                foreach (Reservation resv in thisTS.Reservations)
+                {
+                    roomIDList.Add(resv.RoomId);
+                }
+                while (roomIDList.IndexOf(roomID) != -1)
+                {
+                    roomID ++;
+                }
+                vm.OneReservation.RoomId = roomID;
+            }
             if (ModelState.IsValid)
             {
+                
                 // manual validations
                 if (vm.OneReservation.CreatorId == 0 || vm.OneReservation.CustomerId == 0 || vm.OneReservation.PractitionerId == 0 || vm.OneReservation.RoomId == 0 || vm.OneReservation.ServiceId == 0 || vm.OneReservation.TimeslotId == 0)
                 {
-                    ViewBag.CustomError = "An association value was 0, an error has occured";
+                    ViewBag.errormsg = "An association value was 0, an error has occured";
+                    return View("NewReservation", vm);
                 }
                 Query.CreateReservation(vm.OneReservation, dbContext);
                 return RedirectToAction("Dashboard");
             }
             else {
-                return View("ReservationForm", vm);
+                return View("NewReservation", vm);
             }
         }
 
