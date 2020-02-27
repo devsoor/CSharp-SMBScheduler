@@ -35,20 +35,31 @@ namespace massage.Controllers
         }
 
 //////////////////////////////// GET ////////////////////////////////
-        
-        [HttpGet("dashboard")]
-        public IActionResult Dashboard(){
+        // Testing dashboard route changed to allow creation of admin dashboard
+        [HttpGet("testingdashboard")]
+        public IActionResult TestingDashboard() {
             string[] check = AccessCheck();
             if(check != null) return RedirectToAction(check[0], check[1]);
             ViewModel vm = new ViewModel();
-            vm.CurrentUser = dbContext.Users.FirstOrDefault(u => u.UserId == HttpContext.Session.GetInt32("UserId"));
+            vm.CurrentUser = UserSession;
             vm.AllUsers = dbContext.Users.ToList();
             vm.AllCustomers = dbContext.Customers.ToList();
             vm.AllInsurances = dbContext.Insurances.ToList();
-            vm.AllReservations = dbContext.Reservations.ToList();
             vm.AllServices = dbContext.Services.ToList();
             vm.AllTimeslots = dbContext.Timeslots.ToList();
-            return View(vm);
+            vm.AllPractitioners = Query.AllPractitioners(dbContext);
+            return View("Dashboard", vm);
+        }
+        [HttpGet("dashboard")]
+        public IActionResult Dashboard() {
+            string[] check = AccessCheck();
+            if(check != null) return RedirectToAction(check[0], check[1]);
+            ViewModel vm = new ViewModel();
+            vm.CurrentUser = UserSession;
+            vm.AllUsers = dbContext.Users.ToList();
+            vm.AllPractitioners = Query.AllPractitioners(dbContext);
+            vm.NewEmps = dbContext.Users.Any(u => u.Role == 0);
+            return View("ADashboard", vm);
         }
 
         [HttpGet("AddTestUsers")]
@@ -136,7 +147,7 @@ namespace massage.Controllers
             return View();
         }
 
-        [HttpPost]
+        [HttpPost("CreateService")]
         public IActionResult CreateService(Service newService)
         {
             User currentUser = dbContext.Users.Where(u => u.UserId == HttpContext.Session.GetInt32("UserId")).SingleOrDefault();
@@ -162,7 +173,7 @@ namespace massage.Controllers
             return View();
         }
 
-        [HttpPost]
+        [HttpPost("CreateInsurance")]
         public IActionResult CreateInsurance(Insurance newInsurance)
         {
             User currentUser = dbContext.Users.Where(u => u.UserId == HttpContext.Session.GetInt32("UserId")).SingleOrDefault();
@@ -181,15 +192,19 @@ namespace massage.Controllers
 
         // CUSTOMER
         // Admin: New Customer FORM
-        [HttpGet("new/customer")]
+        [HttpGet("newcustomer")]
         public IActionResult NewCustomer()
         {
             string[] check = AccessCheck();
             if(check != null) return RedirectToAction(check[0], check[1]);
-            return View();
+            ViewModel vm = new ViewModel();
+            vm.AllInsurances = dbContext.Insurances.ToList();
+            vm.CurrentUser = UserSession;
+            vm.AllUsers = dbContext.Users.ToList();
+            return View(vm);
         }
 
-        [HttpPost]
+        [HttpPost("CreateCustomer")]
         public IActionResult CreateCustomer(Customer newCustomer)
         {
             User currentUser = dbContext.Users.Where(u => u.UserId == HttpContext.Session.GetInt32("UserId")).SingleOrDefault();
@@ -226,9 +241,10 @@ namespace massage.Controllers
         public IActionResult AllNewUsers(){
             string[] check = AccessCheck();
             if(check != null) return RedirectToAction(check[0], check[1]);
-
-            ViewBag.AllNewUsers = dbContext.Users.Where(n => n.Role == 0);
-            return View();
+            ViewModel vm = new ViewModel();
+            vm.AllUsers = dbContext.Users.Where(n => n.Role == 0).ToList();
+            vm.CurrentUser = UserSession;
+            return View(vm);
         }
         [HttpGet("setrole_prac/{id}")]
         public IActionResult SetRoleP(int id){
@@ -248,7 +264,6 @@ namespace massage.Controllers
 //////////////////////////////// POST ////////////////////////////////
         
         // Admin: Employee Profile FORM-SUBMIT
-        [HttpPost]
         public IActionResult UserProfileSubmit(){
             if(ModelState.IsValid){
                 // stuff
@@ -261,7 +276,6 @@ namespace massage.Controllers
         }
 
         // Admin: Employee template FORM-SUBMIT
-        [HttpPost]
         public IActionResult UserTemplateSubmit(){
             if(ModelState.IsValid){
                 // stuff
@@ -273,7 +287,6 @@ namespace massage.Controllers
         }
 
         // Admin: Add new insurance FORM-SUBMIT
-        [HttpPost]
         public IActionResult CreateInsuranceSubmit(){
             if(ModelState.IsValid){
                 // stuff
@@ -285,7 +298,6 @@ namespace massage.Controllers
         }
 
         // Admin: Updating insurance FORM-SUBMIT
-        [HttpPost]
         public IActionResult UpdateInsuranceSubmit(){
             if(ModelState.IsValid){
                 // stuff

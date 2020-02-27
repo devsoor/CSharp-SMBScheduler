@@ -41,5 +41,7 @@ namespace massage.Models
         public Service OneService { get; set; }
 
         public List<List<Timeslot>> OldQueries { get; set; }
+        // Needed for _ASidebarPartial
+        public bool NewEmps { get; set; }
     }
 }

@@ -4,6 +4,9 @@
 This is a starter template page. Use this page to start your new project from
 scratch. This page gets rid of all links and provides the needed markup only.
 -->
+@{
+  ViewData["Title"] = "Admin Dashboard";
+}
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -35,9 +38,27 @@ scratch. This page gets rid of all links and provides the needed markup only.
   @{
     ViewModel vm = Model;
   }
-  <h1>NAme: @vm.CurrentUser.FirstName</h1>
-  <partial name="_ASidebarPartial" model="vm"/>
+  <partial name="_ASidebarPartial" model="vm" ViewData="ViewData"/>
 
+
+  <div class="content-wrapper">
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h3 class="m-0 text-dark">Schedules for @DateTime.Now.ToString("MMMM dd, yyyy")</h1>
+          </div><!-- /.col -->
+
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <section class="content">
+        <partial name="_RDashPartial" model="vm"/>
+    </section>
+  </div>
   <!-- Main Footer -->
   <footer class="main-footer">
     <!-- To the right -->
