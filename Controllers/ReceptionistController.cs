@@ -38,6 +38,8 @@ namespace massage.Controllers
         // ROUTES
 
         // REC DASHBOARD
+        // Access from Receptionst: "dashboard"
+        // Access from anywhere else: "/rec/dashboard"
         [HttpGet("dashboard")]
         public IActionResult Dashboard()
         {
@@ -52,10 +54,6 @@ namespace massage.Controllers
             vm.AllServices = dbContext.Services.ToList();
             vm.AllTimeslots = dbContext.Timeslots.ToList();
             vm.AllPractitioners = Query.AllPractitioners(dbContext);
-            foreach (var u in vm.AllPractitioners)
-            {
-                System.Console.WriteLine("======> Pracs are : " +  u.FirstName);
-            }
             return View("RDashboard",vm);
         }
 
@@ -74,7 +72,7 @@ namespace massage.Controllers
         [HttpGet("NewReservation")]
         public IActionResult NewReservation()
         {
-             // Checks User's role and login
+            // Checks User's role and login
             string[] check = AccessCheck();
             if(check != null) return RedirectToAction(check[0], check[1]);
             ViewModel vm = new ViewModel();
@@ -197,13 +195,13 @@ namespace massage.Controllers
         }
 
         [HttpGet]
-        public IActionResult OneDayAvailability(DateTime day)
+        public IActionResult OneDayAvailability(DateTime oneDay)
         {
             // Checks User's role and login
             string[] check = AccessCheck();
             if(check != null) return RedirectToAction(check[0], check[1]);
             ViewModel vm = new ViewModel();
-            vm.AllTimeslots = Query.OneDaysTimeslots(day, dbContext);
+            vm.AllTimeslots = Query.OneDaysTimeslots(oneDay, dbContext);
             return View("DayViewTimeslots", vm);
         }
         

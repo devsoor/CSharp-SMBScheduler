@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using massage.Models;
-
+using Newtonsoft.Json;
 
 namespace massage.Controllers
 {
@@ -442,8 +442,40 @@ namespace massage.Controllers
         [HttpGet("/calendar")]
         public IActionResult calendar()
         {
-            return PartialView("Calendar");
+            ViewModel vm = new ViewModel();
+            CheckTimeslots();
+            vm.AllTimeslots = Query.ThisMonthsTimeslots(dbContext);
+            vm.AllUsers = Query.AllPractitioners(dbContext);
+            return PartialView("Calendar", vm);
         }
+        [HttpGet("calendarJson")]
+        public JsonResult calendarJson()
+        {
+            List<Timeslot> allTimeslots = Query.ThisMonthsTimeslots(dbContext);
+            List<object> eventResults = new List<object>();
+            foreach (Timeslot ts in allTimeslots)
+            {
+                long myStart = (long)(ts.Date.AddHours(ts.Hour) - (new DateTime(1970, 1, 1))).TotalMilliseconds;
+                var oneEvent = new {
+                    id = ts.TimeslotId,
+                    title = $"{6 - ts.Reservations.Count} Reservations Available",
+                    start = myStart,
+                    end = (myStart + 3600000),
+                };
+                eventResults.Add(oneEvent);
+            }
+            var jsonEvents = new {
+                success = 1,
+                result = eventResults
+            };
+            return Json(jsonEvents);
+        }
+        // [HttpPost("calendarFilterJson")]
+        // public JsonResult calendarFilterJson(string body)
+        // {
+        //     System.Console.WriteLine(body);
+            
+        // }
 
         [HttpGet("/userProfile")]
         public IActionResult userProfile()

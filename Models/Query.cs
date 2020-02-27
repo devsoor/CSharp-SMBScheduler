@@ -505,13 +505,13 @@ namespace massage.Models
             DateTime start = DateTime.Today;
             while (start.DayOfWeek.ToString() != "Sunday")
             {
-                start.AddDays(-1);
+                start = start.AddDays(-1);
             }
             // now we have 'start' stored as our start date for the week
             DateTime end = DateTime.Today;
             while (end.DayOfWeek.ToString() != "Saturday")
             {
-                end.AddDays(1);
+                end = end.AddDays(1);
             }
             // now we have 'end' stored as our end date for the week
             return db.Reservations
@@ -531,13 +531,13 @@ namespace massage.Models
             DateTime start = DateTime.Today;
             while (start.DayOfWeek.ToString() != "Sunday")
             {
-                start.AddDays(-1);
+                start = start.AddDays(-1);
             }
             // now we have 'start' stored as our start date for the week
             DateTime end = DateTime.Today;
             while (end.DayOfWeek.ToString() != "Saturday")
             {
-                end.AddDays(1);
+                end = end.AddDays(1);
             }
             // now we have 'end' stored as our end date for the week
             return db.Reservations
@@ -738,16 +738,18 @@ namespace massage.Models
         public static List<Timeslot> ThisWeeksTimeslots(ProjectContext db)
         {
             DateTime start = DateTime.Today;
+            System.Console.WriteLine("Entering this weeks timeslots function");
             while (start.DayOfWeek.ToString() != "Sunday")
             {
-                start.AddDays(-1);
+                start = start.AddDays(-1);
             }
             // now we have 'start' stored as our start date for the week
             DateTime end = DateTime.Today;
             while (end.DayOfWeek.ToString() != "Saturday")
             {
-                end.AddDays(1);
+                end = end.AddDays(1);
             }
+            System.Console.WriteLine($"Start is {start.Day}, End is {end.Day}");
             // now we have 'end' stored as our end date for the week
             return db.Timeslots
                 .Include(t => t.PsAvail)
@@ -767,13 +769,13 @@ namespace massage.Models
             DateTime start = startDay;
             while (start.DayOfWeek.ToString() != "Sunday")
             {
-                start.AddDays(-1);
+                start = start.AddDays(-1);
             }
             // now we have 'start' stored as our start date for the week
             DateTime end = DateTime.Today;
             while (end.DayOfWeek.ToString() != "Saturday")
             {
-                end.AddDays(1);
+                end = end.AddDays(1);
             }
             // now we have 'end' stored as our end date for the week
             return db.Timeslots
