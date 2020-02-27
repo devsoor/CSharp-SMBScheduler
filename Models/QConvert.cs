@@ -97,7 +97,7 @@ namespace massage.Models
                 long myStart = (long)(ts.Date.AddHours(ts.Hour) - (new DateTime(1970, 1, 1))).TotalMilliseconds;
                 var oneEvent = new {
                     id = ts.TimeslotId,
-                    title = $"{6 - ts.Reservations.Count} Reservations Available",
+                    title = $"{6 - ts.Reservations.Count} Available",
                     start = myStart,
                     end = (myStart + 3600000), // start + 1 hour in milliseconds.
                 };
