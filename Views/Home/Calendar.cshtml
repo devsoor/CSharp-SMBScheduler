@@ -40,6 +40,16 @@
           <div class="col-sm-6">
             <h1>Calendar</h1>
           </div>
+          <div class="col-sm-2">
+            <select id="custSelector">
+              @{
+                foreach (User pract in Model.AllUsers)
+                {
+                  <option value="@pract.UserId">@pract.FirstName @pract.LastName</option>
+                }
+              }
+            </select>
+          </div>
 
         </div>
       </div><!-- /.container-fluid -->
@@ -154,12 +164,16 @@
 <script src="~/plugins/fullcalendar-bootstrap/main.min.js"></script>
 <!-- Page specific script -->
 <script>
-  $(document).ready(function(){
+  $(document).ready(makeCalendar);
+
+
+  function makeCalendar(){
     $.ajax({
       method: "GET",
       url: "/calendarJson"
     }).done(function(res){
       console.log(res);
+      var oldList = res;
         /* initialize the external events
         -----------------------------------------------------------------*/
         function ini_events(ele) {
@@ -280,7 +294,23 @@
           $('#new-event').val('')
         })
       })
-    })
+  }
+  $('#custSelector').change(function(){
+    var theBody = {
+      'practitioner': 0,
+      'service': 0,
+      'customer': $('#custSelector').val(),
+      'oldList': oldList
+    }
+    $.ajax({
+      method: "POST",
+      url: "/calendarFilterJson",
+      body: theBody
+      }).done(function(res){
+        console.log(res);
+        calendar.events = res.result;
+      })
+  })
 </script>
 </body>
 </html>
