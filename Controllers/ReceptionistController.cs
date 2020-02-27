@@ -55,9 +55,12 @@ namespace massage.Controllers
             vm.AllInsurances = dbContext.Insurances.ToList();
             vm.AllServices = dbContext.Services.ToList();
             vm.AllTimeslots = dbContext.Timeslots.ToList();
-            // List<Reservation> list = Query.AllThisWeeksReservations(dbContext);
-            // var weeklyReservations = list;
-            return View(vm);
+            vm.AllPractitioners = Query.AllPractitioners(dbContext);
+            foreach (var u in vm.AllPractitioners)
+            {
+                System.Console.WriteLine("======> Pracs are : " +  u.FirstName);
+            }
+            return View("RDashboard",vm);
         }
 
         // ALL RESERVATIONS
@@ -71,22 +74,24 @@ namespace massage.Controllers
         }
 
         // FORM PAGE??
-        [HttpGet("new_res")]
+        [HttpGet("NewReservation")]
         public IActionResult NewReservation()
         {
             // Checks User's role and login
             AccessCheck();
             ViewModel vm = new ViewModel();
+            vm.CurrentUser = dbContext.Users.FirstOrDefault(u => u.UserId == HttpContext.Session.GetInt32("UserId"));
             vm.AllUsers = dbContext.Users.ToList();
             vm.AllCustomers = dbContext.Customers.ToList();
             vm.AllInsurances = dbContext.Insurances.ToList();
             vm.AllServices = dbContext.Services.ToList();
             vm.AllTimeslots = dbContext.Timeslots.ToList();
+            vm.AllPractitioners = Query.AllPractitioners(dbContext);
             return View(vm);
         }
 
         // SUBMIT: create Reservation
-        [HttpPost]
+        [HttpPost("CreateReservation")]
         public IActionResult CreateReservation(ViewModel vm)
         {
             if (ModelState.IsValid)
@@ -118,12 +123,13 @@ namespace massage.Controllers
         }
 
         // NEW CUSTOMER FORM?
-        [HttpGet]
+        [HttpGet("NewCustomer")]
         public IActionResult NewCustomer()
         {
             // Checks User's role and login
             AccessCheck();
             ViewModel vm = new ViewModel();
+            vm.CurrentUser = dbContext.Users.FirstOrDefault(u => u.UserId == HttpContext.Session.GetInt32("UserId"));
             vm.AllUsers = dbContext.Users.ToList();
             vm.AllCustomers = dbContext.Customers.ToList();
             vm.AllInsurances = dbContext.Insurances.ToList();
@@ -133,14 +139,14 @@ namespace massage.Controllers
         }
 
         // SUBMIT: create new customer
-        [HttpPost]
+        [HttpPost("CreateCustomer")]
         public IActionResult CreateCustomer(ViewModel vm)
         {
             if (ModelState.IsValid)
             {
                 dbContext.Add(vm.OneCustomer);
                 dbContext.SaveChanges();
-                return RedirectToAction("RDashboard", "Receptionist");
+                return RedirectToAction("Dashboard");
             }
             else
             {
@@ -148,6 +154,12 @@ namespace massage.Controllers
             }
         }
 
+        [HttpGet("PractitionerShow/{id}")]
+        public IActionResult PractitionerShow(int userId)
+        {
+            // Checks User's role and login
+            return RedirectToAction("Dashboard");;
+        }
         // MY PROFILE
         [HttpGet]
         public IActionResult MyProfile()

@@ -85,6 +85,7 @@ namespace massage.Models
 
         public static bool CreateCustomers(ProjectContext db)
         {
+            CreateInsurances(db);
             Customer newCust = new Customer();
             newCust.Address1 = "123 Fake St";
             newCust.Address2 = "Apt 4";
@@ -96,6 +97,10 @@ namespace massage.Models
             newCust.Phone = "1234567890";
             newCust.State = "MA";
             newCust.Zip = 02115;
+            Insurance newCustInsurance = new Insurance();
+            newCust.InsuranceId = 2;
+            newCust.Insurance = newCustInsurance;
+            newCustInsurance.Name = "Aetna";
             Customer newCust2 = new Customer();
             newCust2.Address1 = "4324 bleh ave";
             newCust2.Address2 = "Apt 1";
@@ -107,6 +112,10 @@ namespace massage.Models
             newCust2.Phone = "9087654321";
             newCust2.State = "CA";
             newCust2.Zip = 94611;
+            Insurance newCust2Insurance = new Insurance();
+            newCust2.InsuranceId = 2;
+            newCust2.Insurance = newCust2Insurance;
+            newCust2Insurance.Name = "Premera";
 
             if (db.Customers.Any(c => c.CustomerId == newCust.CustomerId))
             { //Name already in use

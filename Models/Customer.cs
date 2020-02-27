@@ -51,6 +51,7 @@ namespace massage.Models
         public List<Reservation> Reservations { get; set; }
 
         //removed foreign key InsuranceID
+        public int InsuranceId { get; set; }
         public Insurance Insurance { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;

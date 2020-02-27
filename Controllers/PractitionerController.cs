@@ -12,7 +12,6 @@ using massage.Models;
 
 namespace massage.Controllers
 {
-    [Authorize]
     [Route("prac")]
     public class PractitionerController : Controller
     {
@@ -48,7 +47,7 @@ namespace massage.Controllers
             User currUser = dbContext.Users.FirstOrDefault(u => u.UserId == HttpContext.Session.GetInt32("UserId"));
             vm.AllReservations = Query.OnePTodaysReservations(currUser.UserId, dbContext);
             vm.CurrentUser = currUser;
-            return View("Index", vm);
+            return View("PDashboard", vm);
         }
 
         // Practitioner Schedule View w/ current

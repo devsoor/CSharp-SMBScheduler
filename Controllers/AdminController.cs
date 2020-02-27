@@ -56,7 +56,7 @@ namespace massage.Controllers
             return View(vm);
         }
 
-        [HttpPost]
+        [HttpPost("AddTestUsers")]
         public IActionResult AddTestUsers()
         {
             Testing.CreateUser(dbContext);
@@ -70,35 +70,35 @@ namespace massage.Controllers
             return RedirectToAction("Index");
         }
 
-        [HttpPost]
+        [HttpPost("AddTestServices")]
         public IActionResult AddTestServices()
         {
             Testing.CreateServices(dbContext);
             return RedirectToAction("Dashboard");
         }
 
-        [HttpPost]
+        [HttpPost("AddTestCustomers")]
         public IActionResult AddTestCustomers()
         {
             Testing.CreateCustomers(dbContext);
             return RedirectToAction("Dashboard");
         }
 
-        [HttpPost]
+        [HttpPost("AddTestPSchedule")]
         public IActionResult AddTestPSchedule()
         {
             Testing.CreatePSchedule(dbContext, 2);
             return RedirectToAction("Dashboard");
         }
 
-        [HttpPost]
+        [HttpPost("AddTestTimeslots")]
         public IActionResult AddTestTimeslots()
         {
             Testing.CreateTimeslots(dbContext);
             return RedirectToAction("Dashboard");
         }
 
-        [HttpPost]
+        [HttpPost("AddTestInsurances")]
         public IActionResult AddTestInsurances()
         {
             Testing.CreateInsurances(dbContext);
