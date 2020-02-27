@@ -43,9 +43,9 @@
           <div class="col-sm-2">
             <select id="custSelector">
               @{
-                foreach (User pract in Model.AllPractitioners)
+                foreach (Customer cust in Model.AllCustomers)
                 {
-                  <option value="@pract.UserId">@pract.FirstName @pract.LastName</option>
+                  <option value="@cust.CustomerId">@cust.FirstName @cust.LastName</option>
                 }
               }
             </select>

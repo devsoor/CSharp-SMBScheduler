@@ -479,11 +479,7 @@ namespace massage.Controllers
         [RequestSizeLimit(2147483648)]
         public string calendarFilterJson(string body)
         {
-            System.Console.WriteLine(body);
-            System.Console.WriteLine("Enetered calendar filter json method");
-            JsonFilterObject eventsJson = JsonConvert.DeserializeObject<JsonFilterObject>(body);
-            System.Console.WriteLine(eventsJson.PractitionerId);
-            return body // this needs to be converted and fixed
+            return QConvert.FilteredEvents(body, dbContext);
         }
 
         [HttpGet("/userProfile")]
