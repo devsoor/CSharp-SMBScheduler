@@ -35,55 +35,63 @@
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <section class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1>Make an appointment</h1>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <!-- Main content -->
     <section class="content">
         <div class="card card-info">
           <div class="card-header">
-            <h3 class="card-title">Fill in details of the reservation</h3>
+            <h3 class="card-title">Select Date and Time of appointment</h3>
           </div>
- 
-          <form class="form" asp-action="CreateReservation" asp-controller="Home" method="post">
+       <div class="container-fluid">
+        <div class="row mb-2">
+      
+          <form class="form" asp-action="CreateReservation" asp-controller="Receptionist" method="post">
             <div class="card-body">
-              <div class="col">
-                <label for="service">Service:</label>
-                <div class="col-sm-3 mb-2">
-                    <select class="form-control select" asp-for="@Model.OneService.Name">
-                      @foreach (var service in Model.AllServices)
-                      {
-                        <option value="@service.Name">@service.Name</option>
-                      }
-                    </select>            
+              <div class="row">
+                <div class="col">
+                  <label for="service">Customer:</label>
+                  <div class="col mb-2">
+                      <select id="custSelector" class="form-control select" asp-for="@Model.OneCustomer.CustomerId">
+                        <option value="0">Any Customer</option>
+                        @foreach (var cust in Model.AllCustomers)
+                        {
+                          <option value="@cust.CustomerId">@cust.FirstName @cust.LastName</option>
+                        }
+                      </select>            
+                  </div>
                 </div>
-              </div>
-              <div class="col">
-                <label for="service">Practiontioner:</label>
-                <div class="col-sm-3 mb-2">
-                    <select class="form-control select" asp-for="@Model.OneService.Name">
-                      @foreach (var prac in Model.AllPractitioners)
-                      {
-                        <option value="@prac.UserId">@prac.FirstName @prac.LastName</option>
-                      }
-                    </select>            
+                <div class="col">
+                  <label for="service">Service:</label>
+                  <div class="col mb-2">
+                      <select id="servSelector" class="form-control select" asp-for="@Model.OneService.ServiceId">
+                        <option value="0">Any Service</option>
+                        @foreach (var service in Model.AllServices)
+                        {
+                          <option value="@service.ServiceId">@service.Name</option>
+                        }
+                      </select>            
+                  </div>
                 </div>
+                <div class="col">
+                  <label for="service">Practiontioner:</label>
+                  <div class="col mb-2">
+                      <select id="practSelector" class="form-control select" asp-for="@Model.OneUser.UserId">
+                        <option value="0">Any Practitioner</option>
+                        @foreach (var prac in Model.AllPractitioners)
+                        {
+                          <option value="@prac.UserId">@prac.FirstName @prac.LastName</option>
+                        }
+                      </select>            
+                  </div>
+                </div>
+                <input type="hidden" value="0" name="@Model.OneReservation.TimeslotId" id="tsid">
               </div>
+              <div class="row">@ViewBag.errormsg</div>
             </div>
               <div class="form-row mb-2">
-              <div id="pscheduler"></div>
+              <div id="calendar"></div>
           </div>
             <div class="card-footer">
-              <button type="submit" class="btn btn-info">Submit</button>
-              <button type="submit" class="btn btn-danger float-right">Cancel</button>
+              <button submit" class="btn btn-info float-right">Next</button>
             </div>
           </form>
 
@@ -119,167 +127,7 @@
 <script src="~/plugins/fullcalendar-bootstrap/main.min.js"></script>
 
 <!--Practiontioner Scheduler -->
-<script>
-  $(function () {
-    $('.selectpicker').selectpicker(noneSelectedText="Select");
-  });
-  $(function () {
-
-    /* initialize the external events
-     -----------------------------------------------------------------*/
-    function ini_events(ele) {
-      ele.each(function () {
-
-        // create an Event Object (http://arshaw.com/fullcalendar/docs/event_data/Event_Object/)
-        // it doesn't need to have a start or end
-        var eventObject = {
-          title: $.trim($(this).text()) // use the element's text as the event title
-        }
-
-        // store the Event Object in the DOM element so we can get to it later
-        $(this).data('eventObject', eventObject)
-
-        // make the event draggable using jQuery UI
-        $(this).draggable({
-          zIndex        : 1070,
-          revert        : true, // will cause the event to go back to its
-          revertDuration: 0  //  original position after the drag
-        })
-
-      })
-    }
-
-    ini_events($('#external-events div.external-event'))
-
-    /* initialize the calendar
-     -----------------------------------------------------------------*/
-    //Date for the calendar events (dummy data)
-    var date = new Date()
-    var d    = date.getDate(),
-        m    = date.getMonth(),
-        y    = date.getFullYear()
-
-    var Calendar = FullCalendar.Calendar;
-    var Draggable = FullCalendarInteraction.Draggable;
-
-    var containerEl = document.getElementById('external-events');
-    var checkbox = document.getElementById('drop-remove');
-    var calendarEl = document.getElementById('pscheduler');
-
-    // initialize the external events
-    // -----------------------------------------------------------------
-
-
-    var calendar = new Calendar(calendarEl, {
-      plugins: [ 'bootstrap', 'interaction', 'dayGrid', 'timeGrid' ],
-      header    : {
-        left  : 'prev,next today',
-        center: 'title',
-        right : 'dayGridMonth,timeGridWeek,timeGridDay'
-      },
-      //Random default events
-      events    : [
-        {
-          title          : 'All Day Event',
-          start          : new Date(y, m, 1),
-          backgroundColor: '#f56954', //red
-          borderColor    : '#f56954', //red
-          allDay         : true
-        },
-        {
-          title          : 'Long Event',
-          start          : new Date(y, m, d - 5),
-          end            : new Date(y, m, d - 2),
-          backgroundColor: '#f39c12', //yellow
-          borderColor    : '#f39c12' //yellow
-        },
-        {
-          title          : 'Meeting',
-          start          : new Date(y, m, d, 10, 30),
-          allDay         : false,
-          backgroundColor: '#0073b7', //Blue
-          borderColor    : '#0073b7' //Blue
-        },
-        {
-          title          : 'Lunch',
-          start          : new Date(y, m, d, 12, 0),
-          end            : new Date(y, m, d, 14, 0),
-          allDay         : false,
-          backgroundColor: '#00c0ef', //Info (aqua)
-          borderColor    : '#00c0ef' //Info (aqua)
-        },
-        {
-          title          : 'Birthday Party',
-          start          : new Date(y, m, d + 1, 19, 0),
-          end            : new Date(y, m, d + 1, 22, 30),
-          allDay         : false,
-          backgroundColor: '#00a65a', //Success (green)
-          borderColor    : '#00a65a' //Success (green)
-        },
-        {
-          title          : 'Click for Google',
-          start          : new Date(y, m, 28),
-          end            : new Date(y, m, 29),
-          url            : 'http://google.com/',
-          backgroundColor: '#3c8dbc', //Primary (light-blue)
-          borderColor    : '#3c8dbc' //Primary (light-blue)
-        }
-      ],
-      editable  : true,
-      droppable : true, // this allows things to be dropped onto the calendar !!!
-      drop      : function(info) {
-        // is the "remove after drop" checkbox checked?
-        if (checkbox.checked) {
-          // if so, remove the element from the "Draggable Events" list
-          info.draggedEl.parentNode.removeChild(info.draggedEl);
-        }
-      }    
-    });
-
-    calendar.render();
-    // $('#calendar').fullCalendar()
-
-    /* ADDING EVENTS */
-    var currColor = '#3c8dbc' //Red by default
-    //Color chooser button
-    var colorChooser = $('#color-chooser-btn')
-    $('#color-chooser > li > a').click(function (e) {
-      e.preventDefault()
-      //Save color
-      currColor = $(this).css('color')
-      //Add color effect to button
-      $('#add-new-event').css({
-        'background-color': currColor,
-        'border-color'    : currColor
-      })
-    })
-    $('#add-new-event').click(function (e) {
-      e.preventDefault()
-      //Get value and make sure it is not null
-      var val = $('#new-event').val()
-      if (val.length == 0) {
-        return
-      }
-
-      //Create events
-      var event = $('<div />')
-      event.css({
-        'background-color': currColor,
-        'border-color'    : currColor,
-        'color'           : '#fff'
-      }).addClass('external-event')
-      event.html(val)
-      $('#external-events').prepend(event)
-
-      //Add draggable funtionality
-      ini_events(event)
-
-      //Remove event from text input
-      $('#new-event').val('')
-    })
-  })
-</script>
-
+<script src="~/js/timeslotCalendar.js"></script>
 
 </body>
 </html>
