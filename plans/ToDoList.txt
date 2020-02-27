@@ -2,6 +2,49 @@ Jade Spring Wellness Center
 Apppointment Scheduling Application
 To Do List
 
+
+
+
+2/26 let's figure this out
+-Need to program in role checks for controllers (modularize it so it can be reused in every method)
+-Need to get all basic pages hooked up to controllers and get data transferring back and forth between front end, back end, and database
+-Need to get calendar setup for making appointments
+-Need to get PSchedule editing fully setup and working to take inputs
+-Need to get admin able to adjust other user's roles (rest is less important)
+-Need to get receptionist dashboard page setup to show today's, this week's, and this month's appointments
+-Need to get practitioner dashboard page setup to show ^^^^^^
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 P0
 -Code the structure of the different controllers for different roles
     -Code in ability to edit roles

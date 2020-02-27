@@ -38,6 +38,14 @@ function makeCalendar(myEventList){
     },
     //Random default events
     events    : myEventList.result,
+    eventClick: function(info){
+      let oldtsid = $('#tsid').val();
+      if (oldtsid != "0"){
+        // need to somehow change hte old events bg color back to black
+      }
+        $('#tsid').val(info.event.id);
+        info.event.borderColor = "red";
+    },
     editable  : false,
     droppable : false, // this allows things to be dropped onto the calendar !!!
   });

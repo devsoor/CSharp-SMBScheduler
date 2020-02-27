@@ -83,16 +83,18 @@ namespace massage.Controllers
             vm.AllServices = dbContext.Services.ToList();
             vm.AllTimeslots = dbContext.Timeslots.ToList();
             vm.AllPractitioners = Query.AllPractitioners(dbContext);
+            vm.OneReservation = new Reservation();
+            vm.OneReservation.CreatorId = vm.CurrentUser.UserId;
             return View(vm);
         }
 
         // Create Reservation from timeslot id
-        [HttpGet("CreateRes/{tsID}/{custID}/{practID}/{servID}")]
-        public IActionResult CreateReservation(int tsID, int custID, int practID, int servID)
+        [HttpPost("CreateReservation")]
+        public IActionResult CreateReservation(ViewModel vm)
         {
             string[] check = AccessCheck();
             if(check != null) return RedirectToAction(check[0], check[1]);
-            Timeslot thisTS = Query.OneTimeslot(tsID, dbContext);
+            Timeslot thisTS = Query.OneTimeslot(vm.OneReservation.TimeslotId, dbContext);
             int roomID = 1;
             List<int> roomIDList = new List<int>();
             foreach (Reservation resv in thisTS.Reservations)
@@ -103,33 +105,12 @@ namespace massage.Controllers
             {
                 roomID ++;
             }
-            Reservation newRes = new Reservation();            
-            newRes.TimeslotId = tsID;
-            newRes.CustomerId = custID;
-            newRes.PractitionerId = practID;
-            newRes.ServiceId = servID;
-            newRes.RoomId = roomID;
-            newRes.CreatorId = UserSession.UserId;
-            newRes.Notes = "";
-            
-            ViewModel vm = new ViewModel();
-            vm.OneTimeslot = Query.OneTimeslot(tsID, dbContext);
-            vm.AllPractitioners = dbContext.Users.Include(u => u.Services).ThenInclude(s => s.Service).Where(u => u.Role == 1).Where(u => u.AvailTimes.Any(pat => pat.TimeslotId == tsID)).ToList();
-            vm.AllCustomers = Query.AllCustomers(dbContext);
-            List<Service> serviceList = new List<Service>();
-            foreach (User p in vm.AllPractitioners)
-            {
-                foreach (PService ps in p.Services)
-                {
-                    if (serviceList.IndexOf(ps.Service) == -1)
-                    {
-                        serviceList.Add(ps.Service);
-                    }
-                }
-            }
-            vm.AllServices = serviceList;
-            vm.AllInsurances = Query.AllInsurances(dbContext);
-            vm.OneReservation = newRes;
+            vm.OneReservation.RoomId = roomID;
+            vm.OneTimeslot = thisTS;
+            vm.AllPractitioners = Query.AllPractitioners(dbContext);
+            vm.OneCustomer = Query.OneCustomer(vm.OneReservation.CustomerId, dbContext);
+            vm.OneService = Query.OneService(vm.OneReservation.ServiceId, dbContext);
+            vm.OneInsurance = Query.OneInsurance(vm.OneCustomer.InsuranceId, dbContext);
             return View("ReservationForm", vm);
         }
         [HttpPost("SubmitReservation")]

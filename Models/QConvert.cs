@@ -100,6 +100,9 @@ namespace massage.Models
                     title = $"{6 - ts.Reservations.Count} Available",
                     start = myStart,
                     end = (myStart + 3600000), // start + 1 hour in milliseconds.
+                    backgroundColor = "#00a65a",
+                    borderColor     = "#00a65a", 
+                    textColor       = "#ffffff",
                 };
                 eventResults.Add(oneEvent);
             }
