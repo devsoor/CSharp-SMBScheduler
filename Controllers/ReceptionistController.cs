@@ -55,7 +55,7 @@ namespace massage.Controllers
             vm.AllTimeslots = dbContext.Timeslots.ToList();
             // List<Reservation> list = Query.AllThisWeeksReservations(dbContext);
             // var weeklyReservations = list;
-            return View(vm);
+            return View("RDashboard", vm);
         }
 
         // ALL RESERVATIONS
