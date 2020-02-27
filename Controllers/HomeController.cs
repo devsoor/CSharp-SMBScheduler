@@ -450,12 +450,13 @@ namespace massage.Controllers
         [HttpGet("calendarJson")]
         public JsonResult calendarJson()
         {
-            List<Timeslot> allTimeslots = Query.TodaysTimeslots(dbContext);
+            System.Console.WriteLine("Entering calendar json ajax call");
+            List<Timeslot> allTimeslots = Query.ThisMonthsTimeslots(dbContext);
             List<object> eventResults = new List<object>();
+            System.Console.WriteLine("Got all timeslots, running loop now");
             foreach (Timeslot ts in allTimeslots)
             {
                 long myStart = (long)(ts.Date.AddHours(ts.Hour) - (new DateTime(1970, 1, 1))).TotalMilliseconds;
-                System.Console.WriteLine(ts.Date.AddHours(ts.Hour).Hour);
                 var oneEvent = new {
                     id = ts.TimeslotId,
                     title = $"{6 - ts.Reservations.Count} Reservations Available",
@@ -468,6 +469,7 @@ namespace massage.Controllers
                 success = 1,
                 result = eventResults
             };
+            System.Console.WriteLine("created all timeslot json objects, returning json to ajax call now");
             return Json(jsonEvents);
         }
 
