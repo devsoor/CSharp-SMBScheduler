@@ -23,6 +23,7 @@
                     <ul>
                         <li>Associate Insurance</li>
                     </ul> 
+                    <li><a asp-controller="Admin" asp-action="NewRooms">Create 6 Rooms</a></li>
                     <li><a asp-controller="Home" asp-action="CheckTimeslots">Generate Timeslots</a></li>
                     <li><a asp-controller="Receptionist" asp-action="TodaysAvailability">Get Today's Timeslots</a></li>
                     <li><a asp-controller="Admin" asp-action="NewPSchedule">Create New PSchedule</a></li>
@@ -32,7 +33,7 @@
                 <div class="row">
                     <div class="col-sm-3">
                     <span style="font-weight: bold;"><p>All Users:</p></span>
-                    <form action="AddTestUsers" controller="Admin" method="post">
+                    <form action="AddTestUsers" controller="Admin" method="get">
                         <input type="submit" value="Add Test Users">
                     </form>
                     @{
@@ -59,7 +60,7 @@
                 </div>
                 <div class="col-sm-3">
                     <span style="font-weight: bold;"><p>All Services:</p></span>
-                    <form action="AddTestServices" controller="Admin" method="post">
+                    <form action="AddTestServices" controller="Admin" method="get">
                         <input type="submit" value="Add Test Services">
                     </form>
                     @{
@@ -75,7 +76,7 @@
                 </div>
                 <div class="col-sm-3">
                     <span style="font-weight: bold;"><p>All Customers:</p></span>
-                     <form action="AddTestCustomers" controller="Admin" method="post">
+                     <form action="AddTestCustomers" controller="Admin" method="get">
                         <input type="submit" value="Add Test Customers">
                     </form>                   
                         @{
@@ -91,7 +92,7 @@
                 </div>
                 <div class="col-sm-3">
                     <span style="font-weight: bold;"><p>All Timeslots:</p></span>
-                    <form action="AddTestTimeslots" controller="Admin" method="post">
+                    <form action="AddTestTimeslots" controller="Admin" method="get">
                         <input type="submit" value="Add Test Timeslots">
                     </form>
                     @{

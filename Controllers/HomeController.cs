@@ -122,6 +122,8 @@ namespace massage.Controllers
             serv3.Name = "Accupuncture";
             dbContext.Add(serv3);
             dbContext.SaveChanges();
+
+            //Create Rooms
             Room room1 = new Room();
             dbContext.Add(room1);
             dbContext.SaveChanges();
@@ -140,6 +142,8 @@ namespace massage.Controllers
             Room room6 = new Room();
             dbContext.Add(room6);
             dbContext.SaveChanges();
+
+        //Associate Rooms with Service
             List<Room> allRooms = new List<Room>(){room1, room2, room3, room4, room5, room6};
             List<Service> allServices = new List<Service>(){serv1, serv2, serv3};
             foreach (Room room in allRooms)
@@ -154,6 +158,8 @@ namespace massage.Controllers
                 }
             }
             dbContext.SaveChanges();
+
+            //Associate Practitioners with Service
             PService ps = new PService();
             ps.ServiceId = serv1.ServiceId;
             ps.PractitionerId = pract1.UserId;
@@ -179,6 +185,8 @@ namespace massage.Controllers
             ps5.PractitionerId = pract2.UserId;
             dbContext.Add(ps5);
             dbContext.SaveChanges();
+
+            //Associate Practitioner with Insurance
             PInsurance pi1 = new PInsurance();
             pi1.PractitionerId = pract1.UserId;
             pi1.InsuranceId = newIns.InsuranceId;
@@ -194,10 +202,16 @@ namespace massage.Controllers
             pi3.InsuranceId = newIns.InsuranceId;
             dbContext.Add(pi3);
             dbContext.SaveChanges();
+
+            //Query for One schedule for practitioner1, then same for practitioner2
             Query.OnePsSchedules(pract1.UserId, dbContext);
             Query.OnePsSchedules(pract2.UserId, dbContext);
+            //Check last timeslot, generate timeslot based off of last timeslot
             CheckTimeslots();
             Timeslot tsToday = dbContext.Timeslots.OrderByDescending(t => t.Hour).FirstOrDefault(t => t.Date == DateTime.Today);
+            
+            //Create new reservation
+            //Associaton: CreaterId, CustomerId, PractitionerId, RoomId, ServiceId, TimeslotId
             Reservation newResToday = new Reservation();
             newResToday.CreatorId = recep1.UserId;
             newResToday.CustomerId = newCust.CustomerId;
@@ -208,6 +222,7 @@ namespace massage.Controllers
             newResToday.TimeslotId = tsToday.TimeslotId;
             dbContext.Add(newResToday);
             dbContext.SaveChanges();
+
             Reservation newResToday2 = new Reservation();
             newResToday2.CreatorId = recep2.UserId;
             newResToday2.CustomerId = newCust2.CustomerId;
@@ -218,6 +233,8 @@ namespace massage.Controllers
             newResToday2.TimeslotId = tsToday.TimeslotId;
             dbContext.Add(newResToday2);
             dbContext.SaveChanges();
+
+            //Create another Reservation based of off the tstomorrow timeslot
             Timeslot tsTomorrow = dbContext.Timeslots.OrderByDescending(t => t.Hour).FirstOrDefault(t => t.Date == DateTime.Today.AddDays(1));
             Reservation newResTomorrow = new Reservation();
             newResTomorrow.CreatorId = recep1.UserId;
@@ -229,6 +246,7 @@ namespace massage.Controllers
             newResTomorrow.TimeslotId = tsTomorrow.TimeslotId;
             dbContext.Add(newResTomorrow);
             dbContext.SaveChanges();
+
             Reservation newResTomorrow2 = new Reservation();
             newResTomorrow2.CreatorId = recep2.UserId;
             newResTomorrow2.CustomerId = newCust2.CustomerId;

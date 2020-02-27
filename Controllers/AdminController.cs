@@ -36,7 +36,7 @@ namespace massage.Controllers
 
 //////////////////////////////// GET ////////////////////////////////
         
-        [HttpGet("/dashboard")]
+        [HttpGet("dashboard")]
         public IActionResult Dashboard(){
             string[] check = AccessCheck();
             if(check != null) return RedirectToAction(check[0], check[1]);
@@ -51,7 +51,7 @@ namespace massage.Controllers
             return View(vm);
         }
 
-        [HttpPost]
+        [HttpGet("AddTestUsers")]
         public IActionResult AddTestUsers()
         {
             Testing.CreateUser(dbContext);
@@ -65,35 +65,35 @@ namespace massage.Controllers
             return RedirectToAction("Index");
         }
 
-        [HttpPost]
+        [HttpGet]
         public IActionResult AddTestServices()
         {
             Testing.CreateServices(dbContext);
             return RedirectToAction("Dashboard");
         }
 
-        [HttpPost]
+        [HttpGet]
         public IActionResult AddTestCustomers()
         {
             Testing.CreateCustomers(dbContext);
             return RedirectToAction("Dashboard");
         }
 
-        [HttpPost]
+        [HttpGet]
         public IActionResult AddTestPSchedule()
         {
             Testing.CreatePSchedule(dbContext, 2);
             return RedirectToAction("Dashboard");
         }
 
-        [HttpPost]
+        [HttpGet]
         public IActionResult AddTestTimeslots()
         {
             Testing.CreateTimeslots(dbContext);
             return RedirectToAction("Dashboard");
         }
 
-        [HttpPost]
+        [HttpGet]
         public IActionResult AddTestInsurances()
         {
             Testing.CreateInsurances(dbContext);
@@ -114,7 +114,7 @@ namespace massage.Controllers
             return View(vm);
         }
 
-        [HttpPost]
+        [HttpGet]
         public IActionResult NewPSchedule()
         {
             if (ModelState.IsValid)
