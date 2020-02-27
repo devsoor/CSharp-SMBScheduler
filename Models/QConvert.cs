@@ -113,9 +113,19 @@ namespace massage.Models
         {
             JsonFilterObject events = JsonConvert.DeserializeObject<JsonFilterObject>(eventsJson);
             List<Timeslot> parsedTSList = Query.AllFutureTimeslots(db);
-            int cID = Int32.Parse(events.CustomerId);
-            int pID = Int32.Parse(events.PractitionerId);
-            int sID = Int32.Parse(events.ServiceId);
+            int cID;
+            int pID;
+            int sID;
+            if (events.CustomerId.Length != 0){
+                cID = Int32.Parse(events.CustomerId);
+                pID = Int32.Parse(events.PractitionerId);
+                sID = Int32.Parse(events.ServiceId);
+            }
+            else {
+                cID = 0;
+                pID = 0;
+                sID = 0;
+            }
             if (cID != 0)
             {
                 parsedTSList = QueryFilter.ByCustomer(cID, parsedTSList, db);
