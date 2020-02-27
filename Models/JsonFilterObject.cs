@@ -3,18 +3,19 @@ using System.Collections.Generic;
 
 namespace massage.Models {
     public class JsonFilterObject {
-        public int PractitionerId { get; set; }
-        public int ServiceId { get; set; }
-        public int CustomerId { get; set; }
-        public OldListObject OldList { get; set; }
+        public string PractitionerId { get; set; }
+        public string ServiceId { get; set; }
+        public string CustomerId { get; set; }
+        public List<int> OldList { get; set; }
     }
     public class OldListObject {
-        public List<EventObject> OldEventList { get; set; }
+        public int success { get; set; }
+        public List<EventObject> result { get; set; }
     }
     public class EventObject {
-        public int Id { get; set; }
-        public string Title { get; set; }
-        public long Start { get; set; }
-        public long End { get; set; }
+        public int id { get; set; }
+        public string title { get; set; }
+        public long start { get; set; }
+        public long end { get; set; }
     }
 }

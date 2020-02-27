@@ -462,38 +462,29 @@ namespace massage.Controllers
         {
             ViewModel vm = new ViewModel();
             CheckTimeslots();
-            vm.AllTimeslots = Query.ThisMonthsTimeslots(dbContext);
             vm.AllUsers = Query.AllPractitioners(dbContext);
+            vm.AllServices = Query.AllServices(dbContext);
+            vm.AllPractitioners = Query.AllPractitioners(dbContext);
+            vm.AllCustomers = Query.AllCustomers(dbContext);
             return PartialView("Calendar", vm);
         }
         [HttpGet("calendarJson")]
-        public JsonResult calendarJson()
+        public string calendarJson()
         {
-            List<Timeslot> allTimeslots = Query.ThisMonthsTimeslots(dbContext);
-            List<object> eventResults = new List<object>();
-            foreach (Timeslot ts in allTimeslots)
-            {
-                long myStart = (long)(ts.Date.AddHours(ts.Hour) - (new DateTime(1970, 1, 1))).TotalMilliseconds;
-                var oneEvent = new {
-                    id = ts.TimeslotId,
-                    title = $"{6 - ts.Reservations.Count} Reservations Available",
-                    start = myStart,
-                    end = (myStart + 3600000),
-                };
-                eventResults.Add(oneEvent);
-            }
-            var jsonEvents = new {
-                success = 1,
-                result = eventResults
-            };
-            return Json(jsonEvents);
+            List<Timeslot> allTimeslots = Query.AllTimeslots(dbContext);
+            string jsonEvents = QConvert.TimeslotsToEvents(allTimeslots);
+            return jsonEvents;
         }
-        // [HttpPost("calendarFilterJson")]
-        // public JsonResult calendarFilterJson(string body)
-        // {
-        //     System.Console.WriteLine(body);
-            
-        // }
+        [HttpPost("calendarFilterJson")]
+        [RequestSizeLimit(2147483648)]
+        public string calendarFilterJson(string body)
+        {
+            System.Console.WriteLine(body);
+            System.Console.WriteLine("Enetered calendar filter json method");
+            JsonFilterObject eventsJson = JsonConvert.DeserializeObject<JsonFilterObject>(body);
+            System.Console.WriteLine(eventsJson.PractitionerId);
+            return body // this needs to be converted and fixed
+        }
 
         [HttpGet("/userProfile")]
         public IActionResult userProfile()

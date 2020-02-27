@@ -43,7 +43,7 @@
           <div class="col-sm-2">
             <select id="custSelector">
               @{
-                foreach (User pract in Model.AllUsers)
+                foreach (User pract in Model.AllPractitioners)
                 {
                   <option value="@pract.UserId">@pract.FirstName @pract.LastName</option>
                 }
@@ -164,6 +164,7 @@
 <script src="~/plugins/fullcalendar-bootstrap/main.min.js"></script>
 <!-- Page specific script -->
 <script>
+  var oldList;
   $(document).ready(makeCalendar);
 
 
@@ -172,8 +173,8 @@
       method: "GET",
       url: "/calendarJson"
     }).done(function(res){
-      console.log(res);
-      var oldList = res;
+      oldList = JSON.parse(res);
+      console.log(oldList);
         /* initialize the external events
         -----------------------------------------------------------------*/
         function ini_events(ele) {
@@ -240,7 +241,7 @@
             right : 'dayGridMonth,timeGridWeek,timeGridDay'
           },
           //Random default events
-          events    : res.result,
+          events    : oldList.result,
           editable  : true,
           droppable : true, // this allows things to be dropped onto the calendar !!!
           drop      : function(info) {
@@ -296,19 +297,28 @@
       })
   }
   $('#custSelector').change(function(){
-    var theBody = {
-      'practitioner': 0,
-      'service': 0,
-      'customer': $('#custSelector').val(),
-      'oldList': oldList
+    var idList = [];
+    for (var e of oldList.result) {
+      idList.push(e.id);
     }
+    var theBody = {
+      'PractitionerId': "0",
+      'ServiceId': "0",
+      'CustomerId': $('#custSelector').val(),
+      'OldList': idList
+    }
+    console.log("change on cust selector");
+    console.log(theBody);
+    var theBodyString = JSON.stringify(theBody);
+    console.log(theBodyString);
     $.ajax({
       method: "POST",
       url: "/calendarFilterJson",
-      body: theBody
+      data: {'': theBodyString}
       }).done(function(res){
-        console.log(res);
-        calendar.events = res.result;
+        oldList = {"success": 1, "result": JSON.parse(res)};
+        console.log(oldList);
+        calendar.events = oldList.result;
       })
   })
 </script>

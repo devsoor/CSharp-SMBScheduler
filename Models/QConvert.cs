@@ -5,10 +5,12 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using Microsoft.AspNetCore.Identity;
+using Newtonsoft.Json;
 namespace massage.Models
 {
     public static class QConvert
     {
+        // PSchedule conversions
         public static Dictionary<string, Dictionary<string, bool>> ScheduleFromQuery(List<PSchedule> PSs) // this function takes a PSchedule query from the database and converts it to an easily readable/parseable dictionary of dictionaries for the front end to work with
         {
             Dictionary<string, Dictionary<string, bool>> formattedSchedule = new Dictionary<string, Dictionary<string, bool>>();
@@ -85,6 +87,52 @@ namespace massage.Models
                 queryReadyList.Add(thisPS);
             }
             return queryReadyList;
+        }
+        // Json conversions
+        public static string TimeslotsToEvents(List<Timeslot> TSs)
+        {
+            List<object> eventResults = new List<object>();
+            foreach (Timeslot ts in TSs)
+            {
+                long myStart = (long)(ts.Date.AddHours(ts.Hour) - (new DateTime(1970, 1, 1))).TotalMilliseconds;
+                var oneEvent = new {
+                    id = ts.TimeslotId,
+                    title = $"{6 - ts.Reservations.Count} Reservations Available",
+                    start = myStart,
+                    end = (myStart + 3600000), // start + 1 hour in milliseconds.
+                };
+                eventResults.Add(oneEvent);
+            }
+            var jsonEvents = new {
+                success = 1,
+                result = eventResults
+            };
+            return JsonConvert.SerializeObject(jsonEvents);
+        }
+        public static string FilteredEvents(string eventsJson, ProjectContext db)
+        {
+            JsonFilterObject events = JsonConvert.DeserializeObject<JsonFilterObject>(eventsJson);
+            List<Timeslot> parsedTSList = new List<Timeslot>();
+            int cID = Int32.Parse(events.CustomerId);
+            int pID = Int32.Parse(events.PractitionerId);
+            int sID = Int32.Parse(events.ServiceId);
+            foreach (int tsID in events.OldList)
+            {
+                parsedTSList.Add(Query.OneTimeslot(tsID, db));
+            }
+            if (cID != 0)
+            {
+                parsedTSList = QueryFilter.ByCustomer(cID, parsedTSList, db);
+            }
+            if (pID != 0)
+            {
+                parsedTSList = QueryFilter.ByPractitioner(pID, parsedTSList, db);
+            }
+            if (sID != 0)
+            {
+                parsedTSList = QueryFilter.ByService(sID, parsedTSList, db);
+            }
+            return TimeslotsToEvents(parsedTSList);
         }
     }
 }
