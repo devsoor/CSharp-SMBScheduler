@@ -219,20 +219,22 @@ namespace massage.Controllers
                 return PartialView("NewCustomer", vm);
             }
         }
-
-
-
-
-        
-
-        // Admin: DELETE
-        [HttpGet("del_insurance/{insurId}")]  // this can be post of u REALLY want it to be.....
-        public IActionResult DeleteInsurance(){
+        [HttpGet("customers/{id}/delete")]
+        public RedirectToActionResult DeleteCustomer(int id) {
             string[] check = AccessCheck();
             if(check != null) return RedirectToAction(check[0], check[1]);
-            return PartialView();
+            dbContext.Remove(Query.OneCustomer(id, dbContext));
+            dbContext.SaveChanges();
+            return RedirectToAction("customers");
         }
-
+        [HttpGet("insurances/{id}/delete")]
+        public RedirectToActionResult DeleteInsurance(int id) {
+            string[] check = AccessCheck();
+            if(check != null) return RedirectToAction(check[0], check[1]);
+            dbContext.Remove(Query.OneInsurance(id, dbContext));
+            dbContext.SaveChanges();
+            return RedirectToAction("insurances");
+        }
 
 
 

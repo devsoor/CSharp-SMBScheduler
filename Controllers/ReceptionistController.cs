@@ -48,7 +48,7 @@ namespace massage.Controllers
             if(check != null) return RedirectToAction(check[0], check[1]);
             Generate.CheckTimeslots(dbContext); // check if timeslots need to be generated
             ViewModel vm = new ViewModel();
-            vm.CurrentUser = Query.OneReceptionist(UserSession.UserId, dbContext);
+            vm.CurrentUser = UserSession;
             vm.AllUsers = Query.AllUsers(dbContext);
             vm.AllCustomers = Query.AllCustomers(dbContext);
             vm.AllInsurances = Query.AllInsurances(dbContext);
@@ -57,6 +57,16 @@ namespace massage.Controllers
             vm.AllPractitioners = Query.AllPractitioners(dbContext);
             vm.AllReservations = Query.AllReservations(dbContext);
             return PartialView("RDashboard",vm);
+        }
+        [HttpGet("insurances")]
+        public IActionResult Insurances() {
+            string[] check = AccessCheck();
+            if(check != null) return RedirectToAction(check[0], check[1]);
+            ViewModel vm = new ViewModel();
+            vm.CurrentUser = UserSession;
+            vm.AllInsurances = Query.AllInsurances(dbContext);
+            vm.AllUsers = Query.AllUsers(dbContext);
+            return PartialView(vm);
         }
 
         [HttpPost("CurrentReservation/{id}")]
@@ -255,6 +265,22 @@ namespace massage.Controllers
                 vm.AllTimeslots = Query.AllTimeslots(dbContext);
                 return PartialView("NewCustomer", vm);
             }
+        }
+        [HttpGet("customers/{id}/delete")]
+        public RedirectToActionResult DeleteCustomer(int id) {
+            string[] check = AccessCheck();
+            if(check != null) return RedirectToAction(check[0], check[1]);
+            dbContext.Remove(Query.OneCustomer(id, dbContext));
+            dbContext.SaveChanges();
+            return RedirectToAction("customers");
+        }
+        [HttpGet("insurances/{id}/delete")]
+        public RedirectToActionResult DeleteInsurance(int id) {
+            string[] check = AccessCheck();
+            if(check != null) return RedirectToAction(check[0], check[1]);
+            dbContext.Remove(Query.OneInsurance(id, dbContext));
+            dbContext.SaveChanges();
+            return RedirectToAction("insurances");
         }
 
         [HttpGet("PractitionerShow/{id}")]
