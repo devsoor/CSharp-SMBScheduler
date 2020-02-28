@@ -72,6 +72,8 @@ namespace massage.Controllers
         [HttpGet("CurrentReservation/{id}")]
         public IActionResult CurrentReservation(int id)
         {
+            string[] check = AccessCheck();
+            if(check != null) return RedirectToAction(check[0], check[1]);
             ViewModel vm = new ViewModel();
             vm.CurrentUser = Query.OneReceptionist(UserSession.UserId, dbContext);
             vm.AllUsers = Query.AllUsers(dbContext);
