@@ -73,6 +73,14 @@ namespace massage.Controllers
         public IActionResult CurrentReservation(int id)
         {
             ViewModel vm = new ViewModel();
+            vm.CurrentUser = Query.OneReceptionist(UserSession.UserId, dbContext);
+            vm.AllUsers = Query.AllUsers(dbContext);
+            vm.AllCustomers = Query.AllCustomers(dbContext);
+            vm.AllInsurances = Query.AllInsurances(dbContext);
+            vm.AllServices = Query.AllServices(dbContext);
+            vm.AllTimeslots = Query.AllTimeslots(dbContext);
+            vm.AllPractitioners = Query.AllPractitioners(dbContext);
+            vm.AllReservations = Query.AllReservations(dbContext);
             vm.OneReservation = Query.OneReservation(id, dbContext);
             return PartialView(vm);
         }
