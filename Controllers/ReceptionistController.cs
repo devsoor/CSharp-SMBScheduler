@@ -55,6 +55,7 @@ namespace massage.Controllers
             vm.AllServices = Query.AllServices(dbContext);
             vm.AllTimeslots = Query.AllTimeslots(dbContext);
             vm.AllPractitioners = Query.AllPractitioners(dbContext);
+            vm.AllReservations = Query.AllReservations(dbContext);
             return PartialView("RDashboard",vm);
         }
 
