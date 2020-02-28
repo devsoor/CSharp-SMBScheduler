@@ -380,7 +380,7 @@ namespace massage.Models
                 existingPSs = db.PSchedules
                     .Include(ps => ps.Practitioner)
                     .Where(ps => ps.PractitionerId == pID)
-                    .OrderBy(ps => ps.UpdatedAt)
+                    .OrderByDescending(ps => ps.UpdatedAt)
                     .ToList();
             }
             return existingPSs;
@@ -398,9 +398,31 @@ namespace massage.Models
                 db.Remove(oldPS);
             }
             db.SaveChanges();
+            List<PAvailTime> thisPsPats = Query.OnePractitionersAvailabilities(pID, db);
+            foreach (PAvailTime patToDel in thisPsPats)
+            {
+                db.Remove(patToDel);
+            }
+            db.SaveChanges();
             foreach (PSchedule newPS in updatedPSchedules)
             {
                 db.Add(newPS);
+                for (int h=6; h<=18; h++) {
+                    if ((bool)newPS.GetType().GetProperty("t" + h).GetValue(newPS))
+                    {
+                        List<Timeslot> matchingTSs = db.Timeslots.Where(ts => ts.Date.DayOfWeek.ToString() == newPS.DayOfWeek)
+                            .Where(ts => ts.Hour == h).ToList();
+                        foreach (Timeslot tsToAdd in matchingTSs)
+                        {
+                            PAvailTime newPat = new PAvailTime();
+                            newPat.TimeslotId = tsToAdd.TimeslotId;
+                            newPat.PractitionerId = pID;
+                            db.Add(newPat);
+                        }
+
+                    }
+                    
+                }
             }
             db.SaveChanges();
             return updatedPSchedules;
