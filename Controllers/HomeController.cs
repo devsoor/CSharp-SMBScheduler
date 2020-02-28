@@ -17,6 +17,19 @@ namespace massage.Controllers
     {
         // database setup
         public ProjectContext dbContext;
+        private User UserSession {
+            get {return dbContext.Users.FirstOrDefault(u => u.UserId == HttpContext.Session.GetInt32("UserId"));}
+            set {HttpContext.Session.SetInt32("UserId", value.UserId);}
+        }
+        // Redirects non-practitioner users to their respective dashboards
+        // see PractitionerController.AccessCheck for details
+        private string[] AccessCheck() {
+            User ActiveUser = UserSession;
+            if(ActiveUser == null) return new string[]{"Login", "Login"};
+            else if (ActiveUser.Role == 0) return new string[]{"Dashboard", "Home"};
+            else if (ActiveUser.Role == 1) return new string[]{"Dashboard", "Practitioner"};
+            return null;
+        }
         public HomeController(ProjectContext context)
         {
             dbContext = context;
@@ -119,15 +132,9 @@ namespace massage.Controllers
         [HttpGet("Dashboard")]
         public IActionResult Dashboard()
         {
-            ViewModel vm = new ViewModel();
-            vm.CurrentUser = dbContext.Users.FirstOrDefault(u => u.UserId == HttpContext.Session.GetInt32("UserId"));
-            vm.AllUsers = dbContext.Users.ToList();
-            vm.AllCustomers = dbContext.Customers.ToList();
-            vm.AllInsurances = dbContext.Insurances.ToList();
-            vm.AllReservations = dbContext.Reservations.ToList();
-            vm.AllServices = dbContext.Services.ToList();
-            vm.AllTimeslots = dbContext.Timeslots.ToList();
-            return PartialView(vm);
+            string[] check = AccessCheck();
+            if(check != null) return RedirectToAction(check[0], check[1]);
+            return PartialView();
         }
 
         [HttpGet("calendarJson")]

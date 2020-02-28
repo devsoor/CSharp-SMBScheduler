@@ -69,7 +69,7 @@ namespace massage.Controllers
             return PartialView(vm);
         }
 
-        [HttpPost("CurrentReservation/{id}")]
+        [HttpGet("CurrentReservation/{id}")]
         public IActionResult CurrentReservation(int id)
         {
             ViewModel vm = new ViewModel();
