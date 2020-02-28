@@ -59,6 +59,14 @@ namespace massage.Controllers
             return PartialView("RDashboard",vm);
         }
 
+        [HttpPost("CurrentReservation/{id}")]
+        public IActionResult CurrentReservation(int id)
+        {
+            ViewModel vm = new ViewModel();
+            vm.OneReservation = Query.OneReservation(id, dbContext);
+            return View(vm);
+        }
+
         // ALL RESERVATIONS
         [HttpGet("all_res")]
         public IActionResult AllReservations()
@@ -180,9 +188,10 @@ namespace massage.Controllers
         }
 
         // SUBMIT: cancel res
-        [HttpPost]
-        public IActionResult CancelReservation(Reservation newReservation)
+        [HttpPost("CancelReservation/{id}")]
+        public IActionResult CancelReservation(int id)
         {
+            Reservation newReservation = Query.OneReservation(id, dbContext);
             Query.DeleteReservation(newReservation.ReservationId, dbContext);
             return RedirectToAction("Dashboard", "Receptionist");
         }
