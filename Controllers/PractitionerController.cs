@@ -44,6 +44,7 @@ namespace massage.Controllers
         public IActionResult Dashboard () {
             string[] check = AccessCheck();
             if(check != null) return RedirectToAction(check[0], check[1]);
+            Generate.CheckTimeslots(dbContext); // check if timeslots need to be generated
             ViewModel vm = new ViewModel();
             User currUser = dbContext.Users.FirstOrDefault(u => u.UserId == HttpContext.Session.GetInt32("UserId"));
             vm.AllReservations = Query.OnePTodaysReservations(currUser.UserId, dbContext);
@@ -116,6 +117,9 @@ namespace massage.Controllers
 
         [HttpPost("togglepracsched/{id}")]
         public IActionResult togglePracSched(ViewModel result, int id){
+            string[] check = AccessCheck();
+            if(check != null) return RedirectToAction(check[0], check[1]);
+            Generate.CheckTimeslots(dbContext); // check if timeslots need to be generated
             System.Console.WriteLine($"####################################################{ result.PSDict.Keys}");
             List<PSchedule> Schedules = QConvert.ScheduleToQuery(result.PSDict, id);
             Query.UpdateAllOfOnePsSchedules(id, Schedules, dbContext);

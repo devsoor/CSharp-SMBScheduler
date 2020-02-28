@@ -46,6 +46,7 @@ namespace massage.Controllers
             // Checks User's role and login
             string[] check = AccessCheck();
             if(check != null) return RedirectToAction(check[0], check[1]);
+            Generate.CheckTimeslots(dbContext); // check if timeslots need to be generated
             ViewModel vm = new ViewModel();
             vm.CurrentUser = Query.OneReceptionist(UserSession.UserId, dbContext);
             vm.AllUsers = Query.AllUsers(dbContext);
@@ -75,6 +76,7 @@ namespace massage.Controllers
             // Checks User's role and login
             string[] check = AccessCheck();
             if(check != null) return RedirectToAction(check[0], check[1]);
+            Generate.CheckTimeslots(dbContext); // check if timeslots need to be generated
             ViewModel vm = new ViewModel();
             vm.CurrentUser = Query.OneReceptionist(UserSession.UserId, dbContext);
             vm.AllUsers = Query.AllUsers(dbContext);

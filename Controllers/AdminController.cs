@@ -54,6 +54,7 @@ namespace massage.Controllers
         public IActionResult Dashboard() {
             string[] check = AccessCheck();
             if(check != null) return RedirectToAction(check[0], check[1]);
+            Generate.CheckTimeslots(dbContext); // check if timeslots need to be generated
             ViewModel vm = new ViewModel();
             vm.CurrentUser = UserSession;
             vm.AllUsers = dbContext.Users.ToList();
