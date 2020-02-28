@@ -57,11 +57,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
         @{
         ViewModel vm1 = Model;
         }
-
-        @* @foreach (var u in vm1.AllPractitioners)
-            {
-                <h2>@u.FirstName</h2>;
-            } *@
         <partial name="_RDashPartial" model="vm1"/>
     </section>
     <!-- /.content -->
