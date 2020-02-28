@@ -45,6 +45,10 @@
        <div class="container-fluid">
         <div class="row mb-2">
           <form class="form" asp-action="SubmitReservation" asp-controller="Receptionist" method="post">
+            <input type="hidden" value="@Model.OneReservation.TimeslotId" asp-for="@Model.OneReservation.TimeslotId" id="tsid">
+            <input type="hidden" value="@Model.OneReservation.ServiceId" asp-for="@Model.OneReservation.ServiceId">
+            <input type="hidden" value="@Model.OneReservation.PractitionerId" asp-for="@Model.OneReservation.PractitionerId">
+            <input type="hidden" value="@Model.OneReservation.CustomerId" asp-for="@Model.OneReservation.CustomerId">
             <div class="card-body">
               <div class="row">
                 <div class="col">
@@ -54,18 +58,10 @@
                   <label for="service">Selected Service: @Model.OneService.Name</label>
                 </div>
                 <div class="col">
-                  <label for="service">Select Practiontioner:</label>
-                  <div class="col mb-2">
-                      <select id="practSelector" class="form-control select" asp-for="@Model.OneUser.UserId">
-                        <option value="0">Any Practitioner</option>
-                        @foreach (var prac in Model.AllPractitioners)
-                        {
-                          <option value="@prac.UserId">@prac.FirstName @prac.LastName</option>
-                        }
-                      </select>            
-                  </div>
+                  <label for="service">Selected Practiontioner: @Model.OneReservation.Practitioner.FirstName @Model.OneReservation.Practitioner.LastName</label>
                 </div>
               </div>
+              <textarea asp-for="@Model.OneReservation.Notes"></textarea>
             </div>
               <div class="form-row mb-2">
               <div id="calendar"></div>

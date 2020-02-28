@@ -126,6 +126,7 @@ namespace massage.Controllers
                 vm.AllServices = Query.AllServices(dbContext);
                 vm.AllTimeslots = Query.AllTimeslots(dbContext);
                 vm.AllPractitioners = Query.AllPractitioners(dbContext);
+                vm.OneReservation.Practitioner = Query.OnePractitioner(vm.OneReservation.PractitionerId, dbContext);
                 return View("NewReservation", vm);
             }
             Timeslot thisTS = Query.OneTimeslot(vm.OneReservation.TimeslotId, dbContext);
@@ -134,6 +135,8 @@ namespace massage.Controllers
             vm.OneCustomer = Query.OneCustomer(vm.OneReservation.CustomerId, dbContext);
             vm.OneService = Query.OneService(vm.OneReservation.ServiceId, dbContext);
             vm.OneInsurance = Query.OneInsurance(vm.OneCustomer.InsuranceId, dbContext);
+            vm.OneReservation.Practitioner = Query.OnePractitioner(vm.OneReservation.PractitionerId, dbContext);
+            vm.CurrentUser = UserSession;
             return View("ReservationForm", vm);
         }
         [HttpPost("SubmitReservation")]
@@ -141,6 +144,7 @@ namespace massage.Controllers
         {
             string[] check = AccessCheck();
             if(check != null) return RedirectToAction(check[0], check[1]);
+            vm.OneReservation.CreatorId = UserSession.UserId;
             if (vm.OneReservation.TimeslotId == 0)
             {
                 int roomID = 1;
@@ -163,13 +167,15 @@ namespace massage.Controllers
                 if (vm.OneReservation.CreatorId == 0 || vm.OneReservation.CustomerId == 0 || vm.OneReservation.PractitionerId == 0 || vm.OneReservation.RoomId == 0 || vm.OneReservation.ServiceId == 0 || vm.OneReservation.TimeslotId == 0)
                 {
                     ViewBag.errormsg = "An association value was 0, an error has occured";
-                    return View("NewReservation", vm);
+                    vm.CurrentUser = UserSession;
+                    return RedirectToAction("NewReservation");
                 }
                 Query.CreateReservation(vm.OneReservation, dbContext);
                 return RedirectToAction("Dashboard");
             }
             else {
-                return PartialView("ReservationForm", vm);
+                vm.CurrentUser = UserSession;
+                return RedirectToAction("NewReservation");
             }
         }
 
