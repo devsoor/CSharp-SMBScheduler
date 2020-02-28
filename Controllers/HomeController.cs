@@ -26,8 +26,9 @@ namespace massage.Controllers
         private string[] AccessCheck() {
             User ActiveUser = UserSession;
             if(ActiveUser == null) return new string[]{"Login", "Login"};
-            else if (ActiveUser.Role == 0) return new string[]{"Dashboard", "Home"};
             else if (ActiveUser.Role == 1) return new string[]{"Dashboard", "Practitioner"};
+            else if (ActiveUser.Role == 2) return new string[]{"Dashboard", "Receptionist"};
+            else if (ActiveUser.Role == 5) return new string[]{"Dashboard", "Admin"};
             return null;
         }
         public HomeController(ProjectContext context)

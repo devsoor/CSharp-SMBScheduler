@@ -58,100 +58,73 @@ scratch. This page gets rid of all links and provides the needed markup only.
       <div class="container">
         <!-- Small boxes (Stat box) -->
         <div class="row">
-
-              <div class="card card-cascade wider mb-4 wow fadeIn">
-                <div class="card-body card-body-cascade text-left">
-                    <table class="table bg-white">
-                      <thead>                  
-                        <tr>
-                          @{
-                            string[] RoomList = {"Massage 1", "Massage 2", "Massage 3", "Acupuncture 1", "Acupuncture 2", "Acupuncture 2"};
-                            foreach (var room in RoomList)
-                            {
-                              <th>
-                                  <div class="col text-center">
-                                    <h5>@room</h5>
-                                  </div>
-                              </th>
-                            }
-                          }
-                        </tr>
-                      </thead>
-                      <tbody>
-                        @{
-                          string[] timeSlot = {"9am", "10am","11am", "12pm","1pm", "2pm","3pm", "4pm","5pm"};
-                          for (int i=1; i<timeSlot.Length-1; i++)
-                          {
-                              <tr class="text-center">
-                              @for (int day=0; day < RoomList.Length; day++)
-                              {
-                                      <td>
-                                      <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                        <label class="btn btn-outline-success font-weight-light">
-                                          <input type="checkbox" class="form-control" name="timeslot" id="{{day + i}}" autocomplete="off">@timeSlot[i-1] - @timeSlot[i] 
-                                        </label>
-                                      </div>
-                                      </td>
-                              }
-                              </tr>
-                          }
-                        }
-                      </tbody>
-                    </table>
-                              </div>
-          </div>
-        </div>
-
-        <div class="row">
           
             <div class="card card-cascade wider mb-4 wow fadeIn">
-              <div class="card-body card-body-cascade text-left">
+              <div class="card-header">
                   <h3>Upcoming Appointments</h3>
-                  <div class="card-body table-responsive p-0" style="height: 300px;">
-                      <table class="table table-head-fixed text-nowrap">
-                          <thead class="black white-text">
-                              <tr>
-                                  <th scope="col">Date</th>
-                                  <th scope="col">Time</th>
-                                  <th scope="col">Customer Name</th>
-                                  <th scope="col">Practitioner</th>
-                                  <th scope="col">Room</th>
-                              </tr>
-                          </thead>
-                          <tbody>
-                                    <tr>
-                                        <td>Thursday Feb 27, 2020</td>
-                                        <td>10am-11am</td>
-                                        <td>Mary Jane</td>
-                                        <td>Cindy Ball</td>
-                                        <td>Massage 2</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Thursday Feb 27, 2020</td>
-                                        <td>10am-11am</td>
-                                        <td>Mary Jane</td>
-                                        <td>Cindy Ball</td>
-                                        <td>Massage 2</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Thursday Feb 27, 2020</td>
-                                        <td>10am-11am</td>
-                                        <td>Mary Jane</td>
-                                        <td>Cindy Ball</td>
-                                        <td>Massage 2</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Thursday Feb 27, 2020</td>
-                                        <td>10am-11am</td>
-                                        <td>Mary Jane</td>
-                                        <td>Cindy Ball</td>
-                                        <td>Massage 2</td>
-                                    </tr>
-                          </tbody>
-                      </table>
-                  </div>
-                  </div>
-                  </div>
+              </div>
+              <div class="card-body text-center">
+                @if(Model.AllReservations.Count <=0 ){
+                  <p>No Reservations to Display</p>
+                }else{
+                  <table class="table table-head-fixed text-nowrap" id="tableId">
+                    <thead class="black white-text">
+                        <tr class="navigateTest">
+                            <th scope="col">Date</th>
+                            <th scope="col">Customer</th>
+                            <th scope="col">Practitioner</th>
+                            <th scope="col">Service</th>
+                            <th scope="col">Room</th>
+                            <th scope="col">Notes</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                      <tbody>
+                  @{
+                    foreach (Reservation rsv in Model.AllReservations)
+                    {
+                      DateTime startT = DateTime.Today.AddHours(rsv.Timeslot.Hour);
+                      DateTime endT = startT.AddHours(1);
+                      <tr>
+                        <td>@String.Format("{0:htt}", startT) - @String.Format("{0:htt}", endT)</td>
+                        <td>@rsv.Customer.FirstName @rsv.Customer.LastName[0]</td>
+                        <td>@rsv.Practitioner.FirstName @rsv.Practitioner.LastName[0]</td>
+                        <td>@rsv.Service.Name</td>
+                        <td>Room @rsv.Room.RoomId</td>
+                        @if (rsv.Notes == null || rsv.Notes.Length == 0)
+                        {
+                          <td>(no notes)</td>
+                        }
+                        else if (rsv.Notes.Length <= 30) {
+                          <td>@rsv.Notes</td>
+                        }
+                        else {
+                          string shortNotes = "";
+                          for (int i=0; i<=30; i++)
+                          {
+                            shortNotes = shortNotes + rsv.Notes[i];
+                          }
+                          <td>@shortNotes</td>
+                        }
+                        <td>
+                              <div class="row">
+                                <div class="col">
+                                  <form asp-action="CurrentReservation" asp-route-id="@rsv.ReservationId" method="get" style="display:inline;">
+                                <input type="hidden" value="@rsv.ReservationId">
+                                <input type="submit" value="View">
+                              </form>
+                                </div>
+                              </div>
+                              </td>
+                      </tr>
+                    }
+                  }
+                </tbody>
+              </table>
+                }
+            </div>
+            </div>
         </div>
         <!-- /.row (main row) -->
       </div><!-- /.container-fluid -->

@@ -46,7 +46,7 @@ namespace massage.Controllers
             if(check != null) return RedirectToAction(check[0], check[1]);
             Generate.CheckTimeslots(dbContext); // check if timeslots need to be generated
             ViewModel vm = new ViewModel();
-            User currUser = dbContext.Users.FirstOrDefault(u => u.UserId == HttpContext.Session.GetInt32("UserId"));
+            User currUser = UserSession;
             vm.AllReservations = Query.OnePTodaysReservations(currUser.UserId, dbContext);
             vm.CurrentUser = currUser;
             return PartialView("PDashboard", vm);
@@ -99,6 +99,23 @@ namespace massage.Controllers
             vm.PSDict = QConvert.ScheduleFromQuery(Query.OnePsSchedules(UserSession.UserId, dbContext));
             // vm.AllPSchedules = Query.OnePsSchedules(UserSession.UserId, dbContext);
             return PartialView(vm);
+        }
+        [HttpGet("CurrentReservation/{id}")]
+        public IActionResult CurrentReservation(int id)
+        {
+            string[] check = AccessCheck();
+            if(check != null) return RedirectToAction(check[0], check[1]);
+            ViewModel vm = new ViewModel();
+            vm.CurrentUser = UserSession;
+            vm.AllUsers = Query.AllUsers(dbContext);
+            vm.AllCustomers = Query.AllCustomers(dbContext);
+            vm.AllInsurances = Query.AllInsurances(dbContext);
+            vm.AllServices = Query.AllServices(dbContext);
+            vm.AllTimeslots = Query.AllTimeslots(dbContext);
+            vm.AllPractitioners = Query.AllPractitioners(dbContext);
+            vm.AllReservations = Query.AllReservations(dbContext);
+            vm.OneReservation = Query.OneReservation(id, dbContext);
+            return PartialView( "CurrentReservation", vm);
         }
 
 //////////////////////////////// POST ////////////////////////////////

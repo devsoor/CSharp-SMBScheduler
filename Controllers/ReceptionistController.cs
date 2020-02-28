@@ -55,7 +55,7 @@ namespace massage.Controllers
             vm.AllServices = Query.AllServices(dbContext);
             vm.AllTimeslots = Query.AllTimeslots(dbContext);
             vm.AllPractitioners = Query.AllPractitioners(dbContext);
-            vm.AllReservations = Query.AllReservations(dbContext);
+            vm.AllReservations = Query.AllTodaysReservations(dbContext);
             return PartialView("RDashboard",vm);
         }
         [HttpGet("insurances")]
@@ -75,7 +75,7 @@ namespace massage.Controllers
             string[] check = AccessCheck();
             if(check != null) return RedirectToAction(check[0], check[1]);
             ViewModel vm = new ViewModel();
-            vm.CurrentUser = Query.OneReceptionist(UserSession.UserId, dbContext);
+            vm.CurrentUser = UserSession;
             vm.AllUsers = Query.AllUsers(dbContext);
             vm.AllCustomers = Query.AllCustomers(dbContext);
             vm.AllInsurances = Query.AllInsurances(dbContext);
@@ -218,7 +218,7 @@ namespace massage.Controllers
         }
 
         // SUBMIT: cancel res
-        [HttpPost("CancelReservation/{id}")]
+        [HttpGet("CancelReservation/{id}")]
         public IActionResult CancelReservation(int id)
         {
             Reservation newReservation = Query.OneReservation(id, dbContext);

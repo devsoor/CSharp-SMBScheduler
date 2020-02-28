@@ -27,7 +27,7 @@
                     <table class="table table-head-fixed text-nowrap" id="tableId">
                       <thead class="black white-text">
                           <tr class="navigateTest">
-                              <th scope="col">Date</th>
+                              <th scope="col">Time</th>
                               <th scope="col">Customer</th>
                               <th scope="col">Practitioner</th>
                               <th scope="col">Service</th>
@@ -67,11 +67,11 @@
                           <td>
                                 <div class="row">
                                   <div class="col">
-                                    <form asp-action="CurrentReservation"  asp-route-id="@rsv.ReservationId" method="post" style="display:inline;">
+                                    <form asp-action="CurrentReservation"  asp-route-id="@rsv.ReservationId" method="get" style="display:inline;">
                                   <input type="hidden" value="@rsv.ReservationId">
                                   <input type="submit" value="View">
                                 </form>
-                                <form asp-action="CancelReservation" asp-route-id="@rsv.ReservationId" method="post" style="display:inline;">
+                                <form asp-action="CancelReservation" asp-route-id="@rsv.ReservationId" method="get" style="display:inline;">
                                   <input type="hidden" value="@rsv.ReservationId">
                                   <input type="submit" value="Cancel">
                                 </form>
