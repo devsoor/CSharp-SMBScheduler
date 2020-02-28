@@ -66,7 +66,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                                                         @foreach(KeyValuePair<string,bool> timeofday in  dayofweek.Value){
                                                                             @if(dayofweek.Key == "Sunday"){
                                                                                 <tr>
-                                                                                    <td>@timeofday.Key</td>
+                                                                                    <td>
+                                                                                        <input value="@timeofday.Key" class="form-control input-lg bg-secondary text-center">
+                                                                                    </td>
                                                                                 </tr>
                                                                             }
                                                                         }
@@ -86,20 +88,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                                                         @foreach(KeyValuePair<string,bool> timeofday in  dayofweek.Value){
                                                                             @if(dayofweek.Key == "Sunday"){
                                                                                 <tr>
-                                                                                    <td>
-                                                                                        <div class="btn-group  btn-group-toggle" data-toggle="buttons">
-                                                                                            @if (Model.PSDict[dayofweek.Key][timeofday.Key] == false)
-                                                                                            {
-                                                                                                <label class="btn btn-lg btn-danger font-weight-light">
-                                                                                                <input type="checkbox" asp-for="@Model.PSDict[dayofweek.Key][timeofday.Key]">
-                                                                                            </label>
-                                                                                            } else {
-                                                                                            <label class="btn btn-lg btn-success font-weight-light">
-                                                                                                <input type="checkbox" asp-for="@Model.PSDict[dayofweek.Key][timeofday.Key]">
-                                                                                            </label>
-                                                                                            }
-                                                                                        </div>
-                                                                                    </td>
+                                                                                    <td><input class="form-control input-lg" type="checkbox" asp-for="@Model.PSDict[dayofweek.Key][timeofday.Key]"></td>
                                                                                 </tr>
                                                                             }
                                                                         }
@@ -121,20 +110,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                                                         @foreach(KeyValuePair<string,bool> timeofday in  dayofweek.Value){
                                                                             @if(dayofweek.Key == "Monday"){
                                                                                 <tr>
-                                                                                    <td>
-                                                                                        <div class="btn-group  btn-group-toggle" data-toggle="buttons">
-                                                                                            @if (Model.PSDict[dayofweek.Key][timeofday.Key] == false)
-                                                                                            {
-                                                                                                <label class="btn btn-lg btn-danger font-weight-light">
-                                                                                                <input type="checkbox" asp-for="@Model.PSDict[dayofweek.Key][timeofday.Key]">
-                                                                                            </label>
-                                                                                            } else {
-                                                                                            <label class="btn btn-lg btn-success font-weight-light">
-                                                                                                <input type="checkbox" asp-for="@Model.PSDict[dayofweek.Key][timeofday.Key]">
-                                                                                            </label>
-                                                                                            }
-                                                                                        </div>
-                                                                                    </td>
+                                                                                     <td><input class="form-control input-lg" type="checkbox" asp-for="@Model.PSDict[dayofweek.Key][timeofday.Key]"></td>
                                                                                 </tr>
                                                                             }
                                                                         }
@@ -154,19 +130,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                                                         @foreach(KeyValuePair<string,bool> timeofday in  dayofweek.Value){
                                                                             @if(dayofweek.Key == "Tuesday"){
                                                                                 <tr>
-                                                                                    <td>
-                                                                                        <div class="btn-group  btn-group-toggle" data-toggle="buttons">
-                                                                                            @if (Model.PSDict[dayofweek.Key][timeofday.Key] == false)
-                                                                                            {
-                                                                                                <label class="btn btn-lg btn-danger font-weight-light">
-                                                                                                <input type="checkbox" asp-for="@Model.PSDict[dayofweek.Key][timeofday.Key]">
-                                                                                            </label>
-                                                                                            } else {
-                                                                                            <label class="btn btn-lg btn-success font-weight-light">
-                                                                                                <input type="checkbox" asp-for="@Model.PSDict[dayofweek.Key][timeofday.Key]">
-                                                                                            </label>
-                                                                                            }
-                                                                                        </div>                                                                </td>
+                                                                                <td><input class="form-control input-lg" type="checkbox" asp-for="@Model.PSDict[dayofweek.Key][timeofday.Key]"></td>
                                                                                 </tr>
                                                                             }
                                                                         }
@@ -187,20 +151,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                                                         @foreach(KeyValuePair<string,bool> timeofday in  dayofweek.Value){
                                                                             @if(dayofweek.Key == "Wednesday"){
                                                                                 <tr>
-                                                                                    <td>
-                                                                                        <div class="btn-group  btn-group-toggle" data-toggle="buttons">
-                                                                                            @if (Model.PSDict[dayofweek.Key][timeofday.Key] == false)
-                                                                                            {
-                                                                                                <label class="btn btn-lg btn-danger font-weight-light">
-                                                                                                <input type="checkbox" asp-for="@Model.PSDict[dayofweek.Key][timeofday.Key]">
-                                                                                            </label>
-                                                                                            } else {
-                                                                                            <label class="btn btn-lg btn-success font-weight-light">
-                                                                                                <input type="checkbox" asp-for="@Model.PSDict[dayofweek.Key][timeofday.Key]">
-                                                                                            </label>
-                                                                                            }
-                                                                                        </div>                                                                      
-                                                                                    </td>
+                                                                                <td><input class="form-control input-lg" type="checkbox" asp-for="@Model.PSDict[dayofweek.Key][timeofday.Key]"></td>
+
                                                                                 </tr>
                                                                             }
                                                                         }
@@ -220,19 +172,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                                                         @foreach(KeyValuePair<string,bool> timeofday in  dayofweek.Value){
                                                                             @if(dayofweek.Key == "Thursday"){
                                                                                 <tr>
-                                                                                    <td>
-                                                                                        <div class="btn-group  btn-group-toggle" data-toggle="buttons">
-                                                                                            @if (Model.PSDict[dayofweek.Key][timeofday.Key] == false)
-                                                                                            {
-                                                                                                <label class="btn btn-lg btn-danger font-weight-light">
-                                                                                                <input type="checkbox" asp-for="@Model.PSDict[dayofweek.Key][timeofday.Key]">
-                                                                                            </label>
-                                                                                            } else {
-                                                                                            <label class="btn btn-lg btn-success font-weight-light">
-                                                                                                <input type="checkbox" asp-for="@Model.PSDict[dayofweek.Key][timeofday.Key]">
-                                                                                            </label>
-                                                                                            }
-                                                                                        </div>                                                                  </td>
+                                                                                <td><input class="form-control input-lg" type="checkbox" asp-for="@Model.PSDict[dayofweek.Key][timeofday.Key]"></td>
                                                                                 </tr>
                                                                             }
                                                                         }
@@ -253,20 +193,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                                                         @foreach(KeyValuePair<string,bool> timeofday in  dayofweek.Value){
                                                                             @if(dayofweek.Key == "Friday"){
                                                                                 <tr>
-                                                                                    <td>
-                                                                                        <div class="btn-group  btn-group-toggle" data-toggle="buttons">
-                                                                                            @if (Model.PSDict[dayofweek.Key][timeofday.Key] == false)
-                                                                                            {
-                                                                                                <label class="btn btn-lg btn-danger font-weight-light">
-                                                                                                <input type="checkbox" asp-for="@Model.PSDict[dayofweek.Key][timeofday.Key]">
-                                                                                            </label>
-                                                                                            } else {
-                                                                                            <label class="btn btn-lg btn-success font-weight-light">
-                                                                                                <input type="checkbox" asp-for="@Model.PSDict[dayofweek.Key][timeofday.Key]">
-                                                                                            </label>
-                                                                                            }
-                                                                                        </div>                                                                      
-                                                                                    </td>
+                                                                                <td><input class="form-control input-lg" type="checkbox" asp-for="@Model.PSDict[dayofweek.Key][timeofday.Key]"></td>
                                                                                 </tr>
                                                                             }
                                                                         }
@@ -286,19 +213,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                                                         @foreach(KeyValuePair<string,bool> timeofday in  dayofweek.Value){
                                                                             @if(dayofweek.Key == "Saturday"){
                                                                                 <tr>
-                                                                                    <td>
-                                                                                        <div class="btn-group  btn-group-toggle" data-toggle="buttons">
-                                                                                            @if (Model.PSDict[dayofweek.Key][timeofday.Key] == false)
-                                                                                            {
-                                                                                                <label class="btn btn-lg btn-danger font-weight-light">
-                                                                                                <input type="checkbox" asp-for="@Model.PSDict[dayofweek.Key][timeofday.Key]">
-                                                                                            </label>
-                                                                                            } else {
-                                                                                            <label class="btn btn-lg btn-success font-weight-light">
-                                                                                                <input type="checkbox" asp-for="@Model.PSDict[dayofweek.Key][timeofday.Key]">
-                                                                                            </label>
-                                                                                            }
-                                                                                        </div>                                                                  </td>
+                                                                                <td><input class="form-control input-lg" type="checkbox" asp-for="@Model.PSDict[dayofweek.Key][timeofday.Key]"></td>
                                                                                 </tr>
                                                                             }
                                                                         }
