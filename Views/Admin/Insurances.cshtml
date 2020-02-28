@@ -36,17 +36,13 @@
             <div class="col-12">
               <table class="table">
                   <tr>
-                      <th>First Name</th>
-                      <th>Last Name</th>
-                      <th>Insurance</th>
+                      <th>Name</th>
                       <th></th>
                   </tr>
-                @foreach(Customer c in vm.AllCustomers) {
+                @foreach(Insurance i in vm.AllInsurances) {
                     <tr>
-                        <td>@c.FirstName</td>
-                        <td>@c.LastName</td>
-                        <td>@c.Insurance.Name</td>
-                        <td><a href="customers/@c.CustomerId/delete" class="btn btn-primary">Delete</a></td>
+                        <td>@i.Name</td>
+                        <td><a class="btn btn-primary" href="insurances/@i.InsuranceId/delete">Delete</a></td>
                     </tr>
                 }
               </table>

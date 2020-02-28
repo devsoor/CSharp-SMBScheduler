@@ -226,12 +226,12 @@ namespace massage.Controllers
             string[] check = AccessCheck();
             if(check != null) return RedirectToAction(check[0], check[1]);
             ViewModel vm = new ViewModel();
-            vm.CurrentUser = dbContext.Users.FirstOrDefault(u => u.UserId == HttpContext.Session.GetInt32("UserId"));
-            vm.AllUsers = dbContext.Users.ToList();
-            vm.AllCustomers = dbContext.Customers.ToList();
-            vm.AllInsurances = dbContext.Insurances.ToList();
-            vm.AllServices = dbContext.Services.ToList();
-            vm.AllTimeslots = dbContext.Timeslots.ToList();
+            vm.CurrentUser = UserSession;
+            vm.AllUsers = Query.AllUsers(dbContext);
+            vm.AllCustomers = Query.AllCustomers(dbContext);
+            vm.AllInsurances = Query.AllInsurances(dbContext);
+            vm.AllServices = Query.AllServices(dbContext);
+            vm.AllTimeslots = Query.AllTimeslots(dbContext);
             return PartialView(vm);
         }
 
@@ -247,7 +247,13 @@ namespace massage.Controllers
             }
             else
             {
-                return PartialView("NewCustomer");
+                vm.CurrentUser = UserSession;
+                vm.AllUsers = Query.AllUsers(dbContext);
+                vm.AllCustomers = Query.AllCustomers(dbContext);
+                vm.AllInsurances = Query.AllInsurances(dbContext);
+                vm.AllServices = Query.AllServices(dbContext);
+                vm.AllTimeslots = Query.AllTimeslots(dbContext);
+                return PartialView("NewCustomer", vm);
             }
         }
 

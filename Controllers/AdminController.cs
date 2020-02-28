@@ -163,6 +163,16 @@ namespace massage.Controllers
                 return PartialView("NewInsurance");
             }
         }
+        [HttpGet("insurances")]
+        public IActionResult Insurances() {
+            string[] check = AccessCheck();
+            if(check != null) return RedirectToAction(check[0], check[1]);
+            ViewModel vm = new ViewModel();
+            vm.CurrentUser = UserSession;
+            vm.AllInsurances = Query.AllInsurances(dbContext);
+            vm.AllUsers = Query.AllUsers(dbContext);
+            return PartialView(vm);
+        }
         [HttpGet("Customers")]
         public IActionResult Customers() {
             string[] check = AccessCheck();
@@ -190,19 +200,24 @@ namespace massage.Controllers
         }
 
         [HttpPost("CreateCustomer")]
-        public IActionResult CreateCustomer(Customer newCustomer) {
-            if (ModelState.IsValid) {
-                newCustomer.Insurance = Query.OneInsurance(newCustomer.InsuranceId, dbContext);
-                newCustomer.Reservations = new List<Reservation>();
-                dbContext.Add(newCustomer);
+        public IActionResult CreateCustomer(ViewModel vm)
+        {
+            if (ModelState.IsValid)
+            {
+                dbContext.Add(vm.OneCustomer);
                 dbContext.SaveChanges();
                 return RedirectToAction("Dashboard");
             }
-            ViewModel vm = new ViewModel();
-            vm.AllInsurances = dbContext.Insurances.ToList();
-            vm.CurrentUser = UserSession;
-            vm.AllUsers = dbContext.Users.ToList();
-            return PartialView("NewCustomer", vm);
+            else
+            {
+                vm.CurrentUser = UserSession;
+                vm.AllUsers = Query.AllUsers(dbContext);
+                vm.AllCustomers = Query.AllCustomers(dbContext);
+                vm.AllInsurances = Query.AllInsurances(dbContext);
+                vm.AllServices = Query.AllServices(dbContext);
+                vm.AllTimeslots = Query.AllTimeslots(dbContext);
+                return PartialView("NewCustomer", vm);
+            }
         }
 
 
