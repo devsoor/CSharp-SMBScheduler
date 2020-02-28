@@ -380,7 +380,7 @@ namespace massage.Models
                 existingPSs = db.PSchedules
                     .Include(ps => ps.Practitioner)
                     .Where(ps => ps.PractitionerId == pID)
-                    .OrderByDescending(ps => ps.UpdatedAt)
+                    .OrderBy(ps => ps.UpdatedAt)
                     .ToList();
             }
             return existingPSs;

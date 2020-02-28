@@ -48,7 +48,7 @@ namespace massage.Controllers
             User currUser = dbContext.Users.FirstOrDefault(u => u.UserId == HttpContext.Session.GetInt32("UserId"));
             vm.AllReservations = Query.OnePTodaysReservations(currUser.UserId, dbContext);
             vm.CurrentUser = currUser;
-            return View("PDashboard", vm);
+            return PartialView("PDashboard", vm);
         }
 
         // Practitioner Schedule View w/ current
@@ -57,7 +57,7 @@ namespace massage.Controllers
             string[] check = AccessCheck();
             if(check != null) return RedirectToAction(check[0], check[1]);
             // stuff
-            return View();
+            return PartialView();
         }
 
         // Practitioner Template View FORM
@@ -66,7 +66,7 @@ namespace massage.Controllers
             string[] check = AccessCheck();
             if(check != null) return RedirectToAction(check[0], check[1]);
             // stuff
-            return View();
+            return PartialView();
         }
 
         // Practitioner Profile View
@@ -75,7 +75,7 @@ namespace massage.Controllers
             string[] check = AccessCheck();
             if(check != null) return RedirectToAction(check[0], check[1]);
             // stuff
-            return View();
+            return PartialView();
         }
 
         // Practitioner Update Profile FORM
@@ -84,7 +84,27 @@ namespace massage.Controllers
             string[] check = AccessCheck();
             if(check != null) return RedirectToAction(check[0], check[1]);
             // stuff
-            return View();
+            return PartialView();
+        }
+        [HttpGet]
+        [Route("{PracId}")]
+        public IActionResult PractitionerProfile(int PracId)
+        {
+            string[] check = AccessCheck();
+            if(check != null) return RedirectToAction(check[0], check[1]);
+            ViewModel vm = new ViewModel();
+            vm.CurrentUser = dbContext.Users.FirstOrDefault(u => u.UserId == HttpContext.Session.GetInt32("UserId"));
+            vm.OneUser = dbContext.Users.SingleOrDefault(p => p.UserId == PracId);
+            vm.PSDict = QConvert.ScheduleFromQuery(Query.OnePsSchedules(vm.OneUser.UserId, dbContext));
+            vm.AllPSchedules = Query.OnePsSchedules(vm.OneUser.UserId, dbContext);
+            return PartialView(vm);
+        }
+
+        [HttpGet("getpracsched")]
+        public IActionResult NewPSchedule()
+        {
+            User currentUser = dbContext.Users.FirstOrDefault(u => u.UserId == HttpContext.Session.GetInt32("UserId"));
+            return RedirectToAction("PractitionerProfile", new { PracId = currentUser.UserId});
         }
 
 //////////////////////////////// POST ////////////////////////////////
@@ -111,6 +131,12 @@ namespace massage.Controllers
             else {
                 return View("UserProfile");
             }
+        }
+
+                [HttpPost]
+        public IActionResult togglePracSched()
+        {
+            return RedirectToAction("PractitionerProfile");
         }
     }   // END CONTROLLER
 }   // END ALL

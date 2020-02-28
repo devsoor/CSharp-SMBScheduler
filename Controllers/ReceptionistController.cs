@@ -54,7 +54,7 @@ namespace massage.Controllers
             vm.AllServices = Query.AllServices(dbContext);
             vm.AllTimeslots = Query.AllTimeslots(dbContext);
             vm.AllPractitioners = Query.AllPractitioners(dbContext);
-            return View("RDashboard",vm);
+            return PartialView("RDashboard",vm);
         }
 
         // ALL RESERVATIONS
@@ -65,7 +65,7 @@ namespace massage.Controllers
             string[] check = AccessCheck();
             if(check != null) return RedirectToAction(check[0], check[1]);
             Query.AllReservations(dbContext);
-            return View();
+            return PartialView();
         }
 
         // FORM PAGE??
@@ -85,7 +85,7 @@ namespace massage.Controllers
             vm.AllPractitioners = Query.AllPractitioners(dbContext);
             vm.OneReservation = new Reservation();
             vm.OneReservation.CreatorId = vm.CurrentUser.UserId;
-            return View(vm);
+            return PartialView(vm);
         }
         [HttpGet("newinsurance")]
         public IActionResult NewInsurance()
@@ -169,7 +169,7 @@ namespace massage.Controllers
                 return RedirectToAction("Dashboard");
             }
             else {
-                return View("NewReservation", vm);
+                return PartialView("ReservationForm", vm);
             }
         }
 
@@ -207,7 +207,7 @@ namespace massage.Controllers
             vm.AllInsurances = dbContext.Insurances.ToList();
             vm.AllServices = dbContext.Services.ToList();
             vm.AllTimeslots = dbContext.Timeslots.ToList();
-            return View(vm);
+            return PartialView(vm);
         }
 
         // SUBMIT: create new customer
@@ -222,7 +222,7 @@ namespace massage.Controllers
             }
             else
             {
-                return View("NewCustomer");
+                return PartialView("NewCustomer");
             }
         }
 
@@ -262,7 +262,7 @@ namespace massage.Controllers
             }
             else
             {
-                return View("EditProfile");
+                return PartialView("EditProfile");
             }
         }
 
