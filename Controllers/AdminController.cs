@@ -106,34 +106,6 @@ namespace massage.Controllers
         }
 
 
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-        // [HttpGet("getpracsched")]
-        // public IActionResult NewPSchedule()
-        // {
-=======
-=======
-        [HttpGet("getpracsched")]
-        public IActionResult NewPSchedule()
-        {
-            User currentUser = dbContext.Users.FirstOrDefault(u => u.UserId == HttpContext.Session.GetInt32("UserId"));
-            return RedirectToAction("PractitionerProfile", new { PracId = currentUser.UserId});
-        }
->>>>>>> Stashed changes
-
->>>>>>> b3affc412d4953735f83442a2ab79b4334fbc7af
-
-        // }
-
-        [HttpPost("togglepracsched/{id}")]
-        public IActionResult togglePracSched(ViewModel result, int id){
-            System.Console.WriteLine($"####################################################{ result.PSDict.Keys}");
-            List<PSchedule> Schedules = QConvert.ScheduleToQuery(result.PSDict, id);
-            Query.UpdateAllOfOnePsSchedules(id, Schedules, dbContext);
-            return RedirectToAction("Dashboard");
-        }
-
-
 
         // SERVICE
         // Admin: New Service FORM
@@ -312,17 +284,6 @@ namespace massage.Controllers
                 return View("UserProfile");
             }
         }
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-=======
-
->>>>>>> b3affc412d4953735f83442a2ab79b4334fbc7af
-=======
-        [HttpPost]
-        public IActionResult togglePracSched(){
-            return RedirectToAction("PractitionerProfile");
-        }
->>>>>>> Stashed changes
 
     }   // END CONTROLLER
 }   // END ALL

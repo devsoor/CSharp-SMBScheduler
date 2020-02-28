@@ -93,18 +93,11 @@ namespace massage.Controllers
             string[] check = AccessCheck();
             if(check != null) return RedirectToAction(check[0], check[1]);
             ViewModel vm = new ViewModel();
-            vm.CurrentUser = dbContext.Users.FirstOrDefault(u => u.UserId == HttpContext.Session.GetInt32("UserId"));
-            vm.OneUser = dbContext.Users.SingleOrDefault(p => p.UserId == PracId);
-            vm.PSDict = QConvert.ScheduleFromQuery(Query.OnePsSchedules(vm.OneUser.UserId, dbContext));
-            vm.AllPSchedules = Query.OnePsSchedules(vm.OneUser.UserId, dbContext);
+            vm.CurrentUser = UserSession;
+            vm.OneUser = Query.OnePractitioner(PracId, dbContext);
+            vm.PSDict = QConvert.ScheduleFromQuery(Query.OnePsSchedules(UserSession.UserId, dbContext));
+            // vm.AllPSchedules = Query.OnePsSchedules(UserSession.UserId, dbContext);
             return PartialView(vm);
-        }
-
-        [HttpGet("getpracsched")]
-        public IActionResult NewPSchedule()
-        {
-            User currentUser = dbContext.Users.FirstOrDefault(u => u.UserId == HttpContext.Session.GetInt32("UserId"));
-            return RedirectToAction("PractitionerProfile", new { PracId = currentUser.UserId});
         }
 
 //////////////////////////////// POST ////////////////////////////////
@@ -119,6 +112,14 @@ namespace massage.Controllers
             else {
                 return View("UserProfile");
             }
+        }
+
+        [HttpPost("togglepracsched/{id}")]
+        public IActionResult togglePracSched(ViewModel result, int id){
+            System.Console.WriteLine($"####################################################{ result.PSDict.Keys}");
+            List<PSchedule> Schedules = QConvert.ScheduleToQuery(result.PSDict, id);
+            Query.UpdateAllOfOnePsSchedules(id, Schedules, dbContext);
+            return RedirectToAction("PractitionerProfile", new {PracId = id});
         }
 
         // Practitioner: profile FORM ON-SUBMIT

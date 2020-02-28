@@ -51,15 +51,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     </div>
                             <div class="card ">
                                     <div class="card-body ">
-                                        @if(@Model.AllPSchedules.Count <= 0){
-                                            <p>You have no PSchedules to Display</p>
-                                            <form action="NewPSchedule" controller="Admin" method="post">
-                                                <input type="submit" value="Create New PSchedule">
-                                            </form>
-                                        }
-                                        else {
-                                        @* TIME LABLE *@
-                                        <form asp-action="togglePracSched" asp-controller="Practitioner" method="post">
+                                        
+                                        <form asp-action="togglePracSched" asp-route-id="@Model.OneUser.UserId" asp-controller="Practitioner" method="post">
                                             <div class="row">
                                                         <div class="col">
                                                             <table class="table bg-white">
@@ -317,7 +310,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                             </div>
                                             <button>Update</button>
                                         </form>
-                                    }
+                                    
                                     </div>
                             </div>
                     </div>
