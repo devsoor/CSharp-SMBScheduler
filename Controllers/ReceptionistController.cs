@@ -48,7 +48,7 @@ namespace massage.Controllers
             if(check != null) return RedirectToAction(check[0], check[1]);
             Generate.CheckTimeslots(dbContext); // check if timeslots need to be generated
             ViewModel vm = new ViewModel();
-            vm.CurrentUser = Query.OneReceptionist(UserSession.UserId, dbContext);
+            vm.CurrentUser = UserSession;
             vm.AllUsers = Query.AllUsers(dbContext);
             vm.AllCustomers = Query.AllCustomers(dbContext);
             vm.AllInsurances = Query.AllInsurances(dbContext);

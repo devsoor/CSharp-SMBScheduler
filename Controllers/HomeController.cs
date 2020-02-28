@@ -137,6 +137,13 @@ namespace massage.Controllers
             string jsonEvents = QConvert.TimeslotsToEvents(allTimeslots);
             return jsonEvents;
         }
+        [HttpGet("calendarReservationsJson")]
+        public string calendarReservationsJson()
+        {
+            List<Reservation> allReservations = Query.AllReservations(dbContext);
+            string jsonEvents = QConvert.ReservationsToEvents(allReservations);
+            return jsonEvents;
+        }
         [HttpPost("calendarFilterJson")]
         [RequestSizeLimit(2147483648)]
         public string calendarFilterJson(string body)

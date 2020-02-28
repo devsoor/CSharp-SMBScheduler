@@ -112,6 +112,29 @@ namespace massage.Models
             };
             return JsonConvert.SerializeObject(jsonEvents);
         }
+        public static string ReservationsToEvents(List<Reservation> Rs)
+        {
+            List<object> eventResults = new List<object>();
+            foreach (Reservation r in Rs)
+            {
+                long myStart = (long)(r.Timeslot.Date.AddHours(r.Timeslot.Hour) - (new DateTime(1970, 1, 1))).TotalMilliseconds;
+                var oneEvent = new {
+                    id = r.ReservationId,
+                    title = $"Customer: {r.Customer.FirstName} {r.Customer.LastName[0]}, Service: {r.Service.Name}, Practitioner: {r.Practitioner.FirstName} {r.Practitioner.LastName[0]}",
+                    start = myStart,
+                    end = (myStart + 3600000), // start + 1 hour in milliseconds.
+                    backgroundColor = "#00a65a",
+                    borderColor     = "#00a65a", 
+                    textColor       = "#ffffff",
+                };
+                eventResults.Add(oneEvent);
+            }
+            var jsonEvents = new {
+                success = 1,
+                result = eventResults
+            };
+            return JsonConvert.SerializeObject(jsonEvents);
+        }
         public static string FilteredEvents(string eventsJson, ProjectContext db)
         {
             JsonFilterObject events = JsonConvert.DeserializeObject<JsonFilterObject>(eventsJson);
