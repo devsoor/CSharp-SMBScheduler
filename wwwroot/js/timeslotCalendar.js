@@ -1,4 +1,4 @@
-
+console.log("test");
 var oldList;
 var lastClicked;
 $(document).ready(getCalendar);
@@ -9,12 +9,14 @@ function getCalendar(){
     'CustomerId': $('#custSelector').val(),
   }
   var theBodyString = JSON.stringify(theBody);
+  console.log(theBodyString);
   $.ajax({
     method: "POST",
     url: "/calendarFilterJson",
     data: {'': theBodyString}
     }).done(function(res){
       oldList = JSON.parse(res);
+      console.log(oldList);
       makeCalendar(oldList);
     })
 }

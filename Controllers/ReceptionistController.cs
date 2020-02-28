@@ -145,21 +145,18 @@ namespace massage.Controllers
             string[] check = AccessCheck();
             if(check != null) return RedirectToAction(check[0], check[1]);
             vm.OneReservation.CreatorId = UserSession.UserId;
-            if (vm.OneReservation.TimeslotId == 0)
+            int roomID = 1;
+            Timeslot thisTS = Query.OneTimeslot(vm.OneReservation.TimeslotId, dbContext);
+            List<int> roomIDList = new List<int>();
+            foreach (Reservation resv in thisTS.Reservations)
             {
-                int roomID = 1;
-                Timeslot thisTS = Query.OneTimeslot(vm.OneReservation.TimeslotId, dbContext);
-                List<int> roomIDList = new List<int>();
-                foreach (Reservation resv in thisTS.Reservations)
-                {
-                    roomIDList.Add(resv.RoomId);
-                }
-                while (roomIDList.IndexOf(roomID) != -1)
-                {
-                    roomID ++;
-                }
-                vm.OneReservation.RoomId = roomID;
+                roomIDList.Add(resv.RoomId);
             }
+            while (roomIDList.IndexOf(roomID) != -1)
+            {
+                roomID ++;
+            }
+            vm.OneReservation.RoomId = roomID;
             if (ModelState.IsValid)
             {
                 
