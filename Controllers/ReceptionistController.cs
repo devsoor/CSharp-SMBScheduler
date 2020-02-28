@@ -120,6 +120,16 @@ namespace massage.Controllers
                 return View("NewInsurance");
             }
         }
+        [HttpGet("Customers")]
+        public IActionResult Customers() {
+            string[] check = AccessCheck();
+            if(check != null) return RedirectToAction(check[0], check[1]);
+            ViewModel vm = new ViewModel();
+            vm.CurrentUser = UserSession;
+            vm.AllCustomers = Query.AllCustomers(dbContext);
+            vm.AllUsers = Query.AllUsers(dbContext);
+            return View(vm);
+        }
 
         // Create Reservation from timeslot id
         [HttpPost("CreateReservation")]

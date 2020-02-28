@@ -57,9 +57,13 @@ namespace massage.Controllers
             Generate.CheckTimeslots(dbContext); // check if timeslots need to be generated
             ViewModel vm = new ViewModel();
             vm.CurrentUser = UserSession;
-            vm.AllUsers = dbContext.Users.ToList();
+            vm.AllUsers = Query.AllUsers(dbContext);
+            vm.AllCustomers = Query.AllCustomers(dbContext);
+            vm.AllInsurances = Query.AllInsurances(dbContext);
+            vm.AllServices = Query.AllServices(dbContext);
+            vm.AllTimeslots = Query.AllTimeslots(dbContext);
             vm.AllPractitioners = Query.AllPractitioners(dbContext);
-            vm.NewEmps = dbContext.Users.Any(u => u.Role == 0);
+            vm.AllReservations = Query.AllReservations(dbContext);
             return View("ADashboard", vm);
         }
 
@@ -161,9 +165,12 @@ namespace massage.Controllers
         }
         [HttpGet("Customers")]
         public IActionResult Customers() {
+            string[] check = AccessCheck();
+            if(check != null) return RedirectToAction(check[0], check[1]);
             ViewModel vm = new ViewModel();
             vm.CurrentUser = UserSession;
             vm.AllCustomers = Query.AllCustomers(dbContext);
+            vm.AllUsers = Query.AllUsers(dbContext);
             return View(vm);
         }
 
@@ -183,19 +190,19 @@ namespace massage.Controllers
         }
 
         [HttpPost("CreateCustomer")]
-        public IActionResult CreateCustomer(Customer newCustomer)
-        {
-            User currentUser = dbContext.Users.Where(u => u.UserId == HttpContext.Session.GetInt32("UserId")).SingleOrDefault();
-            if (ModelState.IsValid)
-            {
+        public IActionResult CreateCustomer(Customer newCustomer) {
+            if (ModelState.IsValid) {
+                newCustomer.Insurance = Query.OneInsurance(newCustomer.InsuranceId, dbContext);
+                newCustomer.Reservations = new List<Reservation>();
                 dbContext.Add(newCustomer);
                 dbContext.SaveChanges();
                 return RedirectToAction("Dashboard");
             }
-            else
-            {
-                return View("NewCustomer");
-            }
+            ViewModel vm = new ViewModel();
+            vm.AllInsurances = dbContext.Insurances.ToList();
+            vm.CurrentUser = UserSession;
+            vm.AllUsers = dbContext.Users.ToList();
+            return View("NewCustomer", vm);
         }
 
 
