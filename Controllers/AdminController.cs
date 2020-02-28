@@ -48,7 +48,7 @@ namespace massage.Controllers
             vm.AllServices = dbContext.Services.ToList();
             vm.AllTimeslots = dbContext.Timeslots.ToList();
             vm.AllPractitioners = Query.AllPractitioners(dbContext);
-            return View("Dashboard", vm);
+            return PartialView("Dashboard", vm);
         }
         [HttpGet("dashboard")]
         public IActionResult Dashboard() {
@@ -64,7 +64,7 @@ namespace massage.Controllers
             vm.AllTimeslots = Query.AllTimeslots(dbContext);
             vm.AllPractitioners = Query.AllPractitioners(dbContext);
             vm.AllReservations = Query.AllReservations(dbContext);
-            return View("ADashboard", vm);
+            return PartialView("ADashboard", vm);
         }
 
         [HttpGet("AddTestUsers")]
@@ -119,7 +119,7 @@ namespace massage.Controllers
         {
             string[] check = AccessCheck();
             if(check != null) return RedirectToAction(check[0], check[1]);
-            return View();
+            return PartialView();
         }
 
         [HttpPost("CreateService")]
@@ -134,7 +134,7 @@ namespace massage.Controllers
             }
             else
             {
-                return View("newService");
+                return PartialView("newService");
             }
         }
 
@@ -145,7 +145,7 @@ namespace massage.Controllers
         {
             string[] check = AccessCheck();
             if(check != null) return RedirectToAction(check[0], check[1]);
-            return View();
+            return PartialView();
         }
 
         [HttpPost("CreateInsurance")]
@@ -160,7 +160,7 @@ namespace massage.Controllers
             }
             else
             {
-                return View("NewInsurance");
+                return PartialView("NewInsurance");
             }
         }
         [HttpGet("Customers")]
@@ -171,7 +171,7 @@ namespace massage.Controllers
             vm.CurrentUser = UserSession;
             vm.AllCustomers = Query.AllCustomers(dbContext);
             vm.AllUsers = Query.AllUsers(dbContext);
-            return View(vm);
+            return PartialView(vm);
         }
 
 
@@ -186,7 +186,7 @@ namespace massage.Controllers
             vm.AllInsurances = dbContext.Insurances.ToList();
             vm.CurrentUser = UserSession;
             vm.AllUsers = dbContext.Users.ToList();
-            return View(vm);
+            return PartialView(vm);
         }
 
         [HttpPost("CreateCustomer")]
@@ -202,7 +202,7 @@ namespace massage.Controllers
             vm.AllInsurances = dbContext.Insurances.ToList();
             vm.CurrentUser = UserSession;
             vm.AllUsers = dbContext.Users.ToList();
-            return View("NewCustomer", vm);
+            return PartialView("NewCustomer", vm);
         }
 
 
@@ -215,7 +215,7 @@ namespace massage.Controllers
         public IActionResult DeleteInsurance(){
             string[] check = AccessCheck();
             if(check != null) return RedirectToAction(check[0], check[1]);
-            return View();
+            return PartialView();
         }
 
 
@@ -229,7 +229,7 @@ namespace massage.Controllers
             ViewModel vm = new ViewModel();
             vm.AllUsers = dbContext.Users.Where(n => n.Role == 0).ToList();
             vm.CurrentUser = UserSession;
-            return View(vm);
+            return PartialView(vm);
         }
         [HttpGet("setrole_prac/{id}")]
         public IActionResult SetRoleP(int id){
@@ -255,7 +255,7 @@ namespace massage.Controllers
                 return RedirectToAction("UserProfile");
             }
             else {
-                return View("UserProfile");
+                return PartialView("UserProfile");
 
             }
         }
@@ -267,7 +267,7 @@ namespace massage.Controllers
                 return RedirectToAction("UserProfile");
             }
             else {
-                return View("UserProfile");
+                return PartialView("UserProfile");
             }
         }
 
@@ -278,7 +278,7 @@ namespace massage.Controllers
                 return RedirectToAction("AllInsurance");
             }
             else {
-                return View("UserProfile");
+                return PartialView("UserProfile");
             }
         }
 
@@ -289,7 +289,7 @@ namespace massage.Controllers
                 return RedirectToAction("AllInsurance");
             }
             else {
-                return View("UserProfile");
+                return PartialView("UserProfile");
             }
         }
 

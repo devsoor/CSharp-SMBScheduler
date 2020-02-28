@@ -64,7 +64,7 @@ namespace massage.Controllers
         {
             ViewModel vm = new ViewModel();
             vm.OneReservation = Query.OneReservation(id, dbContext);
-            return View(vm);
+            return PartialView(vm);
         }
 
         // ALL RESERVATIONS
@@ -117,7 +117,7 @@ namespace massage.Controllers
             }
             else
             {
-                return View("NewInsurance");
+                return PartialView("NewInsurance");
             }
         }
         [HttpGet("Customers")]
@@ -128,7 +128,7 @@ namespace massage.Controllers
             vm.CurrentUser = UserSession;
             vm.AllCustomers = Query.AllCustomers(dbContext);
             vm.AllUsers = Query.AllUsers(dbContext);
-            return View(vm);
+            return PartialView(vm);
         }
 
         // Create Reservation from timeslot id
@@ -148,7 +148,7 @@ namespace massage.Controllers
                 vm.AllTimeslots = Query.AllTimeslots(dbContext);
                 vm.AllPractitioners = Query.AllPractitioners(dbContext);
                 vm.OneReservation.Practitioner = Query.OnePractitioner(vm.OneReservation.PractitionerId, dbContext);
-                return View("NewReservation", vm);
+                return PartialView("NewReservation", vm);
             }
             Timeslot thisTS = Query.OneTimeslot(vm.OneReservation.TimeslotId, dbContext);
             vm.OneTimeslot = thisTS;
@@ -158,7 +158,7 @@ namespace massage.Controllers
             vm.OneInsurance = Query.OneInsurance(vm.OneCustomer.InsuranceId, dbContext);
             vm.OneReservation.Practitioner = Query.OnePractitioner(vm.OneReservation.PractitionerId, dbContext);
             vm.CurrentUser = UserSession;
-            return View("ReservationForm", vm);
+            return PartialView("ReservationForm", vm);
         }
         [HttpPost("SubmitReservation")]
         public IActionResult SubmitReservation(ViewModel vm)
@@ -299,7 +299,7 @@ namespace massage.Controllers
             if(check != null) return RedirectToAction(check[0], check[1]);
             ViewModel vm = new ViewModel();
             vm.AllTimeslots = Query.OneDaysTimeslots(oneDay, dbContext);
-            return View("DayViewTimeslots", vm);
+            return PartialView("DayViewTimeslots", vm);
         }
         
         [HttpGet]
@@ -310,7 +310,7 @@ namespace massage.Controllers
             if(check != null) return RedirectToAction(check[0], check[1]);
             ViewModel vm = new ViewModel();
             vm.AllTimeslots = Query.TodaysTimeslots(dbContext);
-            return View("DayViewTimeslots", vm);
+            return PartialView("DayViewTimeslots", vm);
         }
 
         [HttpGet]
@@ -321,7 +321,7 @@ namespace massage.Controllers
             if(check != null) return RedirectToAction(check[0], check[1]);
             ViewModel vm = new ViewModel();
             vm.AllTimeslots = Query.ThisWeeksTimeslots(dbContext);
-            return View("WeekViewTimeslots", vm);
+            return PartialView("WeekViewTimeslots", vm);
         }
         [HttpGet]
         public IActionResult ThisMonthsAvailability()
@@ -331,7 +331,7 @@ namespace massage.Controllers
             if(check != null) return RedirectToAction(check[0], check[1]);
             ViewModel vm = new ViewModel();
             vm.AllTimeslots = Query.ThisMonthsTimeslots(dbContext);
-            return View("MonthViewTimeslots", vm);
+            return PartialView("MonthViewTimeslots", vm);
         }
         
         [HttpGet]
@@ -342,7 +342,7 @@ namespace massage.Controllers
             if(check != null) return RedirectToAction(check[0], check[1]);
             ViewModel vm = new ViewModel();
             vm.AllTimeslots = Query.OneWeeksTimeslots(startDay, dbContext);
-            return View("WeekViewTimeslots", vm);
+            return PartialView("WeekViewTimeslots", vm);
         }
 
         [HttpGet]
@@ -353,7 +353,7 @@ namespace massage.Controllers
             if(check != null) return RedirectToAction(check[0], check[1]);
             ViewModel vm = new ViewModel();
             vm.AllTimeslots = Query.OneMonthsTimeslots(dayInMonth, dbContext);
-            return View("MonthViewTimeslots", vm);
+            return PartialView("MonthViewTimeslots", vm);
         }
     }
 }
