@@ -163,6 +163,16 @@ namespace massage.Controllers
                 return PartialView("NewInsurance");
             }
         }
+        [HttpGet("insurances")]
+        public IActionResult Insurances() {
+            string[] check = AccessCheck();
+            if(check != null) return RedirectToAction(check[0], check[1]);
+            ViewModel vm = new ViewModel();
+            vm.CurrentUser = UserSession;
+            vm.AllInsurances = Query.AllInsurances(dbContext);
+            vm.AllUsers = Query.AllUsers(dbContext);
+            return PartialView(vm);
+        }
         [HttpGet("Customers")]
         public IActionResult Customers() {
             string[] check = AccessCheck();
