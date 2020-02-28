@@ -85,14 +85,6 @@ namespace massage.Controllers
             return PartialView(vm);
         }
 
-        [HttpPost("CurrentReservation/{id}")]
-        public IActionResult CurrentReservation(int id)
-        {
-            ViewModel vm = new ViewModel();
-            vm.OneReservation = Query.OneReservation(id, dbContext);
-            return View(vm);
-        }
-
         // ALL RESERVATIONS
         [HttpGet("all_res")]
         public IActionResult AllReservations()
